@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: bc23d85d9b1ce1a4d96c6a0450c1a504
+timeCreated: 1507388087
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Dynamic/Fence_Basic_1.prefab
+  uploadId: 313268

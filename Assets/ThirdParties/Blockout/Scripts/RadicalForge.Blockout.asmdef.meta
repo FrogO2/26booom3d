@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8026044ac34a2d24d9c3a2fa30fd4c16
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Scripts/RadicalForge.Blockout.asmdef
+  uploadId: 313268

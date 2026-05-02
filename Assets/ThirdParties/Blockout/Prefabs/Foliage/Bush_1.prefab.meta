@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2cba268cefb022c4bbda1f7a3d8b5968
+timeCreated: 1496761071
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Foliage/Bush_1.prefab
+  uploadId: 313268

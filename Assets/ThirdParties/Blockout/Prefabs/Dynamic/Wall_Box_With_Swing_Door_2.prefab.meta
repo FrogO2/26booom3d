@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 52dab349a73eae54bb9f030ee8689afe
+timeCreated: 1507388587
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Dynamic/Wall_Box_With_Swing_Door_2.prefab
+  uploadId: 313268

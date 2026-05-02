@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6545fa7462c793e43a095d45c9d31be1
+timeCreated: 1507386760
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Dynamic/Wires_Haging_Large_4_Alt_1.prefab
+  uploadId: 313268

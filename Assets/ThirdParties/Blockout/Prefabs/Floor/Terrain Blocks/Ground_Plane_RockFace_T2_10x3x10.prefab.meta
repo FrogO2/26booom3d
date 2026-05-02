@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2924cc8863b71df4498caf0fb6c1d8f5
+timeCreated: 1496764851
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Terrain Blocks/Ground_Plane_RockFace_T2_10x3x10.prefab
+  uploadId: 313268

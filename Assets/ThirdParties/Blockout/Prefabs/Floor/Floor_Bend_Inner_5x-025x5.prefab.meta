@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3d8bc4c1abda2bf43ae90d1328a44c80
+timeCreated: 1496757672
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Floor_Bend_Inner_5x-025x5.prefab
+  uploadId: 313268

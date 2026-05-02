@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: cada57838ac9e7149866fbcaf4378cd7
+timeCreated: 1495910272
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Resources/Blockout/BlockoutMaterials/Blockout_Theme_2_Trim.mat
+  uploadId: 313268

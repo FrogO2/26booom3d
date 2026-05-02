@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8c20239eba23bd94fbd653fe0d98e1d3
+timeCreated: 1495910272
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Resources/Blockout/BlockoutMaterials/Blockout_Theme_1_Foliage.mat
+  uploadId: 313268

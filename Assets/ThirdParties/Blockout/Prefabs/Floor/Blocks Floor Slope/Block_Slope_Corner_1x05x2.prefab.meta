@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 316ea7f5261e09b4c89d7f2f4c283f7e
+timeCreated: 1496760900
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Blocks Floor Slope/Block_Slope_Corner_1x05x2.prefab
+  uploadId: 313268

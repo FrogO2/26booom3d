@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a7456ad12cb37da4992466f43e76d657
+timeCreated: 1496760862
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Blocks Basic/Block_05x5x5.prefab
+  uploadId: 313268

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0372d29090aee00428a699521d33b12d
+timeCreated: 1496761683
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Blocks Basic/Blocks Corners/Block_Corner_T3_05x3x05.prefab
+  uploadId: 313268

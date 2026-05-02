@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 4f70a48bc7a5a874b8e76a7fd6083c1a
+timeCreated: 1496764850
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Terrain Blocks/Ground_Sphere_Mound_Large_8x02x009.prefab
+  uploadId: 313268

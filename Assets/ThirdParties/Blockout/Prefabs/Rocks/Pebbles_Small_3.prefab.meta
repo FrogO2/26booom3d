@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 52fc1feda96b98e41ab92655ff3db6aa
+timeCreated: 1496761013
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Rocks/Pebbles_Small_3.prefab
+  uploadId: 313268

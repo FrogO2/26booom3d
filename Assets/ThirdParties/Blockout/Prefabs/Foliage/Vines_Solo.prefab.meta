@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 31f1e282cf47ed049ab4c8c61fdeae99
+timeCreated: 1496761071
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Foliage/Vines_Solo.prefab
+  uploadId: 313268

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: d993f347c9c000d44b43303b2232b0ee
+timeCreated: 1497820722
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Walls/Walls Bend/Wall_Bend_025x3x4.prefab
+  uploadId: 313268

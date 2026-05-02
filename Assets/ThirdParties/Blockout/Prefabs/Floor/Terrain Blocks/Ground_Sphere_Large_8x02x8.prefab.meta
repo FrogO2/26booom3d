@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: edd6c878eab70d541a48285da889fc5c
+timeCreated: 1496764854
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Terrain Blocks/Ground_Sphere_Large_8x02x8.prefab
+  uploadId: 313268

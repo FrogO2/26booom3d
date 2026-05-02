@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 75424c1dabbd60745a0111589344298f
+timeCreated: 1507308535
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Rocks/Rock_Walkable_Large_3.prefab
+  uploadId: 313268

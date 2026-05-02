@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ab90d36a9ee06184b8a6bbf5e2dcac4c
+timeCreated: 1496757675
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Floor_2x-025x4.prefab
+  uploadId: 313268

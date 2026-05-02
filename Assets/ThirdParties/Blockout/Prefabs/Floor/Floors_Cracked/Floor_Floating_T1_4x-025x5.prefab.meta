@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 4cbe1bf41e44e554aa678a8c07fb2afb
+timeCreated: 1506599450
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Floors_Cracked/Floor_Floating_T1_4x-025x5.prefab
+  uploadId: 313268

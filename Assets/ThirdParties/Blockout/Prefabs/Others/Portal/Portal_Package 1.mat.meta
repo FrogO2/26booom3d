@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 626b34045ac70c1429dc23d9c36ffdde
+timeCreated: 1499359984
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Others/Portal/Portal_Package 1.mat
+  uploadId: 313268

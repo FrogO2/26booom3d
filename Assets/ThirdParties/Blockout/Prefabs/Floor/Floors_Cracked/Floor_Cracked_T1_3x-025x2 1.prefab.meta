@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 8f5e1666e708e384287db387a0e2c29e
+timeCreated: 1506599539
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Floors_Cracked/Floor_Cracked_T1_3x-025x2
+    1.prefab
+  uploadId: 313268

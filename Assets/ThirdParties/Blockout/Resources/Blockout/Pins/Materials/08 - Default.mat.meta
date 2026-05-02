@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ba580bdc3f51f194bbe4701b0f50c2b5
+timeCreated: 1498834619
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Resources/Blockout/Pins/Materials/08 - Default.mat
+  uploadId: 313268

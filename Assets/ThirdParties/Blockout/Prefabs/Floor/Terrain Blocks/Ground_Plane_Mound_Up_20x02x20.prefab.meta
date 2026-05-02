@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3eeeb9bf6ed457949a4772c12a139274
+timeCreated: 1496764855
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Terrain Blocks/Ground_Plane_Mound_Up_20x02x20.prefab
+  uploadId: 313268

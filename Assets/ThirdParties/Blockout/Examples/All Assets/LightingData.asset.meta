@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: e2b0f67c786608743aaaffbfd6b5b43d
+timeCreated: 1505750225
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 25800000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Examples/All Assets/LightingData.asset
+  uploadId: 313268

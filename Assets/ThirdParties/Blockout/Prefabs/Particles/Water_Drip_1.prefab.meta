@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: aa52eb6a9ff17a94d83a782b7fe7ca60
+timeCreated: 1497286831
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Particles/Water_Drip_1.prefab
+  uploadId: 313268

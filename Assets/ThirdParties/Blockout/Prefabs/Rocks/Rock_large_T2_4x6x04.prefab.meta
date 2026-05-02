@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ecf5fed2c6bcfa540aa81cffa08b97b2
+timeCreated: 1496761012
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Rocks/Rock_large_T2_4x6x04.prefab
+  uploadId: 313268

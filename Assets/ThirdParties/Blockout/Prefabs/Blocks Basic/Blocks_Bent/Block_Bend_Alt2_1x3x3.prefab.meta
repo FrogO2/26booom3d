@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 756a3e5b559a1f048a1ac7573e2ffa0f
+timeCreated: 1496761182
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Blocks Basic/Blocks_Bent/Block_Bend_Alt2_1x3x3.prefab
+  uploadId: 313268

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 36323950fd37ac641b18e4031c042cea
+timeCreated: 1496760951
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Pipes/Tube_Quater_Hole_Small_8x4x4.prefab
+  uploadId: 313268

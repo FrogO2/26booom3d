@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 7d8f35088ef901b41a5a6ecbff4eb5cc
+timeCreated: 1496760823
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Stairs & Slopes/Stairs_Box_2x2x4.prefab
+  uploadId: 313268

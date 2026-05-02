@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 46c6357a72b0dc449b6a04fc4730eb01
+timeCreated: 1496760900
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Blocks Floor Slope/Block_Slope_Corner_Inverse_1x05x1.prefab
+  uploadId: 313268

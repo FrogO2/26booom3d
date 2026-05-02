@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: b638914a664040a46a17eb4892394735
+timeCreated: 1496761374
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Blocks Basic/Blocks Caps/Block_Wall_Pillar_Cap_T4_1x05x1.prefab
+  uploadId: 313268

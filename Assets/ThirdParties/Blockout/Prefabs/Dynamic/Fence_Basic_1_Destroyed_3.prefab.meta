@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: e3696f9bbf3525f438d5ac116093cc9f
+timeCreated: 1507388090
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Dynamic/Fence_Basic_1_Destroyed_3.prefab
+  uploadId: 313268

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: da6d48788517eb544a37d56460b8c9ee
+timeCreated: 1499087503
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: -1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Blocks Basic/Blocks Corner Inner/Block_Inner_Corner_T2_1x1x2.prefab
+  uploadId: 313268

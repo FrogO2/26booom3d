@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 51540706da4ec5c40b219e29077e9e30
+timeCreated: 1498832352
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Resources/Blockout/Pins/Pin_6_Low_Sphere.prefab
+  uploadId: 313268

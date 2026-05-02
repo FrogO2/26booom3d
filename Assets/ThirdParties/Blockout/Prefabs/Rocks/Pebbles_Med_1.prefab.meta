@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ee505717dd4d19749bb357c7a419a2c6
+timeCreated: 1496761014
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Rocks/Pebbles_Med_1.prefab
+  uploadId: 313268

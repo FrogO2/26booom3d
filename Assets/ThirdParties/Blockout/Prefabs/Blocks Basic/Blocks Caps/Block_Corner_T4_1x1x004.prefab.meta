@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6932d96502a37894ab3aee681128a904
+timeCreated: 1496761373
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Blocks Basic/Blocks Caps/Block_Corner_T4_1x1x004.prefab
+  uploadId: 313268

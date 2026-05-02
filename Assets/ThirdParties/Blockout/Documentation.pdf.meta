@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2f7328fef7e3cf741a1af5bf19724782
+timeCreated: 1499277453
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Documentation.pdf
+  uploadId: 313268

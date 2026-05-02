@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: fc7f23423611fa34291d69230a7b3b69
+timeCreated: 1496757673
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Floor_Bend_Outer_2x-025x2.prefab
+  uploadId: 313268

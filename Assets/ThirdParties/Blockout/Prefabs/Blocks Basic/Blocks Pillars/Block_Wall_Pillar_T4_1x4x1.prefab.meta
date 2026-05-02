@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: caad9d662761f9844b3a929387accb3d
+timeCreated: 1496761626
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Blocks Basic/Blocks Pillars/Block_Wall_Pillar_T4_1x4x1.prefab
+  uploadId: 313268

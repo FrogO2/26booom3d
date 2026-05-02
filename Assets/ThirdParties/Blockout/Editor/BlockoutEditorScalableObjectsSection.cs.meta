@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 80252b65bd525e541bcdebaeecbfe554
+timeCreated: 1507982056
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Editor/BlockoutEditorScalableObjectsSection.cs
+  uploadId: 313268

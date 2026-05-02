@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 845cebb26cc572b46b4443660c6aeee2
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Shaders/Area_Comment_Wireframe_2018.shader
+  uploadId: 313268

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: da1f95bbb0333ac48bd5f6acaed6aabb
+timeCreated: 1496760895
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Blocks Floor Slope/Block_1x05x4.prefab
+  uploadId: 313268

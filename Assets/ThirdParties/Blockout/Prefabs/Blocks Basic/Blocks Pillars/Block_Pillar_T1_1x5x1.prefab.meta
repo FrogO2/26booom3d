@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 4d61590ba528d3d4fa9e58e7df3ca835
+timeCreated: 1496761703
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Blocks Basic/Blocks Pillars/Block_Pillar_T1_1x5x1.prefab
+  uploadId: 313268

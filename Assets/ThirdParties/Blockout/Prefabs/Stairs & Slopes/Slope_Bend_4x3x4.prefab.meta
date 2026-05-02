@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6fdc3037222ca4c4baeb48d7c6be3f52
+timeCreated: 1496760824
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Stairs & Slopes/Slope_Bend_4x3x4.prefab
+  uploadId: 313268

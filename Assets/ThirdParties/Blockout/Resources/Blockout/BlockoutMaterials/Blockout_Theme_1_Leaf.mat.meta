@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 015fb8f8c29d24637af685052aae2f7e
+timeCreated: 1496759844
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Resources/Blockout/BlockoutMaterials/Blockout_Theme_1_Leaf.mat
+  uploadId: 313268

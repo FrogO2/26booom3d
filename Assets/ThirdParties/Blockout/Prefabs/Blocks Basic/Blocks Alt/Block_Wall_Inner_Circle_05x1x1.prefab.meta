@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c0716f95da616b04f9e83467492bf247
+timeCreated: 1496761414
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Blocks Basic/Blocks Alt/Block_Wall_Inner_Circle_05x1x1.prefab
+  uploadId: 313268

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4a01b841ff3a8874087da1afa7a5d4da
+timeCreated: 1506428898
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Examples/All Assets.unity
+  uploadId: 313268

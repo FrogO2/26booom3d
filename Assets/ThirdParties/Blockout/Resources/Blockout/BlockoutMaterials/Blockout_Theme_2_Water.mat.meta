@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2c7247dbd4d51401696ceb0e30af58e4
+timeCreated: 1496696267
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Resources/Blockout/BlockoutMaterials/Blockout_Theme_2_Water.mat
+  uploadId: 313268

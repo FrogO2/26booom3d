@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 9d2e72fcebfeda44e9da4610b8ff290c
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Shaders/Blockout_Depth_Blend_2018.shader
+  uploadId: 313268

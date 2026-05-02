@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8bf62dc1d7e6d8d4a94a6d1f539dc4dd
+timeCreated: 1496765285
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Resources/Blockout/BlockoutMaterials/Blockout_Theme_6.asset
+  uploadId: 313268

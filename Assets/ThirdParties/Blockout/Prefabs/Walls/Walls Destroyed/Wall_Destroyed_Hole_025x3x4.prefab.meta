@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: e1d75ec965358cc4fb95ef73cd1085be
+timeCreated: 1497820905
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Walls/Walls Destroyed/Wall_Destroyed_Hole_025x3x4.prefab
+  uploadId: 313268

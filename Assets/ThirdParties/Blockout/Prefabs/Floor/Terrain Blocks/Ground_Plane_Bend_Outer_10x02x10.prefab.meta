@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 350076b9e19a2f849bc308746af5fec8
+timeCreated: 1496764854
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Terrain Blocks/Ground_Plane_Bend_Outer_10x02x10.prefab
+  uploadId: 313268

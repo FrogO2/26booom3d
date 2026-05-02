@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 7438066611a179a438f7b136cf58f48b
+timeCreated: 1497448954
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Dynamic/Crate_2x1x1_Large.prefab
+  uploadId: 313268

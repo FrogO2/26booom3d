@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8e6689ce1e0071e4ba8920efd5330dfd
+timeCreated: 1496757674
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Floor_Corner_2x-025x2.prefab
+  uploadId: 313268

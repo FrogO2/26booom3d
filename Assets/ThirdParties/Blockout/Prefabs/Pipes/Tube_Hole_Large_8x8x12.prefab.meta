@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c1f4369156bfcd440b1ead615157a2f5
+timeCreated: 1496760950
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Pipes/Tube_Hole_Large_8x8x12.prefab
+  uploadId: 313268

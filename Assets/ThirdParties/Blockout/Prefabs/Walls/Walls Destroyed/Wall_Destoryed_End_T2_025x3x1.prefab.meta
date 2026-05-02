@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 4b6300fd360357e47b3024b7d6b70f4c
+timeCreated: 1497820889
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Walls/Walls Destroyed/Wall_Destoryed_End_T2_025x3x1.prefab
+  uploadId: 313268

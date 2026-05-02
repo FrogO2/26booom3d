@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3505de38c13dfd74e88b370e4aaa25d4
+timeCreated: 1496839754
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Materials/Custom_Blockout_Shader_Base.mat
+  uploadId: 313268

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 690e23e158efd284c93baed1d40b3600
+timeCreated: 1497821019
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Walls/Walls Destroyed/Wall_Side_Destroyed_T3_025x1x1
+    1.prefab
+  uploadId: 313268

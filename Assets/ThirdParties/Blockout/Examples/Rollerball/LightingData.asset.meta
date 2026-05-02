@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 629745742eb56444cafa69ac56a3f836
+timeCreated: 1505498317
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 25800000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Examples/Rollerball/LightingData.asset
+  uploadId: 313268

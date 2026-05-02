@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: d536454e5cc5dea47811d9ee8a8e1f25
+timeCreated: 1496761014
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Rocks/Pebbles_Large_1.prefab
+  uploadId: 313268

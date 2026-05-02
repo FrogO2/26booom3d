@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ddbc30a5c3e93e542aca90973857483c
+timeCreated: 1496758391
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Floor_Angle_3x-025x3.prefab
+  uploadId: 313268

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 13cf1ef2e97756248b573a8e038fe4c1
+timeCreated: 1498144542
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Resources/Blockout/Area Comment Textures/Custom_Area_Comment_Wireframe.mat
+  uploadId: 313268

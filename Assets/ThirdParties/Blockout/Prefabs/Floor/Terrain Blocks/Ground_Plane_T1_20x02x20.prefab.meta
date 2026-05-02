@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2174b55b1c82b8c4395617785a5aa9e3
+timeCreated: 1496764853
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Terrain Blocks/Ground_Plane_T1_20x02x20.prefab
+  uploadId: 313268

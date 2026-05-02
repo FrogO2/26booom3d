@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8fae1b28f5c09724c9bf8103da3654ee
+timeCreated: 1496761460
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Blocks Basic/Block_Slope_1x1x5.prefab
+  uploadId: 313268

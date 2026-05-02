@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 29e6adf06e764934f8bd5db5e90f0cfb
+timeCreated: 1506428898
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Examples/FPS.unity
+  uploadId: 313268

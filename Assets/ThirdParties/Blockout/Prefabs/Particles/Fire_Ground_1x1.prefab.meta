@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 4f84b683e1ac0a747a4ca63c49546367
+timeCreated: 1497204583
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Particles/Fire_Ground_1x1.prefab
+  uploadId: 313268

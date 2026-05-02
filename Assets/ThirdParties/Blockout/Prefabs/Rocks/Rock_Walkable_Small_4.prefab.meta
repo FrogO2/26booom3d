@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 5fd4c7dea54155a4eb97a74237bbc86d
+timeCreated: 1507308576
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Rocks/Rock_Walkable_Small_4.prefab
+  uploadId: 313268

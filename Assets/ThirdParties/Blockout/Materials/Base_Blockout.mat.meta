@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 14b951b33d2eed44691f2c333e5118af
+timeCreated: 1495910272
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Materials/Base_Blockout.mat
+  uploadId: 313268

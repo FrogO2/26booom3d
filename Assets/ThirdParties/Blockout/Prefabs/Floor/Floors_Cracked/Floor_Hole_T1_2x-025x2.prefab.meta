@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 194a4b8fa89c7d2439ce803c044a00c2
+timeCreated: 1506599412
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Floor/Floors_Cracked/Floor_Hole_T1_2x-025x2.prefab
+  uploadId: 313268

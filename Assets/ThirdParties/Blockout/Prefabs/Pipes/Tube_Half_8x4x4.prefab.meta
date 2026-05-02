@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 7b9ea3b6d48b8914092fcfb62f9f6955
+timeCreated: 1496760950
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Pipes/Tube_Half_8x4x4.prefab
+  uploadId: 313268

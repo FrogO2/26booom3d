@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: d7a45af8335c77c4283e5eda2926617e
+timeCreated: 1507308568
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Rocks/Rock_Walkable_Med_5.prefab
+  uploadId: 313268

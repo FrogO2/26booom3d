@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 999eec9e111006d4f8afad05516051ca
+timeCreated: 1496762095
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Others/Water_Plane.prefab
+  uploadId: 313268

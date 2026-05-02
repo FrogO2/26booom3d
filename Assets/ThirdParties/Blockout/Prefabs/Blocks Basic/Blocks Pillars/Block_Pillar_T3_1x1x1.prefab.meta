@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c37d1dfa46166b84db2e817486ea79e8
+timeCreated: 1496761702
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 100388
+  packageName: Blockout
+  packageVersion: 1.2.0
+  assetPath: Assets/Blockout/Prefabs/Blocks Basic/Blocks Pillars/Block_Pillar_T3_1x1x1.prefab
+  uploadId: 313268
