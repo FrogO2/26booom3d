@@ -99,14 +99,14 @@ namespace RadicalForge.Blockout
             GUILayout.Label(EUIResourceManager.Instance.GetContent("Example Scenes"), GUILayout.Width(390), GUILayout.Height(EditorGUIUtility.singleLineHeight * 2));
             if (GUILayout.Button(EUIResourceManager.Instance.GetContent("All Assets"), GUILayout.Width(390),
                                  GUILayout.Height(EditorGUIUtility.singleLineHeight * 3 + 8)))
-                EditorSceneManager.OpenScene("Assets/ThirdParties/Blockout/Examples/All Assets.unity");
+                OpenExampleScene("Assets/ThirdParties/Blockout/Examples/All Assets.unity");
 
             using (new HorizontalCenteredScope())
             {
                 if (GUILayout.Button(EUIResourceManager.Instance.GetContent("FPS Scene"), GUILayout.Width(193), GUILayout.Height(125)))
-                    EditorSceneManager.OpenScene("Assets/ThirdParties/Blockout/Examples/FPS.unity");
+                    OpenExampleScene("Assets/ThirdParties/Blockout/Examples/FPS.unity");
                 if (GUILayout.Button(EUIResourceManager.Instance.GetContent("Rollerball Scene"), GUILayout.Width(193), GUILayout.Height(125)))
-                    EditorSceneManager.OpenScene("Assets/ThirdParties/Blockout/Examples/Rollerball.unity");
+                    OpenExampleScene("Assets/ThirdParties/Blockout/Examples/Rollerball.unity");
             }
 
             GUILayout.Space(5);
@@ -224,6 +224,12 @@ namespace RadicalForge.Blockout
                               GUILayout.Height(45));
             }
 
+        }
+
+        private static void OpenExampleScene(string scenePath)
+        {
+            EditorApplication.delayCall += () => { EditorSceneManager.OpenScene(scenePath); };
+            GUIUtility.ExitGUI();
         }
     }
 }

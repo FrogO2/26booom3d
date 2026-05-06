@@ -76,18 +76,33 @@ namespace RadicalForge.Blockout
         /// <param name="prefab">The target tri planar prefab</param>
         private void CreateTriPlanerAsset(GameObject prefab)
         {
-            var target = Instantiate(prefab);
-            Undo.RegisterCreatedObjectUndo(target, "Created Tri-Planer Asset");
+            if (!prefab)
+            {
+                Debug.LogError("Blockout scalable prefab is missing. Reimport the Blockout package prefabs.");
+                return;
+            }
 
-            target.transform.position = BlockoutStaticFunctions.GetSceneViewSpawnPosition();
-            target.name = prefab.name + " (Tri-Planar)";
-            Selection.activeGameObject = target;
-            BlockoutStaticFunctions.SnapPositionSelection();
+            EditorApplication.delayCall += () =>
+            {
+                var target = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+                if (!target)
+                    return;
 
-            SceneView.lastActiveSceneView.FrameSelected();
+                Undo.RegisterCreatedObjectUndo(target, "Created Tri-Planer Asset");
 
-            Tools.current = Tool.Scale;
-            BlockoutStaticFunctions.ApplyCurrentTheme();
+                target.transform.position = BlockoutStaticFunctions.GetSceneViewSpawnPosition();
+                target.name = prefab.name + " (Tri-Planar)";
+                Selection.activeGameObject = target;
+                BlockoutStaticFunctions.SnapPositionSelection();
+
+                if (SceneView.lastActiveSceneView != null)
+                    SceneView.lastActiveSceneView.FrameSelected();
+
+                Tools.current = Tool.Scale;
+                BlockoutStaticFunctions.ApplyCurrentTheme();
+            };
+
+            GUIUtility.ExitGUI();
         }
     }
 }

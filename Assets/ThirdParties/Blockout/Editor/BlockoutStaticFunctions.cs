@@ -529,15 +529,24 @@ namespace RadicalForge.Blockout
         /// <param name="asset2">Seccond Asset name to try (no extension)</param>
         public static void PingAssetInProjectWindow(string asset1, string asset2)
         {
-            EditorUtility.FocusProjectWindow();
+            EditorApplication.delayCall += () =>
+            {
+                EditorUtility.FocusProjectWindow();
+                AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
 
-            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+                var guids = AssetDatabase.FindAssets(asset1 + " t:prefab", null);
+                if (guids.Length == 0)
+                    guids = AssetDatabase.FindAssets(asset2 + " t:prefab", null);
 
-            var guids = AssetDatabase.FindAssets(asset1 + " t:prefab", null);
-            if (guids.Length == 0)
-                guids = AssetDatabase.FindAssets(asset2 + " t:prefab", null);
-            if (guids.Length > 0)
-                Selection.activeObject = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guids[0]));
+                if (guids.Length == 0)
+                    return;
+
+                var asset = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guids[0]));
+                Selection.activeObject = asset;
+                EditorGUIUtility.PingObject(asset);
+            };
+
+            GUIUtility.ExitGUI();
         }
 
         /// <summary>

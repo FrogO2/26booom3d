@@ -26,81 +26,101 @@ namespace RadicalForge.Blockout
         }
     }
 
-    public class HorizontalCenteredScope : GUI.Scope
+    public class HorizontalCenteredScope : System.IDisposable
     {
+        private bool m_begun;
+        private bool m_disposed;
+
         public HorizontalCenteredScope(params GUILayoutOption[] options)
         {
             GUILayout.BeginHorizontal(options);
             GUILayout.FlexibleSpace();
+            m_begun = true;
         }
 
         public HorizontalCenteredScope(GUIStyle style, params GUILayoutOption[] options)
         {
             GUILayout.BeginHorizontal(style, options);
             GUILayout.FlexibleSpace();
+            m_begun = true;
         }
 
         public HorizontalCenteredScope(string text, GUIStyle style, params GUILayoutOption[] options)
         {
             GUILayout.BeginHorizontal(text, style, options);
             GUILayout.FlexibleSpace();
+            m_begun = true;
         }
 
         public HorizontalCenteredScope(Texture image, GUIStyle style, params GUILayoutOption[] options)
         {
             GUILayout.BeginHorizontal(image, style, options);
             GUILayout.FlexibleSpace();
+            m_begun = true;
         }
 
         public HorizontalCenteredScope(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
         {
             GUILayout.BeginHorizontal(content, style, options);
             GUILayout.FlexibleSpace();
+            m_begun = true;
         }
 
-        protected override void CloseScope()
+        public void Dispose()
         {
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
+            if (m_disposed || !m_begun) return;
+            m_disposed = true;
+            try { GUILayout.FlexibleSpace(); } catch (System.Exception) { return; }
+            try { GUILayout.EndHorizontal(); } catch (System.Exception) { }
         }
     }
 
-    public class VerticalCenteredScope : GUI.Scope
+    public class VerticalCenteredScope : System.IDisposable
     {
+        private bool m_begun;
+        private bool m_disposed;
+
         public VerticalCenteredScope(params GUILayoutOption[] options)
         {
             GUILayout.BeginVertical(options);
             GUILayout.FlexibleSpace();
+            m_begun = true;
         }
 
         public VerticalCenteredScope(GUIStyle style, params GUILayoutOption[] options)
         {
             GUILayout.BeginVertical(style, options);
             GUILayout.FlexibleSpace();
+            m_begun = true;
         }
 
         public VerticalCenteredScope(string text, GUIStyle style, params GUILayoutOption[] options)
         {
             GUILayout.BeginVertical(text, style, options);
             GUILayout.FlexibleSpace();
+            m_begun = true;
         }
 
         public VerticalCenteredScope(Texture image, GUIStyle style, params GUILayoutOption[] options)
         {
             GUILayout.BeginVertical(image, style, options);
             GUILayout.FlexibleSpace();
+            m_begun = true;
         }
 
         public VerticalCenteredScope(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
         {
             GUILayout.BeginVertical(content, style, options);
             GUILayout.FlexibleSpace();
+            m_begun = true;
         }
 
-        protected override void CloseScope()
+        public void Dispose()
         {
-            GUILayout.FlexibleSpace();
-            GUILayout.EndVertical();
+            if (m_disposed || !m_begun) return;
+            m_disposed = true;
+            try { GUILayout.FlexibleSpace(); } catch (System.Exception) { return; }
+            try { GUILayout.EndVertical(); } catch (System.Exception) { }
         }
     }
 }
