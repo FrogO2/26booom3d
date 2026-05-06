@@ -8,6 +8,8 @@
     "com.unity.ide.visualstudio": "2.0.27",
     "com.unity.inputsystem": "1.19.0",
     "com.unity.multiplayer.center": "1.0.1",
+    "com.unity.probuilder": "6.0.9",
+    "com.unity.progrids": "3.0.3-preview.6",
     "com.unity.render-pipelines.core": "17.4.0",
     "com.unity.render-pipelines.universal": "17.4.0",
     "com.unity.render-pipelines.universal-config": "17.4.0",
