@@ -1448,12 +1448,12 @@ MonoBehaviour:
   lockCursor: 1
   walkSpeed: 6
   sprintSpeed: 9
-  crouchSpeed: 3.5
+  crouchSpeed: 4
   acceleration: 24
   deceleration: 20
-  airControl: 0.45
+  airControl: 0.7
   jumpHeight: 1.35
-  gravity: 30
+  gravity: 18
   terminalFallSpeed: 45
   groundedStickForce: 5
   standingHeight: 1.8
@@ -1468,15 +1468,15 @@ MonoBehaviour:
   slideDuration: 0.65
   slideCooldown: 0.25
   wallRunSpeed: 9.5
-  wallRunDuration: 1
-  wallRunGravity: 6
+  wallRunDuration: 2
+  wallRunGravity: 1
   wallCheckDistance: 0.9
   wallCheckHeight: 1.1
   wallJumpHorizontalForce: 8
   wallJumpVerticalForce: 8.5
   environmentMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1
   groundProbeDistance: 0.3
   headroomProbePadding: 0.05
   baseFieldOfView: 90
@@ -1504,7 +1504,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 2
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
