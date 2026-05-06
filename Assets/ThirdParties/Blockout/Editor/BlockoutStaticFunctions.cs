@@ -178,9 +178,9 @@ namespace RadicalForge.Blockout
                 newSetting.assetDictionary = new List<AssetDefinition>();
                 newSetting.cameraAnchor = new List<CameraAnchor>();
 
-                Directory.CreateDirectory("Assets/Blockout/Editor/Resources/Blockout/SceneDefinitions");
+                Directory.CreateDirectory("Assets/ThirdParties/Blockout/Editor/Resources/Blockout/SceneDefinitions");
                 AssetDatabase.CreateAsset(newSetting,
-                                          "Assets/Blockout/Editor/Resources/Blockout/SceneDefinitions/" +
+                                          "Assets/ThirdParties/Blockout/Editor/Resources/Blockout/SceneDefinitions/" +
                                           typeof(BlockoutSceneSettings).Name + "_" +
                                           newSetting.sceneName + ".asset");
                 var list = BlockoutEditorSettings.SceneDefinitions.ToList();
@@ -529,7 +529,7 @@ namespace RadicalForge.Blockout
         /// <param name="asset2">Seccond Asset name to try (no extension)</param>
         public static void PingAssetInProjectWindow(string asset1, string asset2)
         {
-            EditorApplication.ExecuteMenuItem("Window/Project");
+            EditorUtility.FocusProjectWindow();
 
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
 

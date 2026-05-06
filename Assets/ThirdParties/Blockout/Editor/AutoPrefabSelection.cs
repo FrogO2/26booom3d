@@ -24,8 +24,8 @@ namespace RadicalForge.Blockout
                 Debug.LogError("There are no selected objects!");
             else
             {
-                if (!Directory.Exists("Assets/Blockout/NewPrefabs"))
-                    Directory.CreateDirectory("Assets/Blockout/NewPrefabs");
+                if (!Directory.Exists("Assets/ThirdParties/Blockout/NewPrefabs"))
+                    Directory.CreateDirectory("Assets/ThirdParties/Blockout/NewPrefabs");
 
                 foreach (var o in selection)
                 {
@@ -38,7 +38,7 @@ namespace RadicalForge.Blockout
                     }
                     if (!isChildInSelection)
                     {
-                        var prefab = PrefabUtility.CreatePrefab("Assets/Blockout/NewPrefabs/" + o.name + ".prefab", o,
+                        var prefab = PrefabUtility.CreatePrefab("Assets/ThirdParties/Blockout/NewPrefabs/" + o.name + ".prefab", o,
                             ReplacePrefabOptions.ConnectToPrefab);
                         EditorGUIUtility.PingObject(prefab);
                     }

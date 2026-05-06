@@ -99,14 +99,14 @@ namespace RadicalForge.Blockout
             GUILayout.Label(EUIResourceManager.Instance.GetContent("Example Scenes"), GUILayout.Width(390), GUILayout.Height(EditorGUIUtility.singleLineHeight * 2));
             if (GUILayout.Button(EUIResourceManager.Instance.GetContent("All Assets"), GUILayout.Width(390),
                                  GUILayout.Height(EditorGUIUtility.singleLineHeight * 3 + 8)))
-                EditorSceneManager.OpenScene("Assets/Blockout/Examples/All Assets.unity");
+                EditorSceneManager.OpenScene("Assets/ThirdParties/Blockout/Examples/All Assets.unity");
 
             using (new HorizontalCenteredScope())
             {
                 if (GUILayout.Button(EUIResourceManager.Instance.GetContent("FPS Scene"), GUILayout.Width(193), GUILayout.Height(125)))
-                    EditorSceneManager.OpenScene("Assets/Blockout/Examples/FPS.unity");
+                    EditorSceneManager.OpenScene("Assets/ThirdParties/Blockout/Examples/FPS.unity");
                 if (GUILayout.Button(EUIResourceManager.Instance.GetContent("Rollerball Scene"), GUILayout.Width(193), GUILayout.Height(125)))
-                    EditorSceneManager.OpenScene("Assets/Blockout/Examples/Rollerball.unity");
+                    EditorSceneManager.OpenScene("Assets/ThirdParties/Blockout/Examples/Rollerball.unity");
             }
 
             GUILayout.Space(5);

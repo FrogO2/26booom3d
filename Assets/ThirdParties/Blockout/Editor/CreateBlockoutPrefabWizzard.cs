@@ -30,8 +30,8 @@ namespace RadicalForge.Blockout
 
         void OnWizardCreate()
         {
-            if (!Directory.Exists("Assets/Blockouts/NewPrefabs"))
-                Directory.CreateDirectory("Assets/Blockouts/NewPrefabs");
+            if (!Directory.Exists("Assets/ThirdParties/Blockout/NewPrefabs"))
+                Directory.CreateDirectory("Assets/ThirdParties/Blockout/NewPrefabs");
 
             List<string> names = new List<string>();
             List<Vector3> positions = new List<Vector3>();
@@ -43,13 +43,13 @@ namespace RadicalForge.Blockout
             {
                 names.Add(SelectedObjects[i].name);
                
-                PrefabUtility.CreatePrefab("Assets/Blockouts/NewPrefabs/" + SelectedObjects[i].name + ".prefab", SelectedObjects[i],
+                PrefabUtility.CreatePrefab("Assets/ThirdParties/Blockout/NewPrefabs/" + SelectedObjects[i].name + ".prefab", SelectedObjects[i],
                     ReplacePrefabOptions.ConnectToPrefab);
                 positions.Add(SelectedObjects[i].transform.position);
                 rotations.Add(SelectedObjects[i].transform.rotation);
                 scales.Add(SelectedObjects[i].transform.localScale);
                 DestroyImmediate(SelectedObjects[i]);
-                GameObject toSpawn = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Blockouts/NewPrefabs/" + names[i]+".prefab");
+                GameObject toSpawn = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/ThirdParties/Blockout/NewPrefabs/" + names[i]+".prefab");
                 toSpawn.AddComponent<BlockoutHelper>().initialBlockoutSection = Sections[i];
                 if (Sections[i] == SectionID.Particles)
                 {

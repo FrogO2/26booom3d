@@ -81,9 +81,9 @@ namespace RadicalForge.Blockout
             {
                 var cd = ScriptableObject.CreateInstance<BlockoutDatabase>();
                 cd.Database = new BlockoutItemPreview[0];
-                Directory.CreateDirectory("Assets/Blockout/Editor/Resources/Blockout/SceneDefinitions");
+                Directory.CreateDirectory("Assets/ThirdParties/Blockout/Editor/Resources/Blockout/SceneDefinitions");
                 AssetDatabase.CreateAsset(cd,
-                                          "Assets/Blockout/Editor/Resources/Blockout/BlockoutSuggestionDatabase.asset");
+                                          "Assets/ThirdParties/Blockout/Editor/Resources/Blockout/BlockoutSuggestionDatabase.asset");
                 database = Resources.Load<BlockoutDatabase>("Blockout/BlockoutSuggestionDatabase");
             }
 
