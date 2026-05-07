@@ -47,7 +47,6 @@ public class FirstPersonController : MonoBehaviour
 
 	[Header("Wall Run")]
 	[SerializeField] private float wallRunSpeed = 9.5f;
-	[SerializeField] private float wallRunDuration = 1f;
 	[SerializeField] private float wallRunGravity = 6f;
 	[SerializeField] private float wallCheckDistance = 0.9f;
 	[SerializeField] private float wallCheckHeight = 1.1f;
@@ -86,7 +85,6 @@ public class FirstPersonController : MonoBehaviour
 	private float jumpBufferTimer;
 	private float slideTimer;
 	private float slideCooldownTimer;
-	private float wallRunTimer;
 	private float currentCameraTilt;
 	private int airJumpsUsed;
 	private bool isGrounded;
@@ -219,7 +217,6 @@ public class FirstPersonController : MonoBehaviour
 		jumpBufferTimer -= deltaTime;
 		slideTimer -= deltaTime;
 		slideCooldownTimer -= deltaTime;
-		wallRunTimer -= deltaTime;
 	}
 
 	private void HandleLook()
@@ -267,12 +264,11 @@ public class FirstPersonController : MonoBehaviour
 		bool canWallRun = !isGrounded && !isSliding && moveInput.y > 0.1f && verticalVelocity <= 0.5f;
 		bool touchingWall = wallOnLeft || wallOnRight;
 
-		if (canWallRun && touchingWall && wallRunTimer > -0.01f)
+		if (canWallRun && touchingWall)
 		{
 			if (!isWallRunning)
 			{
 				isWallRunning = true;
-				wallRunTimer = wallRunDuration;
 			}
 
 			wallRunDirection = Vector3.Cross(wallNormal, Vector3.up).normalized;
@@ -299,9 +295,9 @@ public class FirstPersonController : MonoBehaviour
 		{
 			isWallRunning = false;
 			jumpBufferTimer = 0f;
-			wallRunTimer = 0f;
-			planarVelocity = Vector3.ProjectOnPlane(wallNormal, Vector3.up).normalized * wallJumpHorizontalForce;
-			verticalVelocity = wallJumpVerticalForce;
+			Vector3 wallJumpDirection = Vector3.ProjectOnPlane(wallNormal, Vector3.up).normalized;
+			planarVelocity += wallJumpDirection * wallJumpHorizontalForce;
+			verticalVelocity = Mathf.Max(verticalVelocity + wallJumpVerticalForce, wallJumpVerticalForce);
 			return;
 		}
 
@@ -375,11 +371,6 @@ public class FirstPersonController : MonoBehaviour
 		{
 			coyoteTimer = coyoteTime;
 			airJumpsUsed = 0;
-
-			if (!wasGrounded)
-			{
-				wallRunTimer = wallRunDuration;
-			}
 		}
 		else if (wasGrounded)
 		{
@@ -457,11 +448,6 @@ public class FirstPersonController : MonoBehaviour
 		{
 			coyoteTimer = coyoteTime;
 			airJumpsUsed = 0;
-
-			if (!wasGrounded)
-			{
-				wallRunTimer = wallRunDuration;
-			}
 		}
 	}
 
@@ -505,6 +491,11 @@ public class FirstPersonController : MonoBehaviour
 	private float GetTargetSpeed()
 	{
 		bool wantsSprint = sprintAction != null && sprintAction.IsPressed();
+
+		if (!isGrounded)
+		{
+			return wantsSprint && moveInput.y > 0.1f ? sprintSpeed : walkSpeed;
+		}
 
 		if (isCrouching)
 		{

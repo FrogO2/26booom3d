@@ -1485,6 +1485,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5870186238456741650, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
+      propertyPath: bloodColor.a
+      value: 0.83137256
+      objectReference: {fileID: 0}
     - target: {fileID: 6301509035296075085, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

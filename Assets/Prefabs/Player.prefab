@@ -65,8 +65,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0.1
+  far clip plane: 1500
   field of view: 90
   orthographic: 0
   orthographic size: 5
@@ -162,7 +162,7 @@ Transform:
   m_GameObject: {fileID: 2686030804069082883}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.00000007450586, z: 0, w: -1}
-  m_LocalPosition: {x: 0, y: 0.78, z: 0}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -196,10 +196,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7084690824742996561}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000037252897}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 3.56, z: -2.316718}
-  m_LocalScale: {x: 2.3576, y: 2.3576, z: 2.3576}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1580731124278607381}
   m_Father: {fileID: 0}
@@ -222,7 +222,7 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
+  m_Height: 1.8
   m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
@@ -249,37 +249,36 @@ MonoBehaviour:
   minPitch: -85
   maxPitch: 85
   lockCursor: 1
-  walkSpeed: 6
-  sprintSpeed: 9
-  crouchSpeed: 4
+  walkSpeed: 4
+  sprintSpeed: 6
+  crouchSpeed: 3
   acceleration: 24
   deceleration: 20
-  airControl: 0.7
+  airControl: 0.6
   jumpHeight: 1.35
-  gravity: 18
+  gravity: 15
   terminalFallSpeed: 45
   groundedStickForce: 5
-  standingHeight: 1.8
-  crouchingHeight: 1.1
+  standingHeight: 1.5
+  crouchingHeight: 0.5
   stanceLerpSpeed: 12
-  standingCameraHeight: 0.78
+  standingCameraHeight: 1.4
   crouchingCameraHeight: 0.38
   coyoteTime: 0.15
   jumpBufferTime: 0.2
   extraAirJumps: 1
-  slideSpeed: 12
-  slideDuration: 0.65
+  slideSpeed: 9
+  slideDuration: 1
   slideCooldown: 0.25
-  wallRunSpeed: 9.5
-  wallRunDuration: 2
-  wallRunGravity: 1
-  wallCheckDistance: 0.9
-  wallCheckHeight: 1.1
+  wallRunSpeed: 6
+  wallRunGravity: 0.5
+  wallCheckDistance: 0.45
+  wallCheckHeight: 0.3
   wallJumpHorizontalForce: 8
-  wallJumpVerticalForce: 8.5
+  wallJumpVerticalForce: 6
   environmentMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 17
   groundProbeDistance: 0.3
   headroomProbePadding: 0.05
   baseFieldOfView: 90
@@ -311,7 +310,7 @@ MonoBehaviour:
   visibleDepthBias: 0.05
   projectionMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1
   maxRetainedSprays: 16
   refreshLatestProjectorEveryFrame: 0
   bloodColor: {r: 1, g: 0, b: 0, a: 0.9490196}
