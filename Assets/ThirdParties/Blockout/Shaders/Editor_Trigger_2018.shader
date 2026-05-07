@@ -9,7 +9,7 @@ _Emissive_Brightness("Emissive_Brightness", Float) = 1
 _Color_1("Color_1", Color) = (0.345098,0.3686275,0.627451,1)
 _Extra_Lines("Extra_Lines", Float) = 0.5
 _Texture0("Texture 0", 2D) = "white" {}
-[HideInInspector] __dirty("", Int) = 1
+ Tags { "LightMode" = "UniversalForwardOnly" }
 }
 
 SubShader
@@ -19,7 +19,7 @@ Tags { "RenderType" = "Opaque" "Queue" = "Geometry" "RenderPipeline" = "Universa
 Pass
 {
 Name "ForwardLit"
-Tags { "LightMode" = "UniversalForward" }
+Tags { "LightMode" = "UniversalForwardOnly" }
 Cull Back
 Blend One One
 
@@ -137,6 +137,81 @@ float  mask  = (nAbs.x * maskX + nAbs.y * maskY + nAbs.z * maskZ) / total;
 
 // Depth blend
 float2 screenUV   = i.screenPos.xy / i.screenPos.w;
+ Pass
+ {
+ Name "DepthNormalsOnly"
+ Tags { "LightMode" = "DepthNormalsOnly" }
+ ZWrite On
+ Cull Back
+
+ HLSLPROGRAM
+ #pragma vertex DepthNormalsVert
+ #pragma fragment DepthNormalsFrag
+ #pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
+ #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+ #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
+
+ struct DepthNormalsAttributes
+ {
+ float4 positionOS : POSITION;
+ float3 normalOS   : NORMAL;
+ };
+
+ struct DepthNormalsVaryings
+ {
+ float4 positionCS : SV_POSITION;
+ float3 normalWS   : TEXCOORD0;
+ };
+
+ DepthNormalsVaryings DepthNormalsVert(DepthNormalsAttributes i)
+ {
+ DepthNormalsVaryings o;
+ o.positionCS = TransformObjectToHClip(i.positionOS.xyz);
+ o.normalWS   = TransformObjectToWorldNormal(i.normalOS);
+ return o;
+ }
+
+ void DepthNormalsFrag(
+ DepthNormalsVaryings i,
+ out half4 outNormalWS : SV_Target0
+ #ifdef _WRITE_RENDERING_LAYERS
+ , out uint outRenderingLayers : SV_Target1
+ #endif
+ )
+ {
+ float3 normalWS = NormalizeNormalPerPixel(i.normalWS);
+ #if defined(_GBUFFER_NORMALS_OCT)
+ float2 octNormalWS = PackNormalOctQuadEncode(normalWS);
+ float2 remappedOctNormalWS = saturate(octNormalWS * 0.5 + 0.5);
+ half3 packedNormalWS = half3(PackFloat2To888(remappedOctNormalWS));
+ outNormalWS = half4(packedNormalWS, 0.0);
+ #else
+ outNormalWS = half4(normalWS, 0.0);
+ #endif
+ #ifdef _WRITE_RENDERING_LAYERS
+ outRenderingLayers = EncodeMeshRenderingLayer();
+ #endif
+ }
+ ENDHLSL
+ }
+
+ Pass
+ {
+ Name "DepthOnly"
+ Tags { "LightMode" = "DepthOnly" }
+ ZWrite On
+ ColorMask 0
+ Cull Back
+
+ HLSLPROGRAM
+ #pragma vertex DepthVert
+ #pragma fragment DepthFrag
+ #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+ struct DepthAttribs { float4 positionOS : POSITION; };
+ float4 DepthVert(DepthAttribs i) : SV_POSITION { return TransformObjectToHClip(i.positionOS.xyz); }
+ half4 DepthFrag() : SV_Target { return 0; }
+ ENDHLSL
+ }
 float  sceneDepth = LinearEyeDepth(SampleSceneDepth(screenUV), _ZBufferParams);
 float  surfDepth  = i.screenPos.w;
 float  depthDiff  = abs(sceneDepth - surfDepth) / _Depth_Blend;
