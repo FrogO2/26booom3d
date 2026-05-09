@@ -25,6 +25,8 @@ Shader "Hidden/MyProject/BloodRevealMask"
 
 			TEXTURE2D_ARRAY(_ProjectorVisibilityAtlas);
 			SAMPLER(sampler_ProjectorVisibilityAtlas);
+			TEXTURE2D(_BloodObjectMaskTex);
+			SAMPLER(sampler_BloodObjectMaskTex);
 			// High-resolution depth atlas populated asynchronously via GPU capture.
 			// Alpha > 0.5 in a slot means HD data is present; checked before the standard atlas.
 			TEXTURE2D_ARRAY(_ProjectorHDAtlas);
@@ -128,8 +130,10 @@ Shader "Hidden/MyProject/BloodRevealMask"
 				}
 				#endif
 
+				float revealWithoutBlood = SAMPLE_TEXTURE2D(_BloodObjectMaskTex, sampler_BloodObjectMaskTex, uv).r;
+
 				float3 worldPosition = ComputeWorldSpacePosition(uv, rawDepth, UNITY_MATRIX_I_VP);
-				float visibility = 0.0;
+				float visibility = saturate(revealWithoutBlood);
 
 				[loop]
 				for (int i = 0; i < _RevealProjectorCount; i++)
