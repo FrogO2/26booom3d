@@ -1978,10 +1978,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 7557369968631690598, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
-      propertyPath: wallRunGravity
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

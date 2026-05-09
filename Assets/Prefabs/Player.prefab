@@ -271,7 +271,7 @@ MonoBehaviour:
   slideDuration: 1
   slideCooldown: 0.25
   wallRunSpeed: 6
-  wallRunGravity: 0.5
+  wallRunGravity: 3
   wallCheckDistance: 0.45
   wallCheckHeight: 0.3
   wallJumpHorizontalForce: 8
