@@ -31,7 +31,7 @@ public static class FrozenProjectorManager
 		TrimToLimit();
 	}
 
-	public static int AddProjector(Camera sourceCamera, float projectionDistance, float edgeFeather, float visibleDepthBias, LayerMask projectionMask, int captureResolution)
+	public static int AddProjector(Camera sourceCamera, float projectionDistance, float edgeFeather, float visibleDepthBias, LayerMask projectionMask, int captureResolution, bool skipInitialDepthCapture = false)
 	{
 		if (sourceCamera == null)
 		{
@@ -40,7 +40,7 @@ public static class FrozenProjectorManager
 
 		int depthSliceIndex = AcquireDepthSliceIndex();
 		FrozenProjector projector = CreateProjectorFromCamera(sourceCamera, projectionDistance, edgeFeather, visibleDepthBias, depthSliceIndex, nextProjectorId++);
-		CaptureProjectorVisibility(sourceCamera, projectionMask, captureResolution, projector);
+		CaptureProjectorVisibility(sourceCamera, projectionMask, captureResolution, projector, skipInitialDepthCapture);
 
 		Projectors.Add(projector);
 		TrimToLimit();
@@ -312,8 +312,14 @@ public static class FrozenProjectorManager
 		};
 	}
 
-	private static void CaptureProjectorVisibility(Camera sourceCamera, LayerMask projectionMask, int captureResolution, FrozenProjector projector)
+	private static void CaptureProjectorVisibility(Camera sourceCamera, LayerMask projectionMask, int captureResolution, FrozenProjector projector, bool skipDepthCapture = false)
 	{
+		if (skipDepthCapture)
+		{
+			CaptureVisibleDepthPlaceholder(captureResolution, projector.farDistance, projector.depthSliceIndex);
+			return;
+		}
+
 		CaptureVisibleDepth(sourceCamera, projectionMask, captureResolution, projector.nearDistance, projector.farDistance, projector.depthSliceIndex);
 	}
 
@@ -361,6 +367,21 @@ public static class FrozenProjectorManager
 					depthPixels[pixelIndex] = Color.clear;
 				}
 			}
+		}
+
+		projectorVisibilityAtlas.SetPixels(depthPixels, depthSliceIndex, 0);
+		projectorVisibilityAtlas.Apply(false, false);
+	}
+
+	private static void CaptureVisibleDepthPlaceholder(int captureResolution, float farDistance, int depthSliceIndex)
+	{
+		EnsureDepthAtlas(captureResolution);
+
+		Color[] depthPixels = new Color[captureResolution * captureResolution];
+		Color visiblePixel = new Color(farDistance, 0f, 0f, 1f);
+		for (int i = 0; i < depthPixels.Length; i++)
+		{
+			depthPixels[i] = visiblePixel;
 		}
 
 		projectorVisibilityAtlas.SetPixels(depthPixels, depthSliceIndex, 0);

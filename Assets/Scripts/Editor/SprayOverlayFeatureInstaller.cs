@@ -7,6 +7,7 @@ using UnityEngine.Rendering.Universal;
 public static class BloodProjectorFeatureInstaller
 {
 	private const string RendererAssetPath = "Assets/Settings/PC_Renderer.asset";
+	private const string ObjectMaskShaderPath = "Assets/Arts/Shaders/BloodObjectMask.shader";
 	private const string RevealShaderPath = "Assets/Arts/Shaders/BloodRevealMask.shader";
 	private const string BloodFxShaderPath = "Assets/Arts/Shaders/BloodProjectorFx.shader";
 
@@ -30,6 +31,7 @@ public static class BloodProjectorFeatureInstaller
 			return;
 		}
 
+		Shader objectMaskShader = AssetDatabase.LoadAssetAtPath<Shader>(ObjectMaskShaderPath);
 		Shader revealShader = AssetDatabase.LoadAssetAtPath<Shader>(RevealShaderPath);
 		Shader bloodFxShader = AssetDatabase.LoadAssetAtPath<Shader>(BloodFxShaderPath);
 
@@ -38,8 +40,15 @@ public static class BloodProjectorFeatureInstaller
 		SerializedProperty featureMapProperty = serializedRenderer.FindProperty("m_RendererFeatureMap");
 		RemoveLegacyAndMissingFeatures(featuresProperty, featureMapProperty);
 
+		BloodObjectMaskRendererFeature objectMaskFeature = GetOrCreateFeature<BloodObjectMaskRendererFeature>(rendererData, featuresProperty, featureMapProperty);
 		BloodRevealRendererFeature revealFeature = GetOrCreateFeature<BloodRevealRendererFeature>(rendererData, featuresProperty, featureMapProperty);
 		BloodFxRendererFeature bloodFxFeature = GetOrCreateFeature<BloodFxRendererFeature>(rendererData, featuresProperty, featureMapProperty);
+
+		if (objectMaskShader != null)
+		{
+			objectMaskFeature.SetMaskShader(objectMaskShader);
+			EditorUtility.SetDirty(objectMaskFeature);
+		}
 
 		if (revealShader != null)
 		{
@@ -52,6 +61,9 @@ public static class BloodProjectorFeatureInstaller
 			bloodFxFeature.SetBloodFxShader(bloodFxShader);
 			EditorUtility.SetDirty(bloodFxFeature);
 		}
+
+		EnsureFeatureOrder<BloodObjectMaskRendererFeature, BloodRevealRendererFeature>(featuresProperty, featureMapProperty);
+		EnsureFeatureOrder<BloodObjectMaskRendererFeature, BloodFxRendererFeature>(featuresProperty, featureMapProperty);
 
 		serializedRenderer.ApplyModifiedProperties();
 		rendererData.SetDirty();
@@ -94,6 +106,37 @@ public static class BloodProjectorFeatureInstaller
 
 		EditorUtility.SetDirty(feature);
 		return feature;
+	}
+
+	private static void EnsureFeatureOrder<TBefore, TAfter>(SerializedProperty featuresProperty, SerializedProperty featureMapProperty)
+		where TBefore : ScriptableRendererFeature
+		where TAfter : ScriptableRendererFeature
+	{
+		int beforeIndex = FindFeatureIndex<TBefore>(featuresProperty);
+		int afterIndex = FindFeatureIndex<TAfter>(featuresProperty);
+
+		if (beforeIndex < 0 || afterIndex < 0 || beforeIndex < afterIndex)
+		{
+			return;
+		}
+
+		featuresProperty.MoveArrayElement(beforeIndex, afterIndex);
+		featureMapProperty.MoveArrayElement(beforeIndex, afterIndex);
+	}
+
+	private static int FindFeatureIndex<T>(SerializedProperty featuresProperty)
+		where T : ScriptableRendererFeature
+	{
+		for (int i = 0; i < featuresProperty.arraySize; i++)
+		{
+			Object featureObject = featuresProperty.GetArrayElementAtIndex(i).objectReferenceValue;
+			if (featureObject is T)
+			{
+				return i;
+			}
+		}
+
+		return -1;
 	}
 }
 #endif

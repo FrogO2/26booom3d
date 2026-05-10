@@ -4,7 +4,7 @@ a 2026 booom project on painting the world red
 以下内容供项目组成员确认进度，不是特别细致，爱来自FrogO2。
 
 距离提交还有
-![:FrogO2](https://count.getloli.com/@FrogO2?name=FrogO2&theme=original-new&padding=1&offset=0&align=top&scale=1&pixelated=1&darkmode=auto&num=9)
+![:FrogO2](https://count.getloli.com/@FrogO2?name=FrogO2&theme=original-new&padding=1&offset=0&align=top&scale=1&pixelated=1&darkmode=auto&num=7)
 天
 
 ## 基础能力
@@ -46,6 +46,8 @@ a 2026 booom project on painting the world red
 - 如果新加代码或者模块出现红色警告，考虑点击左上角File->Build Profiles->Build and Run构建项目确认可以通过编译（记得把你的场景加入Scene List!）![alt text](image.png)
 
 - Git没办法合并场景文件修改。不要和别人使用同一场景文件，创建一个自己的Scene。
+
+- 在 ![alt text](image-7.png)
 
 ## Blockout入门
 

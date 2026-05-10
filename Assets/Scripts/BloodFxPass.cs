@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
-using UnityEngine.Rendering.RenderGraphModule.Util;
 using UnityEngine.Rendering.Universal;
 
 public class BloodFxPass : ScriptableRenderPass
@@ -9,6 +8,12 @@ public class BloodFxPass : ScriptableRenderPass
 	private const string PassName = "Blood FX Pass";
 
 	private Material bloodFxMaterial;
+
+	private class PassData
+	{
+		internal Material material;
+		internal TextureHandle source;
+	}
 
 	public BloodFxPass(Material material, RenderPassEvent passEvent)
 	{
@@ -51,8 +56,19 @@ public class BloodFxPass : ScriptableRenderPass
 		destinationDesc.clearBuffer = false;
 		TextureHandle destination = renderGraph.CreateTexture(destinationDesc);
 
-		RenderGraphUtils.BlitMaterialParameters blitParameters = new RenderGraphUtils.BlitMaterialParameters(source, destination, bloodFxMaterial, 0);
-		renderGraph.AddBlitPass(blitParameters, PassName);
+		using (IRasterRenderGraphBuilder builder = renderGraph.AddRasterRenderPass<PassData>(PassName, out PassData passData))
+		{
+			passData.material = bloodFxMaterial;
+			passData.source = source;
+
+			builder.UseTexture(passData.source, AccessFlags.Read);
+			builder.UseAllGlobalTextures(true);
+			builder.SetRenderAttachment(destination, 0, AccessFlags.Write);
+			builder.SetRenderFunc(static (PassData data, RasterGraphContext context) =>
+			{
+				Blitter.BlitTexture(context.cmd, data.source, Vector2.one, data.material, 0);
+			});
+		}
 
 		resourceData.cameraColor = destination;
 	}

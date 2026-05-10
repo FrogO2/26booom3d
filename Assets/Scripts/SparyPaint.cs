@@ -99,7 +99,8 @@ public class SprayPaint : MonoBehaviour
 		FrozenProjectorManager.SetMaxRetainedProjectors(maxRetainedSprays);
 		BloodRevealManager.SetHiddenColor(hiddenColor);
 
-		int projectorId = FrozenProjectorManager.AddProjector(targetCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution);
+		bool useFastInitialVisibility = enableAsyncHighRes && depthCaptureShader != null;
+		int projectorId = FrozenProjectorManager.AddProjector(targetCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution, useFastInitialVisibility);
 		if (projectorId < 0)
 		{
 			return;

@@ -25,6 +25,8 @@ Shader "Hidden/MyProject/BloodProjectorFx"
 
 			TEXTURE2D(_BloodProjectorTexture);
 			SAMPLER(sampler_BloodProjectorTexture);
+			TEXTURE2D(_BloodObjectMaskTex);
+			SAMPLER(sampler_BloodObjectMaskTex);
 			TEXTURE2D_ARRAY(_ProjectorVisibilityAtlas);
 			SAMPLER(sampler_ProjectorVisibilityAtlas);
 			// High-resolution depth atlas populated asynchronously via GPU capture.
@@ -142,6 +144,12 @@ Shader "Hidden/MyProject/BloodProjectorFx"
 				}
 				#endif
 
+				float noBloodMask = SAMPLE_TEXTURE2D(_BloodObjectMaskTex, sampler_BloodObjectMaskTex, uv).g;
+				if (noBloodMask >= 0.999)
+				{
+					return sceneColor;
+				}
+
 				float3 worldPosition = ComputeWorldSpacePosition(uv, rawDepth, UNITY_MATRIX_I_VP);
 				float4 result = sceneColor;
 
@@ -162,7 +170,7 @@ Shader "Hidden/MyProject/BloodProjectorFx"
 						: float4(1.0, 1.0, 1.0, 1.0);
 
 					float4 projectedColor = bloodSample * _BloodProjectorColors[i];
-					float alpha = saturate(projectedColor.a * mask);
+					float alpha = saturate(projectedColor.a * mask * (1.0 - noBloodMask));
 					result.rgb = lerp(result.rgb, projectedColor.rgb, alpha);
 				}
 
