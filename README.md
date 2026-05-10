@@ -47,6 +47,8 @@ a 2026 booom project on painting the world red
 
 - Git没办法合并场景文件修改。不要和别人使用同一场景文件，创建一个自己的Scene。
 
+- 在 ![alt text](image-7.png)
+
 ## Blockout入门
 
 - 打开Window->Blockout->Editor启用Blockout界面 ![alt text](image-2.png)

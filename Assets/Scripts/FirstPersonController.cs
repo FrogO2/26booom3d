@@ -269,6 +269,7 @@ public class FirstPersonController : MonoBehaviour
 			if (!isWallRunning)
 			{
 				isWallRunning = true;
+				verticalVelocity = 0f;
 			}
 
 			wallRunDirection = Vector3.Cross(wallNormal, Vector3.up).normalized;

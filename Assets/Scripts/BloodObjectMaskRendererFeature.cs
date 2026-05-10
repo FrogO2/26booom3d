@@ -7,7 +7,7 @@ using UnityEngine.Rendering.Universal;
 public class BloodObjectMaskRendererFeature : ScriptableRendererFeature
 {
 	private const string DefaultShaderName = "Hidden/MyProject/BloodObjectMask";
-	private static readonly int MaskColorId = Shader.PropertyToID("_MaskColor");
+	private static readonly int MaskWriteColorId = Shader.PropertyToID("_BloodMaskWriteColor");
 
 	[SerializeField] private RenderPassEvent renderPassEvent = RenderPassEvent.AfterRenderingTransparents;
 	[SerializeField] private Shader maskShader;
@@ -15,9 +15,6 @@ public class BloodObjectMaskRendererFeature : ScriptableRendererFeature
 	[SerializeField] private LayerMask noBloodLayerMask;
 	[SerializeField] private LayerMask alwaysVisibleAndNoBloodLayerMask;
 
-	private Material alwaysVisibleMaterial;
-	private Material noBloodMaterial;
-	private Material combinedMaterial;
 	private BloodObjectMaskPass maskPass;
 
 	public override void Create()
@@ -33,10 +30,6 @@ public class BloodObjectMaskRendererFeature : ScriptableRendererFeature
 			return;
 		}
 
-		alwaysVisibleMaterial = CreateOrUpdateMaterial(alwaysVisibleMaterial, new Color(1f, 0f, 0f, 1f));
-		noBloodMaterial = CreateOrUpdateMaterial(noBloodMaterial, new Color(0f, 1f, 0f, 1f));
-		combinedMaterial = CreateOrUpdateMaterial(combinedMaterial, new Color(1f, 1f, 0f, 1f));
-
 		if (maskPass == null)
 		{
 			maskPass = new BloodObjectMaskPass();
@@ -47,15 +40,13 @@ public class BloodObjectMaskRendererFeature : ScriptableRendererFeature
 
 	public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
 	{
-		if (maskPass == null || alwaysVisibleMaterial == null || noBloodMaterial == null || combinedMaterial == null)
+		if (maskPass == null || maskShader == null)
 		{
 			return;
 		}
 
 		maskPass.Setup(
-			alwaysVisibleMaterial,
-			noBloodMaterial,
-			combinedMaterial,
+			maskShader,
 			alwaysVisibleLayerMask,
 			noBloodLayerMask,
 			alwaysVisibleAndNoBloodLayerMask);
@@ -64,12 +55,6 @@ public class BloodObjectMaskRendererFeature : ScriptableRendererFeature
 
 	protected override void Dispose(bool disposing)
 	{
-		CoreUtils.Destroy(alwaysVisibleMaterial);
-		CoreUtils.Destroy(noBloodMaterial);
-		CoreUtils.Destroy(combinedMaterial);
-		alwaysVisibleMaterial = null;
-		noBloodMaterial = null;
-		combinedMaterial = null;
 		maskPass = null;
 	}
 
@@ -78,22 +63,13 @@ public class BloodObjectMaskRendererFeature : ScriptableRendererFeature
 		maskShader = shader;
 	}
 
-	private Material CreateOrUpdateMaterial(Material material, Color maskColor)
-	{
-		if (material == null || material.shader != maskShader)
-		{
-			CoreUtils.Destroy(material);
-			material = CoreUtils.CreateEngineMaterial(maskShader);
-		}
-
-		material.SetColor(MaskColorId, maskColor);
-		return material;
-	}
-
 	private class BloodObjectMaskPass : ScriptableRenderPass
 	{
 		private const string PassName = "Blood Object Mask Pass";
 		private static readonly int BloodObjectMaskTexId = Shader.PropertyToID("_BloodObjectMaskTex");
+		private static readonly Color AlwaysVisibleMaskColor = new Color(1f, 0f, 0f, 0f);
+		private static readonly Color NoBloodMaskColor = new Color(0f, 1f, 0f, 0f);
+		private static readonly Color CombinedMaskColor = new Color(1f, 1f, 0f, 0f);
 
 		private readonly List<ShaderTagId> shaderTagIds = new List<ShaderTagId>
 		{
@@ -104,31 +80,28 @@ public class BloodObjectMaskRendererFeature : ScriptableRendererFeature
 			new ShaderTagId("LightweightForward")
 		};
 
-		private Material alwaysVisibleMaterial;
-		private Material noBloodMaterial;
-		private Material combinedMaterial;
+		private Shader maskShader;
 		private LayerMask alwaysVisibleLayerMask;
 		private LayerMask noBloodLayerMask;
 		private LayerMask combinedLayerMask;
 
 		private class PassData
 		{
-			internal RendererListHandle alwaysVisibleRendererList;
-			internal RendererListHandle noBloodRendererList;
-			internal RendererListHandle combinedRendererList;
+			internal RendererListHandle alwaysVisibleOpaqueRendererList;
+			internal RendererListHandle alwaysVisibleTransparentRendererList;
+			internal RendererListHandle noBloodOpaqueRendererList;
+			internal RendererListHandle noBloodTransparentRendererList;
+			internal RendererListHandle combinedOpaqueRendererList;
+			internal RendererListHandle combinedTransparentRendererList;
 		}
 
 		public void Setup(
-			Material alwaysVisible,
-			Material noBlood,
-			Material combined,
+			Shader overrideShader,
 			LayerMask alwaysVisibleMask,
 			LayerMask noBloodMask,
 			LayerMask combinedMask)
 		{
-			alwaysVisibleMaterial = alwaysVisible;
-			noBloodMaterial = noBlood;
-			combinedMaterial = combined;
+			maskShader = overrideShader;
 			alwaysVisibleLayerMask = alwaysVisibleMask;
 			noBloodLayerMask = noBloodMask;
 			combinedLayerMask = combinedMask;
@@ -155,52 +128,40 @@ public class BloodObjectMaskRendererFeature : ScriptableRendererFeature
 
 			using (IRasterRenderGraphBuilder builder = renderGraph.AddRasterRenderPass<PassData>(PassName, out PassData passData))
 			{
-				passData.alwaysVisibleRendererList = CreateRendererList(renderGraph, frameData, alwaysVisibleLayerMask, alwaysVisibleMaterial);
-				passData.noBloodRendererList = CreateRendererList(renderGraph, frameData, noBloodLayerMask, noBloodMaterial);
-				passData.combinedRendererList = CreateRendererList(renderGraph, frameData, combinedLayerMask, combinedMaterial);
+				passData.alwaysVisibleOpaqueRendererList = CreateRendererList(renderGraph, frameData, alwaysVisibleLayerMask, RenderQueueRange.opaque, true);
+				passData.alwaysVisibleTransparentRendererList = CreateRendererList(renderGraph, frameData, alwaysVisibleLayerMask, RenderQueueRange.transparent, false);
+				passData.noBloodOpaqueRendererList = CreateRendererList(renderGraph, frameData, noBloodLayerMask, RenderQueueRange.opaque, true);
+				passData.noBloodTransparentRendererList = CreateRendererList(renderGraph, frameData, noBloodLayerMask, RenderQueueRange.transparent, false);
+				passData.combinedOpaqueRendererList = CreateRendererList(renderGraph, frameData, combinedLayerMask, RenderQueueRange.opaque, true);
+				passData.combinedTransparentRendererList = CreateRendererList(renderGraph, frameData, combinedLayerMask, RenderQueueRange.transparent, false);
 
-				if (passData.alwaysVisibleRendererList.IsValid())
-				{
-					builder.UseRendererList(passData.alwaysVisibleRendererList);
-				}
-
-				if (passData.noBloodRendererList.IsValid())
-				{
-					builder.UseRendererList(passData.noBloodRendererList);
-				}
-
-				if (passData.combinedRendererList.IsValid())
-				{
-					builder.UseRendererList(passData.combinedRendererList);
-				}
+				UseRendererList(builder, passData.alwaysVisibleOpaqueRendererList);
+				UseRendererList(builder, passData.alwaysVisibleTransparentRendererList);
+				UseRendererList(builder, passData.noBloodOpaqueRendererList);
+				UseRendererList(builder, passData.noBloodTransparentRendererList);
+				UseRendererList(builder, passData.combinedOpaqueRendererList);
+				UseRendererList(builder, passData.combinedTransparentRendererList);
 
 				builder.AllowPassCulling(false);
+				builder.AllowGlobalStateModification(true);
 				builder.SetRenderAttachment(maskTexture, 0, AccessFlags.Write);
 				builder.SetRenderAttachmentDepth(resourceData.activeDepthTexture, AccessFlags.Read);
 				builder.SetGlobalTextureAfterPass(maskTexture, BloodObjectMaskTexId);
 				builder.SetRenderFunc(static (PassData data, RasterGraphContext context) =>
 				{
-					if (data.alwaysVisibleRendererList.IsValid())
-					{
-						context.cmd.DrawRendererList(data.alwaysVisibleRendererList);
-					}
-
-					if (data.noBloodRendererList.IsValid())
-					{
-						context.cmd.DrawRendererList(data.noBloodRendererList);
-					}
-
-					if (data.combinedRendererList.IsValid())
-					{
-						context.cmd.DrawRendererList(data.combinedRendererList);
-					}
+					DrawRendererList(context, data.alwaysVisibleOpaqueRendererList, AlwaysVisibleMaskColor);
+					DrawRendererList(context, data.alwaysVisibleTransparentRendererList, AlwaysVisibleMaskColor);
+					DrawRendererList(context, data.noBloodOpaqueRendererList, NoBloodMaskColor);
+					DrawRendererList(context, data.noBloodTransparentRendererList, NoBloodMaskColor);
+					DrawRendererList(context, data.combinedOpaqueRendererList, CombinedMaskColor);
+					DrawRendererList(context, data.combinedTransparentRendererList, CombinedMaskColor);
 				});
 			}
 		}
 
-		private RendererListHandle CreateRendererList(RenderGraph renderGraph, ContextContainer frameData, LayerMask layerMask, Material material)
+		private RendererListHandle CreateRendererList(RenderGraph renderGraph, ContextContainer frameData, LayerMask layerMask, RenderQueueRange renderQueueRange, bool opaque)
 		{
-			if (layerMask.value == 0 || material == null)
+			if (layerMask.value == 0 || maskShader == null)
 			{
 				return default;
 			}
@@ -209,20 +170,42 @@ public class BloodObjectMaskRendererFeature : ScriptableRendererFeature
 			UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
 			UniversalLightData lightData = frameData.Get<UniversalLightData>();
 
-			FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.all, layerMask);
+			SortingCriteria sortingCriteria = opaque ? cameraData.defaultOpaqueSortFlags : SortingCriteria.CommonTransparent;
+			FilteringSettings filteringSettings = new FilteringSettings(renderQueueRange, layerMask);
 			DrawingSettings drawingSettings = RenderingUtils.CreateDrawingSettings(
 				shaderTagIds,
 				renderingData,
 				cameraData,
 				lightData,
-				cameraData.defaultOpaqueSortFlags);
+				sortingCriteria);
 
-			drawingSettings.overrideMaterial = material;
+			drawingSettings.overrideMaterial = null;
 			drawingSettings.overrideMaterialPassIndex = 0;
+			drawingSettings.overrideShader = maskShader;
+			drawingSettings.overrideShaderPassIndex = 0;
 			drawingSettings.perObjectData = PerObjectData.None;
 
 			RendererListParams rendererListParams = new RendererListParams(renderingData.cullResults, drawingSettings, filteringSettings);
 			return renderGraph.CreateRendererList(rendererListParams);
+		}
+
+		private static void UseRendererList(IRasterRenderGraphBuilder builder, RendererListHandle rendererList)
+		{
+			if (rendererList.IsValid())
+			{
+				builder.UseRendererList(rendererList);
+			}
+		}
+
+		private static void DrawRendererList(RasterGraphContext context, RendererListHandle rendererList, Color maskColor)
+		{
+			if (!rendererList.IsValid())
+			{
+				return;
+			}
+
+			context.cmd.SetGlobalColor(MaskWriteColorId, maskColor);
+			context.cmd.DrawRendererList(rendererList);
 		}
 	}
 }
