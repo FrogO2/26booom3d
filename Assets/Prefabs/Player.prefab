@@ -310,7 +310,7 @@ MonoBehaviour:
   visibleDepthBias: 0.05
   projectionMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 4294967295
   maxRetainedSprays: 16
   refreshLatestProjectorEveryFrame: 0
   bloodColor: {r: 1, g: 0, b: 0, a: 0.9490196}

@@ -25,6 +25,9 @@ public static class FrozenProjectorManager
 	private static readonly List<AsyncHDRequest> PendingHDRequests = new List<AsyncHDRequest>();
 	private static readonly List<PendingCapture> PendingCaptures = new List<PendingCapture>();
 
+	public static bool HasPendingAsyncWork => PendingCaptures.Count > 0 || PendingHDRequests.Count > 0;
+	public static int PendingAsyncWorkCount => PendingCaptures.Count + PendingHDRequests.Count;
+
 	public static void SetMaxRetainedProjectors(int maxProjectors)
 	{
 		maxRetainedProjectors = Mathf.Clamp(maxProjectors, 1, ShaderMaxProjectors);
