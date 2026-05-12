@@ -1056,11 +1056,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 432984334}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!20 &697501170 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 5827110942582263581, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
-  m_PrefabInstance: {fileID: 8578802698748131264}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &745515412
 GameObject:
   m_ObjectHideFlags: 0
@@ -2653,8 +2648,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2117203986}
-  - component: {fileID: 2117203988}
-  - component: {fileID: 2117203987}
+  - component: {fileID: 2117203984}
   m_Layer: 0
   m_Name: Script Manager
   m_TagString: Untagged
@@ -2662,6 +2656,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2117203984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2117203983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4f6e3c03d3a4c0e9a2f1b4d6e7f8a91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaTutorialSceneController
+  knifeEnemyPrefab: {fileID: 870035784031180986, guid: 5e862db241dd7a945a7dd7b2bc1ba52b, type: 3}
+  gunEnemyPrefab: {fileID: 7685868541583183087, guid: 8367eee736864b845a20ca2723bdd9b7, type: 3}
+  promptDuration: 3
+  counterDuration: 3
+  courseOrigin: {x: 120, y: 0, z: 0}
+  fakeKillRange: 10
+  fakeKillAngle: 22
 --- !u!4 &2117203986
 Transform:
   m_ObjectHideFlags: 0
@@ -2677,60 +2690,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2117203987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2117203983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea30ae1ec4d05d74c9be4c2b59286916, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EffectManager
-  postProcessMaterial: {fileID: 2100000, guid: f4e26b5cfcba1fc4f8fcce2c1405d53e, type: 2}
-  killDuration: 0.35
-  killCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  sprintTransitionSpeed: 5
-  mainCamera: {fileID: 697501170}
-  normalFOV: 60
-  dashFOV: 75
---- !u!114 &2117203988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2117203983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e727af2eca1ba6246afa57b842935450, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TestEffectsSpawner
 --- !u!1 &2142857767
 GameObject:
   m_ObjectHideFlags: 0
@@ -2938,20 +2897,12 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5870186238456741650, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
-      propertyPath: edgeFeather
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5870186238456741650, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
       propertyPath: bloodColor.a
       value: 0.83137256
       objectReference: {fileID: 0}
     - target: {fileID: 5870186238456741650, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
-      propertyPath: visibleDepthBias
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5870186238456741650, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
       propertyPath: captureResolution
-      value: 32
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 5870186238456741650, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
       propertyPath: enableAsyncHighRes
