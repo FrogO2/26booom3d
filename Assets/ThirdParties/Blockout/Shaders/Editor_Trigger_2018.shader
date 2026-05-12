@@ -9,7 +9,6 @@ _Emissive_Brightness("Emissive_Brightness", Float) = 1
 _Color_1("Color_1", Color) = (0.345098,0.3686275,0.627451,1)
 _Extra_Lines("Extra_Lines", Float) = 0.5
 _Texture0("Texture 0", 2D) = "white" {}
- Tags { "LightMode" = "UniversalForwardOnly" }
 }
 
 SubShader
@@ -31,196 +30,197 @@ HLSLPROGRAM
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
 CBUFFER_START(UnityPerMaterial)
-float  _Emissive_Brightness;
+float _Emissive_Brightness;
 float4 _Color_1;
 float4 _Texture0_ST;
-float  _Extra_Lines;
-float  _Depth_Blend;
+float _Extra_Lines;
+float _Depth_Blend;
 CBUFFER_END
 
-TEXTURE2D(_Texture0); SAMPLER(sampler_Texture0);
+TEXTURE2D(_Texture0);
+SAMPLER(sampler_Texture0);
 
 struct Attributes
 {
 float4 positionOS : POSITION;
-float3 normalOS   : NORMAL;
+float3 normalOS : NORMAL;
 };
 
 struct Varyings
 {
 float4 positionCS : SV_POSITION;
-float3 normalWS   : TEXCOORD0;
+float3 normalWS : TEXCOORD0;
 float3 positionWS : TEXCOORD1;
-float4 screenPos  : TEXCOORD2;
+float4 screenPos : TEXCOORD2;
 };
 
-Varyings Vert(Attributes i)
+Varyings Vert(Attributes input)
 {
-Varyings o;
-VertexPositionInputs pos = GetVertexPositionInputs(i.positionOS.xyz);
-o.positionCS = pos.positionCS;
-o.positionWS = pos.positionWS;
-o.normalWS   = TransformObjectToWorldNormal(i.normalOS);
-o.screenPos  = ComputeScreenPos(o.positionCS);
-return o;
+Varyings output;
+VertexPositionInputs position = GetVertexPositionInputs(input.positionOS.xyz);
+output.positionCS = position.positionCS;
+output.positionWS = position.positionWS;
+output.normalWS = TransformObjectToWorldNormal(input.normalOS);
+output.screenPos = ComputeScreenPos(output.positionCS);
+return output;
 }
 
-// Blend: screen (soft light)
-float BlendScreen(float a, float b) { return 1.0 - (1.0 - a) * (1.0 - b); }
-
-half4 Frag(Varyings i) : SV_Target
+float BlendScreen(float left, float right)
 {
-float3 nWS   = normalize(i.normalWS);
-float3 vDir  = normalize(GetWorldSpaceViewDir(i.positionWS));
-float  fr    = 0.0 + 0.9 * pow(1.0 - saturate(dot(nWS, vDir)), 2.0);
-float  lerpFr = lerp(0.1, 0.4, fr);
+return 1.0 - (1.0 - left) * (1.0 - right);
+}
 
-float t = _Time.y * 0.8;
+half4 Frag(Varyings input) : SV_Target
+{
+float3 normalWS = normalize(input.normalWS);
+float3 viewDir = normalize(GetWorldSpaceViewDir(input.positionWS));
+float fresnel = 0.9 * pow(1.0 - saturate(dot(normalWS, viewDir)), 2.0);
+float fresnelLerp = lerp(0.1, 0.4, fresnel);
+float timeValue = _Time.y * 0.8;
 
-// X-face lines
-float4 appendX  = float4(i.positionWS.y, i.positionWS.z, 0, 0);
-float  texBaseX  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, appendX.xy).r;
-float  texBlueX  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, appendX.xy).b;
-float2 panX1 = appendX.xy * 0.5 + t * float2(-0.1, 0);
-float2 panX2 = appendX.xy + t * float2(0.1, 0);
-float2 panX3 = appendX.xy * 0.25 + t * float2(0, -0.1);
-float2 panX4 = appendX.xy * 0.75 + t * float2(0, 0.1);
-float  bX1  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panX1).g;
-float  bX2  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panX2).g;
-float  bX3  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panX3).g;
-float  bX4  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panX4).g;
-float  blendXH = saturate(round(0.5 * (bX1 + bX2)));
-float  blendXV = saturate(round(0.5 * (bX3 + bX4)));
-float  animX   = saturate(BlendScreen(blendXH, blendXV));
-float  maskX   = clamp(texBaseX + texBlueX * _Extra_Lines + animX, 0, 1);
+float2 appendX = input.positionWS.yz;
+float texBaseX = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, appendX).r;
+float texBlueX = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, appendX).b;
+float2 panX1 = appendX * 0.5 + timeValue * float2(-0.1, 0.0);
+float2 panX2 = appendX + timeValue * float2(0.1, 0.0);
+float2 panX3 = appendX * 0.25 + timeValue * float2(0.0, -0.1);
+float2 panX4 = appendX * 0.75 + timeValue * float2(0.0, 0.1);
+float blendXH = saturate(round(0.5 * (SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panX1).g + SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panX2).g)));
+float blendXV = saturate(round(0.5 * (SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panX3).g + SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panX4).g)));
+float animX = saturate(BlendScreen(blendXH, blendXV));
+float maskX = clamp(texBaseX + texBlueX * _Extra_Lines + animX, 0.0, 1.0);
 
-// Y-face lines
-float4 appendY  = float4(i.positionWS.x, i.positionWS.z, 0, 0);
-float2 appendYo = appendY.xy + float2(0.5, 0);
-float  texBaseY  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, appendYo).r;
-float  texBlueY  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, appendYo).b;
-float2 panY1 = appendY.xy * 0.5 + t * float2(-0.1, 0);
-float2 panY2 = appendY.xy + t * float2(0.1, 0);
-float2 panY3 = appendY.xy * 0.25 + t * float2(0, -0.1);
-float2 panY4 = appendY.xy * 0.75 + t * float2(0, 0.1);
-float  bY1  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panY1).g;
-float  bY2  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panY2).g;
-float  bY3  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panY3).g;
-float  bY4  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panY4).g;
-float  blendYH = saturate(round(0.5 * (bY1 + bY2)));
-float  blendYV = saturate(round(0.5 * (bY3 + bY4)));
-float  animY   = 0.1 * saturate(BlendScreen(blendYH, blendYV));
-float  maskY   = clamp(texBaseY + texBlueY * _Extra_Lines + animY, 0, 1);
+float2 appendY = input.positionWS.xz;
+float2 appendYo = appendY + float2(0.5, 0.0);
+float texBaseY = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, appendYo).r;
+float texBlueY = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, appendYo).b;
+float2 panY1 = appendY * 0.5 + timeValue * float2(-0.1, 0.0);
+float2 panY2 = appendY + timeValue * float2(0.1, 0.0);
+float2 panY3 = appendY * 0.25 + timeValue * float2(0.0, -0.1);
+float2 panY4 = appendY * 0.75 + timeValue * float2(0.0, 0.1);
+float blendYH = saturate(round(0.5 * (SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panY1).g + SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panY2).g)));
+float blendYV = saturate(round(0.5 * (SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panY3).g + SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panY4).g)));
+float animY = 0.1 * saturate(BlendScreen(blendYH, blendYV));
+float maskY = clamp(texBaseY + texBlueY * _Extra_Lines + animY, 0.0, 1.0);
 
-// Z-face lines
-float4 appendZ  = float4(i.positionWS.x, i.positionWS.y, 0, 0);
-float2 appendZo = (float4(0.5, appendZ.xy, 0)).yz;
-float  texBaseZ  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, appendZo).r;
-float  texBlueZ  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, appendZo).b;
-float2 panZ1 = appendZ.xy * 0.5 + t * float2(-0.1, 0);
-float2 panZ2 = appendZ.xy + t * float2(0.1, 0);
-float2 panZ3 = appendZ.xy * 0.25 + t * float2(0, -0.1);
-float2 panZ4 = appendZ.xy * 0.75 + t * float2(0, 0.1);
-float  bZ1  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panZ1).g;
-float  bZ2  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panZ2).g;
-float  bZ3  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panZ3).g;
-float  bZ4  = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panZ4).g;
-float  blendZH = saturate(round(0.5 * (bZ1 + bZ2)));
-float  blendZV = saturate(round(0.5 * (bZ3 + bZ4)));
-float  animZ   = saturate(BlendScreen(blendZH, blendZV));
-float  maskZ   = clamp(texBaseZ + texBlueZ * _Extra_Lines + animZ, 0, 1);
+float2 appendZ = input.positionWS.xy;
+float2 appendZo = float2(0.5, appendZ.y);
+float texBaseZ = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, appendZo).r;
+float texBlueZ = SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, appendZo).b;
+float2 panZ1 = appendZ * 0.5 + timeValue * float2(-0.1, 0.0);
+float2 panZ2 = appendZ + timeValue * float2(0.1, 0.0);
+float2 panZ3 = appendZ * 0.25 + timeValue * float2(0.0, -0.1);
+float2 panZ4 = appendZ * 0.75 + timeValue * float2(0.0, 0.1);
+float blendZH = saturate(round(0.5 * (SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panZ1).g + SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panZ2).g)));
+float blendZV = saturate(round(0.5 * (SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panZ3).g + SAMPLE_TEXTURE2D(_Texture0, sampler_Texture0, panZ4).g)));
+float animZ = saturate(BlendScreen(blendZH, blendZV));
+float maskZ = clamp(texBaseZ + texBlueZ * _Extra_Lines + animZ, 0.0, 1.0);
 
-// Combine faces by world normal weight
-float3 nAbs  = pow(abs(nWS), 3);
-float  total = nAbs.x + nAbs.y + nAbs.z + 0.0001;
-float  mask  = (nAbs.x * maskX + nAbs.y * maskY + nAbs.z * maskZ) / total;
+float3 absNormal = pow(abs(normalWS), 3.0);
+float totalWeight = absNormal.x + absNormal.y + absNormal.z + 0.0001;
+float mask = (absNormal.x * maskX + absNormal.y * maskY + absNormal.z * maskZ) / totalWeight;
 
-// Depth blend
-float2 screenUV   = i.screenPos.xy / i.screenPos.w;
- Pass
- {
- Name "DepthNormalsOnly"
- Tags { "LightMode" = "DepthNormalsOnly" }
- ZWrite On
- Cull Back
+float2 screenUV = input.screenPos.xy / input.screenPos.w;
+float sceneDepth = LinearEyeDepth(SampleSceneDepth(screenUV), _ZBufferParams);
+float surfaceDepth = input.screenPos.w;
+float depthDiff = abs(sceneDepth - surfaceDepth) / _Depth_Blend;
 
- HLSLPROGRAM
- #pragma vertex DepthNormalsVert
- #pragma fragment DepthNormalsFrag
- #pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
- #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
- #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
+half3 emission = _Emissive_Brightness * _Color_1.rgb * fresnelLerp * mask * saturate(depthDiff);
+return half4(emission, 1.0);
+}
+ENDHLSL
+}
 
- struct DepthNormalsAttributes
- {
- float4 positionOS : POSITION;
- float3 normalOS   : NORMAL;
- };
+Pass
+{
+Name "DepthNormalsOnly"
+Tags { "LightMode" = "DepthNormalsOnly" }
+ZWrite On
+Cull Back
 
- struct DepthNormalsVaryings
- {
- float4 positionCS : SV_POSITION;
- float3 normalWS   : TEXCOORD0;
- };
+HLSLPROGRAM
+#pragma vertex DepthNormalsVert
+#pragma fragment DepthNormalsFrag
+#pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
 
- DepthNormalsVaryings DepthNormalsVert(DepthNormalsAttributes i)
- {
- DepthNormalsVaryings o;
- o.positionCS = TransformObjectToHClip(i.positionOS.xyz);
- o.normalWS   = TransformObjectToWorldNormal(i.normalOS);
- return o;
- }
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
 
- void DepthNormalsFrag(
- DepthNormalsVaryings i,
- out half4 outNormalWS : SV_Target0
- #ifdef _WRITE_RENDERING_LAYERS
- , out uint outRenderingLayers : SV_Target1
- #endif
- )
- {
- float3 normalWS = NormalizeNormalPerPixel(i.normalWS);
- #if defined(_GBUFFER_NORMALS_OCT)
- float2 octNormalWS = PackNormalOctQuadEncode(normalWS);
- float2 remappedOctNormalWS = saturate(octNormalWS * 0.5 + 0.5);
- half3 packedNormalWS = half3(PackFloat2To888(remappedOctNormalWS));
- outNormalWS = half4(packedNormalWS, 0.0);
- #else
- outNormalWS = half4(normalWS, 0.0);
- #endif
- #ifdef _WRITE_RENDERING_LAYERS
- outRenderingLayers = EncodeMeshRenderingLayer();
- #endif
- }
- ENDHLSL
- }
+struct DepthNormalsAttributes
+{
+float4 positionOS : POSITION;
+float3 normalOS : NORMAL;
+};
 
- Pass
- {
- Name "DepthOnly"
- Tags { "LightMode" = "DepthOnly" }
- ZWrite On
- ColorMask 0
- Cull Back
+struct DepthNormalsVaryings
+{
+float4 positionCS : SV_POSITION;
+float3 normalWS : TEXCOORD0;
+};
 
- HLSLPROGRAM
- #pragma vertex DepthVert
- #pragma fragment DepthFrag
- #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
- struct DepthAttribs { float4 positionOS : POSITION; };
- float4 DepthVert(DepthAttribs i) : SV_POSITION { return TransformObjectToHClip(i.positionOS.xyz); }
- half4 DepthFrag() : SV_Target { return 0; }
- ENDHLSL
- }
-float  sceneDepth = LinearEyeDepth(SampleSceneDepth(screenUV), _ZBufferParams);
-float  surfDepth  = i.screenPos.w;
-float  depthDiff  = abs(sceneDepth - surfDepth) / _Depth_Blend;
+DepthNormalsVaryings DepthNormalsVert(DepthNormalsAttributes input)
+{
+DepthNormalsVaryings output;
+output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+output.normalWS = TransformObjectToWorldNormal(input.normalOS);
+return output;
+}
 
-half3  emit  = _Emissive_Brightness * _Color_1.rgb * lerpFr * mask * saturate(depthDiff);
-return half4(emit, 1);
+void DepthNormalsFrag(
+DepthNormalsVaryings input,
+out half4 outNormalWS : SV_Target0
+#ifdef _WRITE_RENDERING_LAYERS
+, out uint outRenderingLayers : SV_Target1
+#endif
+)
+{
+float3 normalWS = NormalizeNormalPerPixel(input.normalWS);
+#if defined(_GBUFFER_NORMALS_OCT)
+float2 octNormalWS = PackNormalOctQuadEncode(normalWS);
+float2 remappedOctNormalWS = saturate(octNormalWS * 0.5 + 0.5);
+half3 packedNormalWS = half3(PackFloat2To888(remappedOctNormalWS));
+outNormalWS = half4(packedNormalWS, 0.0);
+#else
+outNormalWS = half4(normalWS, 0.0);
+#endif
+#ifdef _WRITE_RENDERING_LAYERS
+outRenderingLayers = EncodeMeshRenderingLayer();
+#endif
+}
+ENDHLSL
+}
+
+Pass
+{
+Name "DepthOnly"
+Tags { "LightMode" = "DepthOnly" }
+ZWrite On
+ColorMask 0
+Cull Back
+
+HLSLPROGRAM
+#pragma vertex DepthVert
+#pragma fragment DepthFrag
+
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+struct DepthAttribs
+{
+float4 positionOS : POSITION;
+};
+
+float4 DepthVert(DepthAttribs input) : SV_POSITION
+{
+return TransformObjectToHClip(input.positionOS.xyz);
+}
+
+half4 DepthFrag() : SV_Target
+{
+return 0;
 }
 ENDHLSL
 }
 }
+
 FallBack "Universal Render Pipeline/Lit"
 }
