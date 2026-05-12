@@ -988,7 +988,7 @@ MonoBehaviour:
   inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   actionMapName: Player
   attackActionName: Attack
-  projectionDistance: 3000
+  projectionDistance: 5000
   edgeFeather: 0.12
   hiddenColor: {r: 1, g: 1, b: 1, a: 1}
   captureResolution: 512
@@ -1049,7 +1049,6 @@ MonoBehaviour:
   slideDuration: 0.65
   slideCooldown: 0.25
   wallRunSpeed: 9.5
-  wallRunDuration: 1
   wallRunGravity: 6
   wallCheckDistance: 0.9
   wallCheckHeight: 1.1

@@ -9952,7 +9952,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 1890141779}
+  m_Mesh: {fileID: 226432946}
 --- !u!33 &594575353
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -41743,6 +41743,62 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4474712263105832, guid: 3315ee48ccc2bce4fa73c4b39288def4, type: 3}
   m_PrefabInstance: {fileID: 496059268}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &882489140 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7084690824742996561, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
+  m_PrefabInstance: {fileID: 8578802698748131264}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &882489145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882489140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea30ae1ec4d05d74c9be4c2b59286916, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectManager
+  postProcessMaterial: {fileID: 2100000, guid: f4e26b5cfcba1fc4f8fcce2c1405d53e, type: 2}
+  killDuration: 0.35
+  killCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  sprintTransitionSpeed: 5
+--- !u!114 &882489146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882489140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e727af2eca1ba6246afa57b842935450, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TestEffectsSpawner
 --- !u!1001 &904857073
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54046,19 +54102,35 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5870186238456741650, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
       propertyPath: bloodColor.a
-      value: 0.83137256
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5870186238456741650, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
+      propertyPath: hiddenColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5870186238456741650, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
+      propertyPath: hiddenColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5870186238456741650, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
+      propertyPath: hiddenColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5870186238456741650, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
+      propertyPath: enableAsyncHighRes
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6301509035296075085, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 487.7
+      value: 478.62
       objectReference: {fileID: 0}
     - target: {fileID: 6301509035296075085, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -107.7
+      value: -105.31
       objectReference: {fileID: 0}
     - target: {fileID: 6301509035296075085, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -241.4
+      value: -244.39
       objectReference: {fileID: 0}
     - target: {fileID: 6301509035296075085, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -54095,7 +54167,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7084690824742996561, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 882489145}
+    - targetCorrespondingSourceObject: {fileID: 7084690824742996561, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 882489146}
   m_SourcePrefab: {fileID: 100100000, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
