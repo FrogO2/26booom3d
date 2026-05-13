@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f05a2636126bb043b29c885698383ed, type: 3}
   m_Name: BloodRevealRendererFeature
   m_EditorClassIdentifier: Assembly-CSharp::BloodRevealRendererFeature
-  m_Active: 1
+  m_Active: 0
   renderPassEvent: 500
   revealShader: {fileID: 4800000, guid: 143ccfbfc60de804683ecd18b04186df, type: 3}
 --- !u!114 &-3330109864168671474

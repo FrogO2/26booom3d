@@ -32,6 +32,8 @@ public class KnifePawnController : MonoBehaviour
 
 	[Header("Chase")]
 	[SerializeField] float attackDistance = 1.4f;
+	[SerializeField, Min(0f)] float chaseStopDistance = 1.4f;
+	[SerializeField] bool slowDownBeforeStopping = true;
 	[SerializeField] float destinationRefreshInterval = 0.15f;
 
 	[Header("Attack")]
@@ -62,8 +64,18 @@ public class KnifePawnController : MonoBehaviour
 		if (eyePoint == null)
 			eyePoint = transform;
 
-		agent.stoppingDistance = Mathf.Max(0f, attackDistance);
+		ApplyChaseSettings();
 		StopMoving();
+	}
+
+	void OnValidate()
+	{
+		if (agent == null)
+		{
+			agent = GetComponent<NavMeshAgent>();
+		}
+
+		ApplyChaseSettings();
 	}
 
 	void Update()
@@ -209,6 +221,17 @@ public class KnifePawnController : MonoBehaviour
 
 		if (agent.hasPath)
 			agent.ResetPath();
+	}
+
+	void ApplyChaseSettings()
+	{
+		if (agent == null)
+		{
+			return;
+		}
+
+		agent.stoppingDistance = Mathf.Max(0f, chaseStopDistance);
+		agent.autoBraking = slowDownBeforeStopping;
 	}
 
 	public void TakeDamage()
