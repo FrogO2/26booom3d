@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 55d21989553a04b45bf27a3a8905417f
+timeCreated: 1431957352
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/3DModels/Props/bullets/materials/lambert1.mat
+  uploadId: 705020

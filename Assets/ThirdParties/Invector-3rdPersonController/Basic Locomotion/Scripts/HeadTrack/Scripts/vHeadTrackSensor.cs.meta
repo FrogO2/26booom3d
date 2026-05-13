@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 6f8827d96877cdc4bb6f1b8126c504de
+timeCreated: 1472314528
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Scripts/HeadTrack/Scripts/vHeadTrackSensor.cs
+  uploadId: 705020

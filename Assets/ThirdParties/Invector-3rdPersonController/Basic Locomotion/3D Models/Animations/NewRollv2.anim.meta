@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4f40922fa4f66bc4fbc281d0cd575187
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/3D Models/Animations/NewRollv2.anim
+  uploadId: 705020

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cbd1db45c75e5b948a5befe9ecb80421
+timeCreated: 1484698048
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Animator/Invector@BasicLocomotion.controller
+  uploadId: 705020

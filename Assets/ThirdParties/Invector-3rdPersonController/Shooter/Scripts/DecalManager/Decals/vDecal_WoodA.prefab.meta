@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 57dda1262bff1c541a37c7eb3df8ff68
+timeCreated: 1481755605
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/DecalManager/Decals/vDecal_WoodA.prefab
+  uploadId: 705020

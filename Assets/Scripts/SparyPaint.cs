@@ -33,24 +33,11 @@ public class SprayPaint : MonoBehaviour
 	[SerializeField, Min(1), Tooltip("每帧渲染的扫描行数。越小则每帧 GPU 开销越低，但 HD 数据就绪所需帧数越多。")]
 	private int hdCaptureRowsPerFrame = 64;
 
-	[Header("Render Time Assist")]
-	[SerializeField] private bool slowTimeWhileProjectorRendering = true;
-	[SerializeField, Range(0f, 1f)] private float renderPendingTimeScale = 0.08f;
-	[SerializeField, Min(0f)] private float initialHitStopDuration = 0.04f;
-	[SerializeField, Min(0.1f)] private float timeScaleRestoreSpeed = 6f;
-
 	private InputAction attackAction;
 	private int latestProjectorId = -1;
-	private float originalTimeScale = 1f;
-	private float originalFixedDeltaTime;
-	private float hitStopTimer;
-	private bool waitingForRenderCompletion;
-	private bool isManagingTimeScale;
 
 	private void Awake()
 	{
-		originalFixedDeltaTime = Time.fixedDeltaTime;
-
 		if (targetCamera == null)
 		{
 			targetCamera = Camera.main;
@@ -69,20 +56,18 @@ public class SprayPaint : MonoBehaviour
 	private void OnDisable()
 	{
 		attackAction?.Disable();
-		RestoreManagedTimeScaleImmediate();
 	}
 
 	private void Update()
 	{
 		FrozenProjectorManager.Tick(hdCaptureRowsPerFrame);
-		UpdateRenderTimeAssist();
 
 		if (targetCamera == null)
 		{
 			return;
 		}
 
-		if (WasAttackPressedThisFrame())
+		if (attackAction != null && attackAction.WasPressedThisFrame())
 		{
 			TriggerSpray();
 			return;
@@ -109,26 +94,6 @@ public class SprayPaint : MonoBehaviour
 		attackAction = actionMap.FindAction(attackActionName, true);
 	}
 
-	private bool WasAttackPressedThisFrame()
-	{
-		if (attackAction != null && attackAction.WasPressedThisFrame())
-		{
-			return true;
-		}
-
-		if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
-		{
-			return true;
-		}
-
-		if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
-		{
-			return true;
-		}
-
-		return Gamepad.current != null && Gamepad.current.buttonWest.wasPressedThisFrame;
-	}
-
 	private void TriggerSpray()
 	{
 		FrozenProjectorManager.SetMaxRetainedProjectors(maxRetainedSprays);
@@ -148,94 +113,7 @@ public class SprayPaint : MonoBehaviour
 		if (enableAsyncHighRes && depthCaptureShader != null)
 		{
 			FrozenProjectorManager.ScheduleAsyncHDCapture(projectorId, asyncHighResResolution, projectionMask, depthCaptureShader);
-
-			if (slowTimeWhileProjectorRendering)
-			{
-				waitingForRenderCompletion = true;
-				hitStopTimer = Mathf.Max(hitStopTimer, initialHitStopDuration);
-				ApplyManagedTimeScale(initialHitStopDuration > 0f ? 0f : renderPendingTimeScale);
-			}
 		}
-	}
-
-	private void UpdateRenderTimeAssist()
-	{
-		if (!slowTimeWhileProjectorRendering)
-		{
-			waitingForRenderCompletion = false;
-			hitStopTimer = 0f;
-			RestoreManagedTimeScaleImmediate();
-			return;
-		}
-
-		if (!waitingForRenderCompletion && !isManagingTimeScale)
-		{
-			return;
-		}
-
-		if (hitStopTimer > 0f)
-		{
-			hitStopTimer -= Time.unscaledDeltaTime;
-			ApplyManagedTimeScale(0f);
-			return;
-		}
-
-		if (waitingForRenderCompletion && FrozenProjectorManager.HasPendingAsyncWork)
-		{
-			ApplyManagedTimeScale(renderPendingTimeScale);
-			return;
-		}
-
-		waitingForRenderCompletion = false;
-		RestoreManagedTimeScaleStep();
-	}
-
-	private void ApplyManagedTimeScale(float targetTimeScale)
-	{
-		float clampedTimeScale = Mathf.Clamp01(targetTimeScale);
-		if (!isManagingTimeScale)
-		{
-			originalTimeScale = Time.timeScale;
-			originalFixedDeltaTime = Time.fixedDeltaTime;
-			isManagingTimeScale = true;
-		}
-
-		Time.timeScale = clampedTimeScale;
-		float scaleRatio = originalTimeScale > 0.0001f ? clampedTimeScale / originalTimeScale : clampedTimeScale;
-		Time.fixedDeltaTime = clampedTimeScale > 0f
-			? Mathf.Max(0.0001f, originalFixedDeltaTime * scaleRatio)
-			: 0.0001f;
-	}
-
-	private void RestoreManagedTimeScaleStep()
-	{
-		if (!isManagingTimeScale)
-		{
-			return;
-		}
-
-		float restoredTimeScale = Mathf.MoveTowards(Time.timeScale, originalTimeScale, timeScaleRestoreSpeed * Time.unscaledDeltaTime);
-		Time.timeScale = restoredTimeScale;
-
-		float restoredFixedDeltaTime = Mathf.MoveTowards(Time.fixedDeltaTime, originalFixedDeltaTime, timeScaleRestoreSpeed * originalFixedDeltaTime * Time.unscaledDeltaTime);
-		Time.fixedDeltaTime = restoredFixedDeltaTime;
-
-		if (Mathf.Approximately(restoredTimeScale, originalTimeScale) && Mathf.Approximately(restoredFixedDeltaTime, originalFixedDeltaTime))
-		{
-			RestoreManagedTimeScaleImmediate();
-		}
-	}
-
-	private void RestoreManagedTimeScaleImmediate()
-	{
-		if (!isManagingTimeScale)
-		{
-			return;
-		}
-
-		Time.timeScale = originalTimeScale;
-		Time.fixedDeltaTime = originalFixedDeltaTime;
-		isManagingTimeScale = false;
 	}
 
 	public void ClearAllSpray()
@@ -255,9 +133,6 @@ public class SprayPaint : MonoBehaviour
 		maxRetainedSprays = Mathf.Max(1, maxRetainedSprays);
 		asyncHighResResolution = Mathf.Max(16, asyncHighResResolution);
 		hdCaptureRowsPerFrame = Mathf.Max(1, hdCaptureRowsPerFrame);
-		renderPendingTimeScale = Mathf.Clamp01(renderPendingTimeScale);
-		initialHitStopDuration = Mathf.Max(0f, initialHitStopDuration);
-		timeScaleRestoreSpeed = Mathf.Max(0.1f, timeScaleRestoreSpeed);
 	}
 
 	private Texture ResolveProjectionTexture()

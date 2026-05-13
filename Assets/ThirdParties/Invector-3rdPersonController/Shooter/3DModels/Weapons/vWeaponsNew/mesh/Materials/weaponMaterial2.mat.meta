@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 738736f6ade870648957ea31fd538a5e
+timeCreated: 1544531212
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/3DModels/Weapons/vWeaponsNew/mesh/Materials/weaponMaterial2.mat
+  uploadId: 705020

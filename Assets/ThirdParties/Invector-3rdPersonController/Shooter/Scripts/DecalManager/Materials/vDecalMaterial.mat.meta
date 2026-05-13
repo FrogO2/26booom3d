@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 68c902126d1e5bb48973f698c07ff293
+timeCreated: 1481753516
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/DecalManager/Materials/vDecalMaterial.mat
+  uploadId: 705020

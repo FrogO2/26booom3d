@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 23c321ce016dd7d49949264a20063c0d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/ItemManager/Scripts/vToolbarButton.cs
+  uploadId: 705020

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: eb61a71d8f68e2c4ea71e5f66c4c2db0
+timeCreated: 1490915601
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/ThrowSystem/Scripts/vThrowManagerInventory.cs
+  uploadId: 705020

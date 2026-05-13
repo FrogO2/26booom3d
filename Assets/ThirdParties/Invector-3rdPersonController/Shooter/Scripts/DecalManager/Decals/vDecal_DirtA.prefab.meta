@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7dd479543444c5144b3c1966b17fca06
+timeCreated: 1481755600
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/DecalManager/Decals/vDecal_DirtA.prefab
+  uploadId: 705020

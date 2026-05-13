@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 990f12e11c0c307478a50283c620cb39
+timeCreated: 1487894561
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/3DModels/Weapons/vWeaponsNew/material/orange.mat
+  uploadId: 705020

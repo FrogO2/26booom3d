@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 76ee9eee966307a46a2e9392c05955fc
+timeCreated: 1487894974
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/3DModels/Weapons/vWeaponsNew/mesh/assaultRifle01.asset
+  uploadId: 705020

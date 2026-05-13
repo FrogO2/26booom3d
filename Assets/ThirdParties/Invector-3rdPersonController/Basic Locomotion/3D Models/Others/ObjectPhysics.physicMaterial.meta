@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c77abc477d4de2a4197e1f08cebc364e
+timeCreated: 1456086976
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/3D Models/Others/ObjectPhysics.physicMaterial
+  uploadId: 705020

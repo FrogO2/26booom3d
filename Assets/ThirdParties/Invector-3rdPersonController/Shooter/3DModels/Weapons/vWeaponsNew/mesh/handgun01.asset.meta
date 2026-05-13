@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7a701710b904eaa4e87a3391cabbf285
+timeCreated: 1487894906
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/3DModels/Weapons/vWeaponsNew/mesh/handgun01.asset
+  uploadId: 705020

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 00bf0dc6ae04cf040b6ba6afb034b3c6
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/Weapon/vShooterWeapon.cs
+  uploadId: 705020

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: af1c89896f5f7f6439ef1a93a23a0f3d
+timeCreated: 1458347752
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {fileID: 2800000, guid: c98dd48f519049f42a092e26c1049b5b, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Scripts/FootStep/Scripts/vAudioSurface.cs
+  uploadId: 705020

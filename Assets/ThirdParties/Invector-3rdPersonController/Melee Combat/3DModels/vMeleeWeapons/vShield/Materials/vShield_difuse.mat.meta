@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bf5874e16a20ba648b5d74ca8ba32a56
+timeCreated: 1456513206
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Melee Combat/3DModels/vMeleeWeapons/vShield/Materials/vShield_difuse.mat
+  uploadId: 705020

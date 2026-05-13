@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8b652964c1cf28a4a8e4a9136ecc2d6e
+timeCreated: 1487895576
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/3DModels/Weapons/vWeaponsNew/mesh/vShotgun.asset
+  uploadId: 705020

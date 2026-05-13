@@ -25,9 +25,6 @@ public static class FrozenProjectorManager
 	private static readonly List<AsyncHDRequest> PendingHDRequests = new List<AsyncHDRequest>();
 	private static readonly List<PendingCapture> PendingCaptures = new List<PendingCapture>();
 
-	public static bool HasPendingAsyncWork => PendingCaptures.Count > 0 || PendingHDRequests.Count > 0;
-	public static int PendingAsyncWorkCount => PendingCaptures.Count + PendingHDRequests.Count;
-
 	public static void SetMaxRetainedProjectors(int maxProjectors)
 	{
 		maxRetainedProjectors = Mathf.Clamp(maxProjectors, 1, ShaderMaxProjectors);
@@ -341,69 +338,42 @@ public static class FrozenProjectorManager
 		return false;
 	}
 
-    private static void CaptureVisibleDepth(Camera sourceCamera, LayerMask projectionMask, int captureResolution, float nearDistance, float farDistance, int depthSliceIndex)
-    {
-        EnsureDepthAtlas(captureResolution);
+	private static void CaptureVisibleDepth(Camera sourceCamera, LayerMask projectionMask, int captureResolution, float nearDistance, float farDistance, int depthSliceIndex)
+	{
+		EnsureDepthAtlas(captureResolution);
 
-        int totalPixels = captureResolution * captureResolution;
-        Color[] depthPixels = new Color[totalPixels];
-        Transform cameraTransform = sourceCamera.transform;
-        Vector3 cameraPosition = cameraTransform.position;
-        Vector3 cameraForward = cameraTransform.forward;
+		Color[] depthPixels = new Color[captureResolution * captureResolution];
+		Transform cameraTransform = sourceCamera.transform;
+		Vector3 cameraPosition = cameraTransform.position;
+		Vector3 cameraForward = cameraTransform.forward;
 
-        // 1. 分配原生多线程内存 (Allocator.TempJob 速度极快)
-        NativeArray<RaycastCommand> commands = new NativeArray<RaycastCommand>(totalPixels, Allocator.TempJob);
-        NativeArray<RaycastHit> results = new NativeArray<RaycastHit>(totalPixels, Allocator.TempJob);
+		for (int y = 0; y < captureResolution; y++)
+		{
+			float viewportY = (y + 0.5f) / captureResolution;
 
-        // 设置射线过滤参数
-        QueryParameters queryParams = new QueryParameters(projectionMask, false, QueryTriggerInteraction.Ignore, false);
+			for (int x = 0; x < captureResolution; x++)
+			{
+				float viewportX = (x + 0.5f) / captureResolution;
+				Ray ray = sourceCamera.ViewportPointToRay(new Vector3(viewportX, viewportY, 0f));
+				int pixelIndex = y * captureResolution + x;
 
-        // 2. 组装所有射线指令 (这一步在主线程，但没有任何物理计算，耗时近乎为 0)
-        for (int y = 0; y < captureResolution; y++)
-        {
-            float viewportY = (y + 0.5f) / captureResolution;
-            for (int x = 0; x < captureResolution; x++)
-            {
-                float viewportX = (x + 0.5f) / captureResolution;
-                Ray ray = sourceCamera.ViewportPointToRay(new Vector3(viewportX, viewportY, 0f));
-                int pixelIndex = y * captureResolution + x;
+				if (Physics.Raycast(ray, out RaycastHit hit, farDistance, projectionMask, QueryTriggerInteraction.Ignore))
+				{
+					float visibleProjectedDepth = Vector3.Dot(hit.point - cameraPosition, cameraForward);
+					depthPixels[pixelIndex] = new Color(visibleProjectedDepth, 0f, 0f, 1f);
+				}
+				else
+				{
+					depthPixels[pixelIndex] = Color.clear;
+				}
+			}
+		}
 
-                commands[pixelIndex] = new RaycastCommand(ray.origin, ray.direction, queryParams, farDistance);
-            }
-        }
+		projectorVisibilityAtlas.SetPixels(depthPixels, depthSliceIndex, 0);
+		projectorVisibilityAtlas.Apply(false, false);
+	}
 
-        // 3. 多线程并发执行物理计算！
-        // 参数 64 是 BatchSize，让 CPU 把任务切块分配给多核同时执行
-        Unity.Jobs.JobHandle handle = RaycastCommand.ScheduleBatch(commands, results, 64, default);
-
-        // 强制等待所有线程算完（为了保证开枪瞬间立刻出结果）
-        handle.Complete();
-
-        // 4. 收集结果写入数组
-        for (int i = 0; i < totalPixels; i++)
-        {
-            RaycastHit hit = results[i];
-            if (hit.collider != null)
-            {
-                float visibleProjectedDepth = Vector3.Dot(hit.point - cameraPosition, cameraForward);
-                depthPixels[i] = new Color(visibleProjectedDepth, 0f, 0f, 1f);
-            }
-            else
-            {
-                depthPixels[i] = Color.clear;
-            }
-        }
-
-        // 5. 释放原生内存，防止内存泄漏
-        commands.Dispose();
-        results.Dispose();
-
-        // 将计算好的颜色数组推入显存
-        projectorVisibilityAtlas.SetPixels(depthPixels, depthSliceIndex, 0);
-        projectorVisibilityAtlas.Apply(false, false);
-    }
-
-    private static void CaptureVisibleDepthPlaceholder(int captureResolution, float farDistance, int depthSliceIndex)
+	private static void CaptureVisibleDepthPlaceholder(int captureResolution, float farDistance, int depthSliceIndex)
 	{
 		EnsureDepthAtlas(captureResolution);
 

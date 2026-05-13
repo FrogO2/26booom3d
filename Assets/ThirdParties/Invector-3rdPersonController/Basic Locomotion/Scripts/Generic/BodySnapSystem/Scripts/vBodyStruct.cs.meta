@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 0a71bb1e533fbeb47923da3d71727828
+timeCreated: 1558679522
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {fileID: 2800000, guid: 4bf53de60edd82845b73148913d56195, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Scripts/Generic/BodySnapSystem/Scripts/vBodyStruct.cs
+  uploadId: 705020

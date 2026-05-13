@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: c97065fcce0140c479f08ad868d95753
+timeCreated: 1474928127
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Scripts/Generic/Utils/vPlayRandomClip.cs
+  uploadId: 705020

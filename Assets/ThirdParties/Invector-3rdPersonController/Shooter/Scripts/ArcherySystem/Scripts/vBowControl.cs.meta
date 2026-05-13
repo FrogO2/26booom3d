@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 8b9a342b41260db4a91313f7bce21a3c
+timeCreated: 1511208871
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/ArcherySystem/Scripts/vBowControl.cs
+  uploadId: 705020

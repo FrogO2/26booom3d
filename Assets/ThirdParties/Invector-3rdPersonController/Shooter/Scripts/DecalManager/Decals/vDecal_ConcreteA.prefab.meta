@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: adcc07c1b4d949244958f04e8b4afad7
+timeCreated: 1481755612
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/DecalManager/Decals/vDecal_ConcreteA.prefab
+  uploadId: 705020

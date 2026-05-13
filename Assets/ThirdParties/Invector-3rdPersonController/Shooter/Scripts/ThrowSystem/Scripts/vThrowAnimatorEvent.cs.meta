@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: ae7ca1bbf9c554a49ae313dd3cd99c21
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/ThrowSystem/Scripts/vThrowAnimatorEvent.cs
+  uploadId: 705020

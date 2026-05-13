@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: a9853b4f1e758c04d91a5db8f1b9a453
+timeCreated: 1529517732
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Scripts/CharacterController/vAnimatorStateInfo.cs
+  uploadId: 705020

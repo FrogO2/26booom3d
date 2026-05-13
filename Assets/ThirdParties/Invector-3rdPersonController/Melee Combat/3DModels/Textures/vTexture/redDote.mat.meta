@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2447387afca3a1747b476b37c7741e1e
+timeCreated: 1486002631
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Melee Combat/3DModels/Textures/vTexture/redDote.mat
+  uploadId: 705020
