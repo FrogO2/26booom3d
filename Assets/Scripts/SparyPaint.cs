@@ -38,6 +38,8 @@ public class SprayPaint : MonoBehaviour
 
 	private void Awake()
 	{
+		ExcludeProtectedLayers();
+
 		if (targetCamera == null)
 		{
 			targetCamera = Camera.main;
@@ -133,6 +135,24 @@ public class SprayPaint : MonoBehaviour
 		maxRetainedSprays = Mathf.Max(1, maxRetainedSprays);
 		asyncHighResResolution = Mathf.Max(16, asyncHighResResolution);
 		hdCaptureRowsPerFrame = Mathf.Max(1, hdCaptureRowsPerFrame);
+		ExcludeProtectedLayers();
+	}
+
+	private void ExcludeProtectedLayers()
+	{
+		projectionMask = RemoveLayerFromMask(projectionMask, "Unpaintable");
+		projectionMask = RemoveLayerFromMask(projectionMask, "Unpaintable&Unmaskable");
+	}
+
+	private static LayerMask RemoveLayerFromMask(LayerMask mask, string layerName)
+	{
+		int layer = LayerMask.NameToLayer(layerName);
+		if (layer < 0)
+		{
+			return mask;
+		}
+
+		return mask & ~(1 << layer);
 	}
 
 	private Texture ResolveProjectionTexture()
