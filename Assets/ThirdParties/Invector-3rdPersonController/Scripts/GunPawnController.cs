@@ -125,7 +125,6 @@ public class GunPawnController : MonoBehaviour
 
     void Start()
     {
-        EnsureAimAngleReference();
         TryResolvePlayer();
 
         if (weapon != null)
