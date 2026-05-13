@@ -111,6 +111,11 @@ public static class FrozenProjectorManager
 
 			foreach (Renderer r in cap.visibleRenderers)
 			{
+				if (r == null)
+				{
+					continue;
+				}
+
 				cmd.DrawRenderer(r, depthMat, 0, 0);
 			}
 

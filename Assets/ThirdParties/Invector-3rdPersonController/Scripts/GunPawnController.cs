@@ -24,6 +24,7 @@ public class GunPawnController : MonoBehaviour
     [Header("Detection")]
     [SerializeField] float detectionRange = 20f;
     [SerializeField] float fieldOfView = 150f;
+    [SerializeField] string playerTag = "Player";
 
     [Header("Shooting")]
     // Note: set weapon.isInfinityAmmo = true in the Inspector for unlimited ammo
@@ -124,6 +125,9 @@ public class GunPawnController : MonoBehaviour
 
     void Start()
     {
+        EnsureAimAngleReference();
+        TryResolvePlayer();
+
         if (weapon != null)
         {
 			ApplyWeaponRuntimeSettings();
@@ -201,6 +205,7 @@ public class GunPawnController : MonoBehaviour
     {
         if (player == null)
         {
+            TryResolvePlayer();
             playerDetected = false;
             return;
         }
@@ -214,6 +219,25 @@ public class GunPawnController : MonoBehaviour
 
         float angle = Vector3.Angle(transform.forward, toPlayer);
         playerDetected = angle <= fieldOfView * 0.5f;
+    }
+
+    void TryResolvePlayer()
+    {
+        if (player != null || string.IsNullOrWhiteSpace(playerTag))
+        {
+            return;
+        }
+
+        GameObject playerObject = GameObject.FindGameObjectWithTag(playerTag);
+        if (playerObject != null)
+        {
+            player = playerObject.transform;
+        }
+    }
+
+    public void SetPlayer(Transform target)
+    {
+        player = target;
     }
 
     void FacePlayer()

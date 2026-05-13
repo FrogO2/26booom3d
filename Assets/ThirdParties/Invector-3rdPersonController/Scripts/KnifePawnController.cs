@@ -116,6 +116,11 @@ public class KnifePawnController : MonoBehaviour
 			player = playerObject.transform;
 	}
 
+	public void SetPlayer(Transform target)
+	{
+		player = target;
+	}
+
 	bool ShouldDiscoverPlayer()
 	{
 		bool visionSatisfied = !detectByVision || CanSeePlayer();
