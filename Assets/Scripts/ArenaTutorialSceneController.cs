@@ -24,20 +24,6 @@ public class ArenaTutorialSceneController : MonoBehaviour
 	private static readonly Vector3 PlayerStartOffset = new Vector3(0f, 1.05f, 4f);
 	private static readonly Vector3 ExitArrowOffset = new Vector3(0f, 0.08f, 68f);
 
-	internal enum PromptColorMode
-	{
-		Solid,
-		AdaptiveContrast,
-		AdaptiveHueShift,
-	}
-
-	internal enum TriggerKind
-	{
-		Tutorial,
-		ArenaStart,
-		ArenaExit,
-	}
-
 	[Header("Prefabs")]
 	[SerializeField] private GameObject knifeEnemyPrefab;
 	[SerializeField] private GameObject gunEnemyPrefab;
@@ -59,17 +45,17 @@ public class ArenaTutorialSceneController : MonoBehaviour
 	[SerializeField] private Vector3 leaderboardEulerAngles = new Vector3(0f, 180f, 0f);
 
 	private readonly List<ArenaBakedEnemyTarget> arenaEnemies = new List<ArenaBakedEnemyTarget>();
-	private readonly List<Renderer> arrowRenderers = new List<Renderer>();
 
 	private Transform player;
 	private CharacterController playerController;
 	private Camera playerCamera;
 	private NavMeshSurface navMeshSurface;
+	private ArenaEncounterFlow arenaEncounterFlow;
 
 	private GameObject runtimeRoot;
 	private GameObject entryBarrier;
 	private GameObject exitBarrier;
-	private GameObject exitArrow;
+	private ArenaGuidanceArrow exitArrow;
 	private ArenaRunTimerDisplay runTimerDisplay;
 	private ArenaWallLeaderboardDisplay wallLeaderboardDisplay;
 	private SceneIntroOverlay sceneIntroOverlay;
@@ -84,15 +70,13 @@ public class ArenaTutorialSceneController : MonoBehaviour
 	private ActivePromptState activePrompt;
 	private float counterHideAt = -1f;
 	private float initialPromptAt = -1f;
-	private bool arenaStarted;
-	private bool arenaCleared;
-	private bool scoreSubmitted;
 	private bool isRetryReloadPending;
+	private bool encounterEventsBound;
 
 	private sealed class ActivePromptState
 	{
 		public string Message;
-		public PromptColorMode ColorMode;
+		public ArenaPromptColorMode ColorMode;
 		public Color SolidColor;
 		public float HideAt;
 	}
@@ -106,6 +90,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 			return;
 		}
 
+		EnsureArenaEncounterFlow();
 		sceneIntroOverlay = null;
 		EnsureSceneBuilt();
 		ResetArenaState();
@@ -131,7 +116,21 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		UpdatePromptVisuals();
 		UpdateCounterVisuals();
 		HandleFakeAttackKill();
-		AnimateExitArrow();
+	}
+
+	private void OnDestroy()
+	{
+		if (!encounterEventsBound || arenaEncounterFlow == null)
+		{
+			return;
+		}
+
+		arenaEncounterFlow.EncounterStarted -= HandleArenaEncounterStarted;
+		arenaEncounterFlow.RemainingEnemiesChanged -= HandleArenaRemainingEnemiesChanged;
+		arenaEncounterFlow.ExitRequestedBeforeStart -= HandleArenaExitRequestedBeforeStart;
+		arenaEncounterFlow.ExitRequestedWhileLocked -= HandleArenaExitRequestedWhileLocked;
+		arenaEncounterFlow.EncounterCleared -= HandleArenaEncounterCleared;
+		arenaEncounterFlow.RunCompleted -= HandleArenaRunCompleted;
 	}
 
 	private void HandleRetryInput()
@@ -169,6 +168,64 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		SceneManager.LoadScene(currentScene.name);
 	}
 
+	private void EnsureArenaEncounterFlow()
+	{
+		if (arenaEncounterFlow == null)
+		{
+			arenaEncounterFlow = GetComponent<ArenaEncounterFlow>();
+			if (arenaEncounterFlow == null)
+			{
+				arenaEncounterFlow = gameObject.AddComponent<ArenaEncounterFlow>();
+			}
+		}
+
+		arenaEncounterFlow.BindPlayer(player, playerController, playerCamera);
+
+		if (encounterEventsBound)
+		{
+			return;
+		}
+
+		arenaEncounterFlow.EncounterStarted += HandleArenaEncounterStarted;
+		arenaEncounterFlow.RemainingEnemiesChanged += HandleArenaRemainingEnemiesChanged;
+		arenaEncounterFlow.ExitRequestedBeforeStart += HandleArenaExitRequestedBeforeStart;
+		arenaEncounterFlow.ExitRequestedWhileLocked += HandleArenaExitRequestedWhileLocked;
+		arenaEncounterFlow.EncounterCleared += HandleArenaEncounterCleared;
+		arenaEncounterFlow.RunCompleted += HandleArenaRunCompleted;
+		encounterEventsBound = true;
+	}
+
+	private void HandleArenaEncounterStarted()
+	{
+		ShowPrompt("Arena active. Defeat every enemy to unlock the barriers.", promptDuration, ArenaPromptColorMode.Solid, new Color(1f, 0.55f, 0.55f));
+	}
+
+	private void HandleArenaRemainingEnemiesChanged(int remainingEnemies)
+	{
+		ShowCounter($"Enemies left: {remainingEnemies}", counterDuration);
+	}
+
+	private void HandleArenaExitRequestedBeforeStart()
+	{
+		ShowPrompt("Enter the arena before heading for the exit.", promptDuration, ArenaPromptColorMode.Solid, Color.white);
+	}
+
+	private void HandleArenaExitRequestedWhileLocked()
+	{
+		ShowPrompt("Exit locked. Defeat every enemy in the arena first.", promptDuration, ArenaPromptColorMode.AdaptiveContrast, Color.white);
+	}
+
+	private void HandleArenaEncounterCleared()
+	{
+		ShowPrompt("Arena cleared. Follow the ground arrow to leave.", promptDuration, ArenaPromptColorMode.AdaptiveHueShift, Color.white);
+	}
+
+	private void HandleArenaRunCompleted(float elapsedSeconds)
+	{
+		string timeText = elapsedSeconds > 0f ? $"\nTime: {ArenaRunTimerDisplay.FormatTime(elapsedSeconds)}" : string.Empty;
+		ShowPrompt($"Arena complete.{timeText}\nFollow the path ahead.", promptDuration, ArenaPromptColorMode.AdaptiveHueShift, Color.white);
+	}
+
 	private bool TryResolvePlayer()
 	{
 		playerController = FindFirstObjectByType<CharacterController>();
@@ -202,11 +259,25 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void EnsureSceneBuilt()
 	{
+		EnsureArenaEncounterFlow();
 		EnsureSceneIntroOverlay();
 		EnsurePromptUi();
 		EnsureGeneratedContent();
 		EnsureRunTimerDisplay();
 		EnsureLeaderboardDisplay();
+		BindArenaEncounterFlow();
+	}
+
+	private void BindArenaEncounterFlow()
+	{
+		if (arenaEncounterFlow == null)
+		{
+			return;
+		}
+
+		arenaEncounterFlow.BindPlayer(player, playerController, playerCamera);
+		arenaEncounterFlow.ConfigureSceneObjects(entryBarrier, exitBarrier, exitArrow, runTimerDisplay, wallLeaderboardDisplay, playerLeaderboardName);
+		arenaEncounterFlow.BindEnemies(arenaEnemies);
 	}
 
 	private void EnsurePromptUi()
@@ -358,22 +429,19 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		ConfigureNavMeshSurface(navMeshSurface);
 		entryBarrier = FindDescendantByName(runtimeRoot.transform, EntryBarrierObjectName)?.gameObject;
 		exitBarrier = FindDescendantByName(runtimeRoot.transform, ExitBarrierObjectName)?.gameObject;
-		exitArrow = FindDescendantByName(runtimeRoot.transform, ExitArrowObjectName)?.gameObject;
-		NormalizeExitArrowGeometry();
-		EnsureEncounterZones();
-
-		arrowRenderers.Clear();
+		Transform exitArrowTransform = FindDescendantByName(runtimeRoot.transform, ExitArrowObjectName);
+		exitArrow = exitArrowTransform != null ? exitArrowTransform.GetComponent<ArenaGuidanceArrow>() : null;
+		if (exitArrowTransform != null && exitArrow == null)
+		{
+			exitArrow = exitArrowTransform.gameObject.AddComponent<ArenaGuidanceArrow>();
+		}
 		if (exitArrow != null)
 		{
-			Renderer[] renderers = exitArrow.GetComponentsInChildren<Renderer>(true);
-			for (int i = 0; i < renderers.Length; i++)
-			{
-				if (renderers[i] != null)
-				{
-					arrowRenderers.Add(renderers[i]);
-				}
-			}
+			exitArrow.SetBasePosition(courseOrigin + ExitArrowOffset);
+			exitArrow.EnsureSceneBuilt();
 		}
+
+		EnsureEncounterZones();
 
 		EnsureArenaEnemyBindings();
 	}
@@ -388,9 +456,6 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void ResetArenaState()
 	{
-		arenaStarted = false;
-		arenaCleared = false;
-		scoreSubmitted = false;
 		counterHideAt = -1f;
 		activePrompt = null;
 
@@ -404,34 +469,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 			counterCanvasGroup.alpha = 0f;
 		}
 
-		if (entryBarrier != null)
-		{
-			entryBarrier.SetActive(false);
-		}
-
-		if (exitBarrier != null)
-		{
-			exitBarrier.SetActive(false);
-		}
-
-		if (exitArrow != null)
-		{
-			exitArrow.SetActive(false);
-			exitArrow.transform.position = courseOrigin + ExitArrowOffset;
-		}
-
-		for (int i = 0; i < arenaEnemies.Count; i++)
-		{
-			if (arenaEnemies[i] != null)
-			{
-				arenaEnemies[i].Initialize(this);
-			}
-		}
-
-		if (runTimerDisplay != null)
-		{
-			runTimerDisplay.ResetRun();
-		}
+		arenaEncounterFlow?.ResetEncounter();
 	}
 
 	private void QueueInitialPrompt()
@@ -459,7 +497,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void ShowInitialPrompt()
 	{
-		ShowPrompt("Tutorial 1/3\nMove: WASD, Jump: Space, Sprint: Shift", promptDuration, PromptColorMode.Solid, new Color(0.26f, 0.90f, 1f));
+		ShowPrompt("Tutorial 1/3\nMove: WASD, Jump: Space, Sprint: Shift", promptDuration, ArenaPromptColorMode.Solid, new Color(0.26f, 0.90f, 1f));
 	}
 
 	private void CreateRuntimeUi()
@@ -580,7 +618,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		SpawnArenaEnemy(gunEnemyPrefab, courseOrigin + new Vector3(3f, 0.1f, 61f), Quaternion.identity);
 
 		exitArrow = CreateArrow(runtimeRoot.transform, courseOrigin + ExitArrowOffset, arrowMaterial);
-		exitArrow.SetActive(false);
+		exitArrow.Hide();
 	}
 
 	private void RepositionPlayer()
@@ -612,12 +650,12 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		}
 	}
 
-	private void CreateTutorialZone(Vector3 position, Vector3 size, string message, PromptColorMode colorMode, Color solidColor)
+	private void CreateTutorialZone(Vector3 position, Vector3 size, string message, ArenaPromptColorMode colorMode, Color solidColor)
 	{
-		CreateEncounterZone(position, size, TriggerKind.Tutorial, message, colorMode, solidColor);
+		CreateEncounterZone(position, size, ArenaTriggerKind.Tutorial, message, colorMode, solidColor);
 	}
 
-	private void CreateEncounterZone(Vector3 position, Vector3 size, TriggerKind kind, string message, PromptColorMode colorMode, Color solidColor)
+	private void CreateEncounterZone(Vector3 position, Vector3 size, ArenaTriggerKind kind, string message, ArenaPromptColorMode colorMode, Color solidColor)
 	{
 		GameObject zoneObject = new GameObject(kind + " Zone");
 		zoneObject.transform.SetParent(runtimeRoot.transform, false);
@@ -628,7 +666,8 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		boxCollider.size = size;
 
 		ArenaBakedTriggerZone zone = zoneObject.AddComponent<ArenaBakedTriggerZone>();
-		zone.Initialize(this, kind, message, colorMode, solidColor);
+		zone.Initialize(kind, message, colorMode, solidColor);
+		zone.Bind(this, arenaEncounterFlow);
 	}
 
 	private GameObject SpawnArenaEnemy(GameObject prefab, Vector3 position, Quaternion rotation)
@@ -688,19 +727,19 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		{
 			enemyTarget = enemyInstance.AddComponent<ArenaBakedEnemyTarget>();
 		}
-		enemyTarget.Initialize(this);
+		enemyTarget.Initialize(arenaEncounterFlow);
 		arenaEnemies.Add(enemyTarget);
 		return enemyInstance;
 	}
 
 	private void BuildEncounterZones()
 	{
-		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 7f), new Vector3(14f, 3f, 5f), "Tutorial 1/3\nMove: WASD, Jump: Space, Sprint: Shift.", PromptColorMode.Solid, new Color(0.26f, 0.90f, 1f));
-		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 18f), new Vector3(14f, 3f, 6f), "Tutorial 2/3\nLeft Click triggers spray and a temporary kill check.", PromptColorMode.AdaptiveContrast, Color.white);
-		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 29f), new Vector3(14f, 3f, 6f), "Tutorial 3/3\nEnter the arena ahead. Defeat every enemy before leaving.", PromptColorMode.AdaptiveHueShift, Color.white);
+		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 7f), new Vector3(14f, 3f, 5f), "Tutorial 1/3\nMove: WASD, Jump: Space, Sprint: Shift.", ArenaPromptColorMode.Solid, new Color(0.26f, 0.90f, 1f));
+		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 18f), new Vector3(14f, 3f, 6f), "Tutorial 2/3\nLeft Click triggers spray and a temporary kill check.", ArenaPromptColorMode.AdaptiveContrast, Color.white);
+		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 29f), new Vector3(14f, 3f, 6f), "Tutorial 3/3\nEnter the arena ahead. Defeat every enemy before leaving.", ArenaPromptColorMode.AdaptiveHueShift, Color.white);
 
-		CreateEncounterZone(courseOrigin + new Vector3(0f, 1.5f, 37f), new Vector3(14f, 3.2f, 6f), TriggerKind.ArenaStart, null, PromptColorMode.Solid, new Color(1f, 0.4f, 0.4f));
-		CreateEncounterZone(courseOrigin + new Vector3(0f, 1.5f, 74f), new Vector3(14f, 3.2f, 6f), TriggerKind.ArenaExit, null, PromptColorMode.Solid, new Color(0.8f, 1f, 0.8f));
+		CreateEncounterZone(courseOrigin + new Vector3(0f, 1.5f, 37f), new Vector3(14f, 3.2f, 6f), ArenaTriggerKind.ArenaStart, null, ArenaPromptColorMode.Solid, new Color(1f, 0.4f, 0.4f));
+		CreateEncounterZone(courseOrigin + new Vector3(0f, 1.5f, 74f), new Vector3(14f, 3.2f, 6f), ArenaTriggerKind.ArenaExit, null, ArenaPromptColorMode.Solid, new Color(0.8f, 1f, 0.8f));
 	}
 
 	private void EnsureEncounterZones()
@@ -717,7 +756,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		{
 			if (triggerZones[i] != null)
 			{
-				triggerZones[i].Bind(this);
+				triggerZones[i].Bind(this, arenaEncounterFlow);
 			}
 		}
 	}
@@ -794,7 +833,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 				enemyTarget = enemyRoot.AddComponent<ArenaBakedEnemyTarget>();
 			}
 
-			enemyTarget.Initialize(this);
+			enemyTarget.Initialize(arenaEncounterFlow);
 			arenaEnemies.Add(enemyTarget);
 		}
 	}
@@ -816,7 +855,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		return box;
 	}
 
-	private GameObject CreateArrow(Transform parent, Vector3 position, Material material)
+	private ArenaGuidanceArrow CreateArrow(Transform parent, Vector3 position, Material material)
 	{
 		GameObject root = new GameObject("Exit Arrow");
 		root.transform.SetParent(parent, false);
@@ -824,54 +863,24 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 		GameObject shaft = CreateBox(root.transform, "Arrow Shaft", position + new Vector3(0f, 0f, -0.12f), new Vector3(0.9f, 0.12f, 3.3f), material);
 		DisableCollider(shaft);
-		RegisterArrowRenderer(shaft);
 
 		GameObject headLeft = CreateBox(root.transform, "Arrow Head Left", position + new Vector3(-0.52f, 0f, 1.34f), new Vector3(0.64f, 0.12f, 1.72f), material);
 		headLeft.transform.rotation = Quaternion.Euler(0f, 38f, 0f);
 		DisableCollider(headLeft);
-		RegisterArrowRenderer(headLeft);
 
 		GameObject headRight = CreateBox(root.transform, "Arrow Head Right", position + new Vector3(0.52f, 0f, 1.34f), new Vector3(0.64f, 0.12f, 1.72f), material);
 		headRight.transform.rotation = Quaternion.Euler(0f, -38f, 0f);
 		DisableCollider(headRight);
-		RegisterArrowRenderer(headRight);
 
-		return root;
-	}
-
-	private void NormalizeExitArrowGeometry()
-	{
-		if (exitArrow == null)
+		ArenaGuidanceArrow guidanceArrow = root.GetComponent<ArenaGuidanceArrow>();
+		if (guidanceArrow == null)
 		{
-			return;
+			guidanceArrow = root.AddComponent<ArenaGuidanceArrow>();
 		}
 
-		Transform shaft = exitArrow.transform.Find("Arrow Shaft");
-		if (shaft != null)
-		{
-			shaft.position = exitArrow.transform.position + new Vector3(0f, 0f, -0.12f);
-			shaft.rotation = Quaternion.identity;
-			shaft.localScale = new Vector3(0.9f, 0.12f, 3.3f);
-			DisableCollider(shaft.gameObject);
-		}
-
-		Transform headLeft = exitArrow.transform.Find("Arrow Head Left");
-		if (headLeft != null)
-		{
-			headLeft.position = exitArrow.transform.position + new Vector3(-0.52f, 0f, 1.34f);
-			headLeft.rotation = Quaternion.Euler(0f, 38f, 0f);
-			headLeft.localScale = new Vector3(0.64f, 0.12f, 1.72f);
-			DisableCollider(headLeft.gameObject);
-		}
-
-		Transform headRight = exitArrow.transform.Find("Arrow Head Right");
-		if (headRight != null)
-		{
-			headRight.position = exitArrow.transform.position + new Vector3(0.52f, 0f, 1.34f);
-			headRight.rotation = Quaternion.Euler(0f, -38f, 0f);
-			headRight.localScale = new Vector3(0.64f, 0.12f, 1.72f);
-			DisableCollider(headRight.gameObject);
-		}
+		guidanceArrow.SetBasePosition(position);
+		guidanceArrow.EnsureSceneBuilt();
+		return guidanceArrow;
 	}
 
 	private static void DisableCollider(GameObject gameObject)
@@ -880,15 +889,6 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		if (collider != null)
 		{
 			collider.enabled = false;
-		}
-	}
-
-	private void RegisterArrowRenderer(GameObject gameObject)
-	{
-		Renderer renderer = gameObject.GetComponent<Renderer>();
-		if (renderer != null)
-		{
-			arrowRenderers.Add(renderer);
 		}
 	}
 
@@ -942,169 +942,31 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		return material;
 	}
 
-	internal void HandleTrigger(ArenaBakedTriggerZone zone)
+	internal void HandleTutorialTrigger(ArenaBakedTriggerZone zone)
 	{
-		switch (zone.Kind)
-		{
-			case TriggerKind.Tutorial:
-				ShowPrompt(zone.Message, promptDuration, zone.ColorMode, zone.SolidColor);
-				break;
-
-			case TriggerKind.ArenaStart:
-				if (!arenaStarted)
-				{
-					arenaStarted = true;
-					entryBarrier.SetActive(true);
-					exitBarrier.SetActive(true);
-					ShowPrompt("Arena active. Defeat every enemy to unlock the barriers.", promptDuration, PromptColorMode.Solid, new Color(1f, 0.55f, 0.55f));
-					ShowCounter($"Enemies left: {GetRemainingEnemyCount()}", counterDuration);
-				}
-				break;
-
-			case TriggerKind.ArenaExit:
-				if (!arenaStarted)
-				{
-					ShowPrompt("Enter the arena before heading for the exit.", promptDuration, PromptColorMode.Solid, Color.white);
-				}
-				else if (!arenaCleared)
-				{
-					ShowPrompt("Exit locked. Defeat every enemy in the arena first.", promptDuration, PromptColorMode.AdaptiveContrast, Color.white);
-				}
-				else
-				{
-					if (exitArrow != null)
-					{
-						exitArrow.SetActive(false);
-					}
-
-					CompleteRun();
-					string timeText = runTimerDisplay != null && runTimerDisplay.HasStarted ? $"\nTime: {ArenaRunTimerDisplay.FormatTime(runTimerDisplay.ElapsedSeconds)}" : string.Empty;
-					ShowPrompt($"Arena complete.{timeText}\nFollow the path ahead.", promptDuration, PromptColorMode.AdaptiveHueShift, Color.white);
-				}
-				break;
-		}
-	}
-
-	private void HandleFakeAttackKill()
-	{
-		if (!arenaStarted || arenaCleared || Mouse.current == null || !Mouse.current.leftButton.wasPressedThisFrame)
+		if (zone == null || zone.Kind != ArenaTriggerKind.Tutorial)
 		{
 			return;
 		}
 
-		ArenaBakedEnemyTarget candidate = SelectKillCandidate();
+		ShowPrompt(zone.Message, promptDuration, zone.ColorMode, zone.SolidColor);
+	}
+
+	private void HandleFakeAttackKill()
+	{
+		if (arenaEncounterFlow == null || !arenaEncounterFlow.HasStarted || arenaEncounterFlow.IsCleared || Mouse.current == null || !Mouse.current.leftButton.wasPressedThisFrame)
+		{
+			return;
+		}
+
+		ArenaBakedEnemyTarget candidate = arenaEncounterFlow.SelectKillCandidate(fakeKillRange, fakeKillAngle);
 		if (candidate != null)
 		{
 			candidate.Kill();
 		}
 	}
 
-	private ArenaBakedEnemyTarget SelectKillCandidate()
-	{
-		if (playerCamera == null)
-		{
-			return null;
-		}
-
-		Vector3 origin = playerCamera.transform.position;
-		Vector3 forward = playerCamera.transform.forward;
-		ArenaBakedEnemyTarget bestCandidate = null;
-		float bestScore = float.MaxValue;
-
-		for (int i = 0; i < arenaEnemies.Count; i++)
-		{
-			ArenaBakedEnemyTarget enemy = arenaEnemies[i];
-			if (enemy == null || !enemy.IsAlive)
-			{
-				continue;
-			}
-
-			Vector3 targetPoint = enemy.GetAimPoint();
-			Vector3 toTarget = targetPoint - origin;
-			float distance = toTarget.magnitude;
-			if (distance > fakeKillRange || distance <= 0.01f)
-			{
-				continue;
-			}
-
-			float angle = Vector3.Angle(forward, toTarget.normalized);
-			if (angle > fakeKillAngle)
-			{
-				continue;
-			}
-
-			float score = angle * 4f + distance;
-			if (score < bestScore)
-			{
-				bestScore = score;
-				bestCandidate = enemy;
-			}
-		}
-
-		return bestCandidate;
-	}
-
-	internal void NotifyEnemyKilled(ArenaBakedEnemyTarget enemy)
-	{
-		if (runTimerDisplay != null && !runTimerDisplay.HasStarted)
-		{
-			runTimerDisplay.BeginRun();
-		}
-
-		int remaining = GetRemainingEnemyCount();
-		ShowCounter($"Enemies left: {remaining}", counterDuration);
-
-		if (!arenaCleared && remaining <= 0)
-		{
-			arenaCleared = true;
-			if (entryBarrier != null)
-			{
-				entryBarrier.SetActive(false);
-			}
-			if (exitBarrier != null)
-			{
-				exitBarrier.SetActive(false);
-			}
-			if (exitArrow != null)
-			{
-				exitArrow.SetActive(true);
-			}
-
-			ShowPrompt("Arena cleared. Follow the ground arrow to leave.", promptDuration, PromptColorMode.AdaptiveHueShift, Color.white);
-		}
-	}
-
-	private void CompleteRun()
-	{
-		if (runTimerDisplay != null && !runTimerDisplay.HasFinished)
-		{
-			runTimerDisplay.FinishRun();
-		}
-
-		if (scoreSubmitted || wallLeaderboardDisplay == null || runTimerDisplay == null || !runTimerDisplay.HasStarted)
-		{
-			return;
-		}
-
-		wallLeaderboardDisplay.SubmitScore(playerLeaderboardName, runTimerDisplay.ElapsedSeconds);
-		scoreSubmitted = true;
-	}
-
-	private int GetRemainingEnemyCount()
-	{
-		int remaining = 0;
-		for (int i = 0; i < arenaEnemies.Count; i++)
-		{
-			if (arenaEnemies[i] != null && arenaEnemies[i].IsAlive)
-			{
-				remaining++;
-			}
-		}
-
-		return remaining;
-	}
-
-	private void ShowPrompt(string message, float duration, PromptColorMode colorMode, Color solidColor)
+	private void ShowPrompt(string message, float duration, ArenaPromptColorMode colorMode, Color solidColor)
 	{
 		if (promptCanvasGroup == null || promptLabel == null)
 		{
@@ -1187,9 +1049,9 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		counterBackground.color = new Color(0f, 0f, 0f, 0.62f);
 	}
 
-	private Color ResolvePromptColor(PromptColorMode colorMode, Color solidColor)
+	private Color ResolvePromptColor(ArenaPromptColorMode colorMode, Color solidColor)
 	{
-		if (colorMode == PromptColorMode.Solid)
+		if (colorMode == ArenaPromptColorMode.Solid)
 		{
 			return solidColor;
 		}
@@ -1198,7 +1060,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		Color.RGBToHSV(backgroundColor, out float hue, out float saturation, out float value);
 
 		float baseHue = Mathf.Repeat(hue + 0.5f, 1f);
-		if (colorMode == PromptColorMode.AdaptiveHueShift)
+		if (colorMode == ArenaPromptColorMode.AdaptiveHueShift)
 		{
 			baseHue = Mathf.Repeat(baseHue + Time.unscaledTime * 0.18f, 1f);
 		}
@@ -1237,48 +1099,6 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		}
 
 		return RenderSettings.ambientSkyColor.maxColorComponent > 0f ? RenderSettings.ambientSkyColor : playerCamera.backgroundColor;
-	}
-
-	private void AnimateExitArrow()
-	{
-		if (exitArrow == null || !exitArrow.activeSelf)
-		{
-			return;
-		}
-
-		float hue = Mathf.Repeat(Time.unscaledTime * 0.22f, 1f);
-		Color animatedColor = Color.HSVToRGB(hue, 0.85f, 1f);
-		float bob = Mathf.Sin(Time.unscaledTime * 2.2f) * 0.18f;
-		exitArrow.transform.position = courseOrigin + new Vector3(0f, 0.18f + bob, 68f);
-
-		for (int i = 0; i < arrowRenderers.Count; i++)
-		{
-			Renderer renderer = arrowRenderers[i];
-			if (renderer == null)
-			{
-				continue;
-			}
-
-			Material material = renderer.sharedMaterial;
-			if (material == null)
-			{
-				continue;
-			}
-
-			if (material.HasProperty("_BaseColor"))
-			{
-				material.SetColor("_BaseColor", animatedColor);
-			}
-			else if (material.HasProperty("_Color"))
-			{
-				material.SetColor("_Color", animatedColor);
-			}
-
-			if (material.HasProperty("_EmissionColor"))
-			{
-				material.SetColor("_EmissionColor", animatedColor * 0.6f);
-			}
-		}
 	}
 
 	internal bool IsPlayerCollider(Collider other)
@@ -1411,867 +1231,10 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		promptLabel = null;
 		counterLabel = null;
 		arenaEnemies.Clear();
-		arrowRenderers.Clear();
 	}
 
 
 }
 
-public class ArenaBakedTriggerZone : MonoBehaviour
-{
-	private ArenaTutorialSceneController controller;
-	[SerializeField] private ArenaTutorialSceneController.TriggerKind kind;
-	[SerializeField] private string message;
-	[SerializeField] private ArenaTutorialSceneController.PromptColorMode colorMode;
-	[SerializeField] private Color solidColor = Color.white;
-	private bool triggered;
 
-	internal ArenaTutorialSceneController.TriggerKind Kind => kind;
-	internal ArenaTutorialSceneController.PromptColorMode ColorMode => colorMode;
-	public Color SolidColor => solidColor;
-	public string Message => message;
 
-	internal void Initialize(ArenaTutorialSceneController owner, ArenaTutorialSceneController.TriggerKind zoneKind, string promptMessage, ArenaTutorialSceneController.PromptColorMode zoneColorMode, Color zoneSolidColor)
-	{
-		controller = owner;
-		kind = zoneKind;
-		message = promptMessage;
-		colorMode = zoneColorMode;
-		solidColor = zoneSolidColor;
-		triggered = false;
-	}
-
-	public void Bind(ArenaTutorialSceneController owner)
-	{
-		controller = owner;
-		triggered = false;
-	}
-
-	private void OnEnable()
-	{
-		triggered = false;
-	}
-
-	private void OnTriggerEnter(Collider other)
-	{
-		if (controller == null || triggered || !controller.IsPlayerCollider(other))
-		{
-			return;
-		}
-
-		triggered = true;
-		controller.HandleTrigger(this);
-	}
-}
-
-public class ArenaBakedEnemyTarget : MonoBehaviour
-{
-	private ArenaTutorialSceneController controller;
-
-	public bool IsAlive { get; private set; } = true;
-
-	public void Initialize(ArenaTutorialSceneController owner)
-	{
-		controller = owner;
-		IsAlive = true;
-	}
-
-	public Vector3 GetAimPoint()
-	{
-		return transform.position + Vector3.up * 1.2f;
-	}
-
-	public void Kill()
-	{
-		if (!IsAlive)
-		{
-			return;
-		}
-
-		IsAlive = false;
-
-		LocomotionSimpleAgent locomotionAgent = GetComponent<LocomotionSimpleAgent>();
-		if (locomotionAgent != null)
-		{
-			locomotionAgent.enabled = false;
-		}
-
-		KnifePawnController pawnController = GetComponent<KnifePawnController>();
-		if (pawnController != null)
-		{
-			pawnController.enabled = false;
-		}
-
-		GunPawnController gunPawnController = GetComponent<GunPawnController>();
-		if (gunPawnController != null)
-		{
-			gunPawnController.enabled = false;
-		}
-
-		NavMeshAgent agent = GetComponent<NavMeshAgent>();
-		if (agent != null)
-		{
-			if (agent.isOnNavMesh)
-			{
-				agent.isStopped = true;
-				agent.ResetPath();
-			}
-
-			agent.enabled = false;
-		}
-
-		Animator animator = GetComponent<Animator>();
-		if (animator != null)
-		{
-			animator.enabled = false;
-		}
-
-		AudioSource audioSource = GetComponent<AudioSource>();
-		if (audioSource != null)
-		{
-			audioSource.Stop();
-		}
-
-		Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
-		for (int i = 0; i < renderers.Length; i++)
-		{
-			renderers[i].enabled = false;
-		}
-
-		Collider[] colliders = GetComponentsInChildren<Collider>(true);
-		for (int i = 0; i < colliders.Length; i++)
-		{
-			colliders[i].enabled = false;
-		}
-
-		controller.NotifyEnemyKilled(this);
-		Destroy(gameObject, 0.05f);
-	}
-}
-
-public class ArenaRunTimerDisplay : MonoBehaviour
-{
-	private const string CanvasObjectName = "Run Timer Canvas";
-	private const string PanelObjectName = "Run Timer Panel";
-
-	[SerializeField] private string timerTitle = "RUN TIME";
-	[SerializeField] private Vector2 panelAnchoredPosition = new Vector2(0f, -76f);
-	[SerializeField] private Vector2 panelSize = new Vector2(560f, 132f);
-	[SerializeField] private Color panelColor = new Color(0f, 0f, 0f, 0.48f);
-	[SerializeField] private Color titleColor = new Color(1f, 1f, 1f, 0.72f);
-	[SerializeField] private Color valueColor = Color.white;
-	[SerializeField] private int sortingOrder = 215;
-
-	private CanvasGroup panelCanvasGroup;
-	private TextMeshProUGUI titleLabel;
-	private TextMeshProUGUI valueLabel;
-	private bool hasStarted;
-	private bool hasFinished;
-	private float startedAt = -1f;
-	private float finishedAt = -1f;
-
-	private void Awake()
-	{
-		TryBindExistingUi();
-	}
-
-	private void Update()
-	{
-		if (hasStarted && !hasFinished)
-		{
-			UpdateTimerLabel();
-		}
-	}
-
-	public bool HasStarted => hasStarted;
-	public bool HasFinished => hasFinished;
-	public float ElapsedSeconds => !hasStarted ? 0f : (hasFinished ? finishedAt - startedAt : Time.unscaledTime - startedAt);
-
-	public void BeginRun()
-	{
-		EnsureRuntimeUi();
-		if (hasStarted)
-		{
-			return;
-		}
-
-		hasStarted = true;
-		hasFinished = false;
-		startedAt = Time.unscaledTime;
-		finishedAt = -1f;
-		panelCanvasGroup.alpha = 1f;
-		UpdateTimerLabel();
-	}
-
-	public void FinishRun()
-	{
-		if (!hasStarted || hasFinished)
-		{
-			return;
-		}
-
-		finishedAt = Time.unscaledTime;
-		hasFinished = true;
-		UpdateTimerLabel();
-	}
-
-	public void ResetRun()
-	{
-		hasStarted = false;
-		hasFinished = false;
-		startedAt = -1f;
-		finishedAt = -1f;
-
-		if (panelCanvasGroup != null)
-		{
-			panelCanvasGroup.alpha = 0f;
-		}
-	}
-
-	public void EnsureSceneBuilt()
-	{
-		EnsureRuntimeUi();
-		ApplyVisuals();
-		UpdateTimerLabel();
-	}
-
-	public void EnsureRuntimeUi()
-	{
-		if (panelCanvasGroup != null || TryBindExistingUi())
-		{
-			ApplyVisuals();
-			return;
-		}
-
-		GameObject canvasObject = new GameObject(CanvasObjectName);
-		canvasObject.transform.SetParent(transform, false);
-
-		Canvas canvas = canvasObject.AddComponent<Canvas>();
-		canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-		canvas.sortingOrder = sortingOrder;
-
-		CanvasScaler scaler = canvasObject.AddComponent<CanvasScaler>();
-		scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-		scaler.referenceResolution = new Vector2(1920f, 1080f);
-		scaler.matchWidthOrHeight = 0.5f;
-
-		canvasObject.AddComponent<GraphicRaycaster>();
-
-		GameObject panelObject = new GameObject(PanelObjectName);
-		panelObject.transform.SetParent(canvasObject.transform, false);
-
-		RectTransform panelRect = panelObject.AddComponent<RectTransform>();
-		panelRect.anchorMin = new Vector2(0.5f, 1f);
-		panelRect.anchorMax = new Vector2(0.5f, 1f);
-		panelRect.pivot = new Vector2(0.5f, 1f);
-		panelRect.anchoredPosition = panelAnchoredPosition;
-		panelRect.sizeDelta = panelSize;
-
-		panelCanvasGroup = panelObject.AddComponent<CanvasGroup>();
-		panelCanvasGroup.alpha = 0f;
-		panelCanvasGroup.interactable = false;
-		panelCanvasGroup.blocksRaycasts = false;
-
-		GameObject backgroundObject = new GameObject("Background");
-		backgroundObject.transform.SetParent(panelObject.transform, false);
-		RectTransform backgroundRect = backgroundObject.AddComponent<RectTransform>();
-		backgroundRect.anchorMin = Vector2.zero;
-		backgroundRect.anchorMax = Vector2.one;
-		backgroundRect.offsetMin = Vector2.zero;
-		backgroundRect.offsetMax = Vector2.zero;
-		Image background = backgroundObject.AddComponent<Image>();
-		background.color = panelColor;
-		background.raycastTarget = false;
-
-		titleLabel = CreateLabel(panelObject.transform, "Title", new Vector2(0f, -28f), new Vector2(500f, 36f), 28f, TextAlignmentOptions.Center);
-		titleLabel.text = timerTitle;
-		titleLabel.color = titleColor;
-		titleLabel.characterSpacing = 16f;
-		titleLabel.fontStyle = FontStyles.Bold | FontStyles.UpperCase;
-
-		valueLabel = CreateLabel(panelObject.transform, "Value", new Vector2(0f, -80f), new Vector2(500f, 62f), 56f, TextAlignmentOptions.Center);
-		valueLabel.color = valueColor;
-		valueLabel.fontStyle = FontStyles.Bold;
-		valueLabel.text = FormatTime(0f);
-
-		ApplyVisuals();
-	}
-
-	public static string FormatTime(float seconds)
-	{
-		float safeSeconds = Mathf.Max(0f, seconds);
-		int minutes = Mathf.FloorToInt(safeSeconds / 60f);
-		float remainingSeconds = safeSeconds - minutes * 60f;
-		return $"{minutes:00}:{remainingSeconds:00.000}";
-	}
-
-	private void UpdateTimerLabel()
-	{
-		if (valueLabel == null)
-		{
-			return;
-		}
-
-		valueLabel.text = FormatTime(ElapsedSeconds);
-	}
-
-	private bool TryBindExistingUi()
-	{
-		Transform canvasTransform = transform.Find(CanvasObjectName);
-		if (canvasTransform == null)
-		{
-			return false;
-		}
-
-		Transform panelTransform = canvasTransform.Find(PanelObjectName);
-		if (panelTransform == null)
-		{
-			return false;
-		}
-
-		panelCanvasGroup = panelTransform.GetComponent<CanvasGroup>();
-		titleLabel = panelTransform.Find("Title")?.GetComponent<TextMeshProUGUI>();
-		valueLabel = panelTransform.Find("Value")?.GetComponent<TextMeshProUGUI>();
-		return panelCanvasGroup != null && titleLabel != null && valueLabel != null;
-	}
-
-	private void ApplyVisuals()
-	{
-		if (panelCanvasGroup != null)
-		{
-			Image background = panelCanvasGroup.transform.Find("Background")?.GetComponent<Image>();
-			if (background != null)
-			{
-				background.color = panelColor;
-				background.raycastTarget = false;
-			}
-		}
-
-		Canvas canvas = GetComponentInChildren<Canvas>(true);
-		if (canvas != null)
-		{
-			canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-			canvas.sortingOrder = sortingOrder;
-		}
-
-		if (titleLabel != null)
-		{
-			titleLabel.text = timerTitle;
-			titleLabel.color = titleColor;
-		}
-
-		if (valueLabel != null)
-		{
-			valueLabel.color = valueColor;
-			if (!hasStarted)
-			{
-				valueLabel.text = FormatTime(0f);
-			}
-		}
-	}
-
-	private static TextMeshProUGUI CreateLabel(Transform parent, string name, Vector2 anchoredPosition, Vector2 size, float fontSize, TextAlignmentOptions alignment)
-	{
-		GameObject labelObject = new GameObject(name);
-		labelObject.transform.SetParent(parent, false);
-
-		RectTransform labelRect = labelObject.AddComponent<RectTransform>();
-		labelRect.anchorMin = new Vector2(0.5f, 1f);
-		labelRect.anchorMax = new Vector2(0.5f, 1f);
-		labelRect.pivot = new Vector2(0.5f, 0.5f);
-		labelRect.anchoredPosition = anchoredPosition;
-		labelRect.sizeDelta = size;
-
-		TextMeshProUGUI label = labelObject.AddComponent<TextMeshProUGUI>();
-		label.font = TMP_Settings.defaultFontAsset;
-		label.fontSize = fontSize;
-		label.enableAutoSizing = false;
-		label.alignment = alignment;
-		label.enableWordWrapping = false;
-		label.raycastTarget = false;
-		return label;
-	}
-}
-
-public class ArenaWallLeaderboardDisplay : MonoBehaviour
-{
-	[Serializable]
-	public struct EntryData
-	{
-		public string playerName;
-		public float seconds;
-	}
-
-	private sealed class RuntimeEntry
-	{
-		public string PlayerName;
-		public float Seconds;
-		public bool IsPlayer;
-	}
-
-	private struct PersistedEntryData
-	{
-		public string PlayerName;
-		public float Seconds;
-		public bool IsPlayer;
-	}
-
-	[SerializeField] private string leaderboardTitle = "BEST TIMES";
-	[SerializeField] private string leaderboardSubtitle = "SPRAY THE WALL";
-	[SerializeField] private Vector2 boardSize = new Vector2(3f, 2f);
-	[SerializeField] private float boardThickness = 0.08f;
-	[SerializeField] private Color boardColor = new Color(0.12f, 0.13f, 0.15f, 1f);
-	[SerializeField] private Color titleColor = new Color(1f, 1f, 1f, 0.98f);
-	[SerializeField] private Color subtitleColor = new Color(1f, 1f, 1f, 0.76f);
-	[SerializeField] private Color entryColor = new Color(1f, 1f, 1f, 0.94f);
-	[SerializeField] private Color highlightColor = new Color(1f, 0.94f, 0.84f, 1f);
-	[SerializeField] private int maxEntries = 6;
-	[SerializeField] private Vector2 canvasResolution = new Vector2(1180f, 860f);
-	[SerializeField] private float canvasScale = 0.0024f;
-	[SerializeField] private List<EntryData> seedEntries = new List<EntryData>
-	{
-		new EntryData { playerName = "CREATOR 01", seconds = -1f },
-		new EntryData { playerName = "CREATOR 02", seconds = -1f },
-		new EntryData { playerName = "CREATOR 03", seconds = -1f },
-		new EntryData { playerName = "CREATOR 04", seconds = -1f },
-	};
-
-	private static readonly Dictionary<string, List<PersistedEntryData>> persistedEntriesByKey = new Dictionary<string, List<PersistedEntryData>>(StringComparer.Ordinal);
-	private readonly List<RuntimeEntry> runtimeEntries = new List<RuntimeEntry>();
-	private readonly List<TextMeshProUGUI> rowLabels = new List<TextMeshProUGUI>();
-	private MeshRenderer boardRenderer;
-	private Material boardMaterial;
-	private TextMeshProUGUI titleLabel;
-	private TextMeshProUGUI subtitleLabel;
-	private bool built;
-
-	private void Awake()
-	{
-		EnsureBuilt();
-		ApplySeedEntriesIfNeeded();
-		RefreshVisuals();
-	}
-
-	public void EnsureSceneBuilt()
-	{
-		EnsureBuilt();
-		ApplySeedEntriesIfNeeded();
-		RefreshVisuals();
-	}
-
-	public void PersistCurrentEntries()
-	{
-		PersistRuntimeEntries();
-	}
-
-	public void Configure(string title, string subtitle, IReadOnlyList<EntryData> entries)
-	{
-		leaderboardTitle = title;
-		leaderboardSubtitle = subtitle;
-		ReplaceSeedEntries(entries);
-	}
-
-	public void ReplaceSeedEntries(IReadOnlyList<EntryData> entries)
-	{
-		runtimeEntries.Clear();
-
-		if (entries != null)
-		{
-			for (int i = 0; i < entries.Count; i++)
-			{
-				EntryData entry = entries[i];
-				if (string.IsNullOrWhiteSpace(entry.playerName))
-				{
-					continue;
-				}
-
-				runtimeEntries.Add(new RuntimeEntry
-				{
-					PlayerName = entry.playerName,
-					Seconds = entry.seconds,
-					IsPlayer = false,
-				});
-			}
-		}
-
-		SortEntries();
-		PersistRuntimeEntries();
-		RefreshVisuals();
-	}
-
-	public void SubmitScore(string playerName, float seconds)
-	{
-		if (string.IsNullOrWhiteSpace(playerName))
-		{
-			return;
-		}
-
-		EnsureBuilt();
-		ApplySeedEntriesIfNeeded();
-
-		RuntimeEntry existingEntry = runtimeEntries.Find(entry => string.Equals(entry.PlayerName, playerName, StringComparison.OrdinalIgnoreCase));
-		if (existingEntry != null)
-		{
-			existingEntry.Seconds = existingEntry.Seconds >= 0f ? Mathf.Min(existingEntry.Seconds, seconds) : seconds;
-			existingEntry.IsPlayer = true;
-		}
-		else
-		{
-			runtimeEntries.Add(new RuntimeEntry
-			{
-				PlayerName = playerName,
-				Seconds = seconds,
-				IsPlayer = true,
-			});
-		}
-
-		SortEntries();
-		if (runtimeEntries.Count > maxEntries)
-		{
-			runtimeEntries.RemoveRange(maxEntries, runtimeEntries.Count - maxEntries);
-		}
-
-		PersistRuntimeEntries();
-		RefreshVisuals();
-	}
-
-	private void EnsureBuilt()
-	{
-		if (built)
-		{
-			return;
-		}
-
-		if (TryBindExistingHierarchy())
-		{
-			ApplyUnpaintableLayer();
-			built = true;
-			return;
-		}
-
-		built = true;
-
-		GameObject plaqueObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		plaqueObject.name = "Leaderboard Plaque";
-		plaqueObject.transform.SetParent(transform, false);
-		plaqueObject.transform.localPosition = Vector3.back * (boardThickness * 0.5f);
-		plaqueObject.transform.localScale = new Vector3(boardSize.x, boardSize.y, boardThickness);
-
-		Collider plaqueCollider = plaqueObject.GetComponent<Collider>();
-		if (plaqueCollider != null)
-		{
-			plaqueCollider.enabled = false;
-		}
-
-		boardRenderer = plaqueObject.GetComponent<MeshRenderer>();
-		if (boardRenderer != null)
-		{
-			boardMaterial = CreateBoardMaterial();
-			boardRenderer.sharedMaterial = boardMaterial;
-		}
-
-		ApplyUnpaintableLayer();
-
-		GameObject canvasObject = new GameObject("Leaderboard Canvas");
-		canvasObject.transform.SetParent(transform, false);
-		canvasObject.transform.localPosition = new Vector3(0.17f, 1.81f, -0.308f);
-		ApplyUnpaintableLayer();
-
-		Canvas canvas = canvasObject.AddComponent<Canvas>();
-		canvas.renderMode = RenderMode.WorldSpace;
-
-		RectTransform canvasRect = canvasObject.GetComponent<RectTransform>();
-		canvasRect.sizeDelta = canvasResolution;
-		canvasRect.localScale = Vector3.one * canvasScale;
-
-		canvasObject.AddComponent<GraphicRaycaster>();
-
-		titleLabel = CreateTextLabel(canvasObject.transform, "Title", new Vector2(0f, -92f), new Vector2(920f, 92f), 66f, TextAlignmentOptions.Center);
-		titleLabel.fontStyle = FontStyles.Bold | FontStyles.UpperCase;
-		titleLabel.color = titleColor;
-		titleLabel.characterSpacing = 18f;
-
-		subtitleLabel = CreateTextLabel(canvasObject.transform, "Subtitle", new Vector2(0f, -156f), new Vector2(920f, 40f), 24f, TextAlignmentOptions.Center);
-		subtitleLabel.fontStyle = FontStyles.Bold | FontStyles.UpperCase;
-		subtitleLabel.color = subtitleColor;
-		subtitleLabel.characterSpacing = 10f;
-
-		for (int i = 0; i < maxEntries; i++)
-		{
-			TextMeshProUGUI rowLabel = CreateTextLabel(canvasObject.transform, $"Row {i + 1}", new Vector2(0f, -258f - i * 76f), new Vector2(960f, 52f), 36f, TextAlignmentOptions.Left);
-			rowLabel.fontStyle = FontStyles.Bold;
-			rowLabel.color = entryColor;
-			rowLabels.Add(rowLabel);
-		}
-	}
-
-	private void ApplySeedEntriesIfNeeded()
-	{
-		if (runtimeEntries.Count > 0)
-		{
-			return;
-		}
-
-		if (TryRestorePersistedEntries())
-		{
-			return;
-		}
-
-		ReplaceSeedEntries(seedEntries);
-	}
-
-	private bool TryRestorePersistedEntries()
-	{
-		if (!persistedEntriesByKey.TryGetValue(GetPersistenceKey(), out List<PersistedEntryData> persistedEntries) || persistedEntries == null || persistedEntries.Count == 0)
-		{
-			return false;
-		}
-
-		runtimeEntries.Clear();
-		for (int i = 0; i < persistedEntries.Count; i++)
-		{
-			PersistedEntryData entry = persistedEntries[i];
-			if (string.IsNullOrWhiteSpace(entry.PlayerName))
-			{
-				continue;
-			}
-
-			runtimeEntries.Add(new RuntimeEntry
-			{
-				PlayerName = entry.PlayerName,
-				Seconds = entry.Seconds,
-				IsPlayer = entry.IsPlayer,
-			});
-		}
-
-		SortEntries();
-		return runtimeEntries.Count > 0;
-	}
-
-	private void PersistRuntimeEntries()
-	{
-		List<PersistedEntryData> persistedEntries = new List<PersistedEntryData>(runtimeEntries.Count);
-		for (int i = 0; i < runtimeEntries.Count; i++)
-		{
-			RuntimeEntry entry = runtimeEntries[i];
-			persistedEntries.Add(new PersistedEntryData
-			{
-				PlayerName = entry.PlayerName,
-				Seconds = entry.Seconds,
-				IsPlayer = entry.IsPlayer,
-			});
-		}
-
-		persistedEntriesByKey[GetPersistenceKey()] = persistedEntries;
-	}
-
-	private string GetPersistenceKey()
-	{
-		string sceneKey = string.IsNullOrEmpty(gameObject.scene.path) ? gameObject.scene.name : gameObject.scene.path;
-		return sceneKey + ":" + GetHierarchyPath(transform);
-	}
-
-	private static string GetHierarchyPath(Transform current)
-	{
-		string path = current.name;
-		while (current.parent != null)
-		{
-			current = current.parent;
-			path = current.name + "/" + path;
-		}
-
-		return path;
-	}
-
-	private void RefreshVisuals()
-	{
-		if (!built)
-		{
-			return;
-		}
-
-		if (boardRenderer != null)
-		{
-			boardMaterial = boardRenderer.sharedMaterial;
-			if (boardMaterial != null)
-			{
-				if (boardMaterial.HasProperty("_BaseColor"))
-				{
-					boardMaterial.SetColor("_BaseColor", boardColor);
-				}
-				else if (boardMaterial.HasProperty("_Color"))
-				{
-					boardMaterial.SetColor("_Color", boardColor);
-				}
-
-				if (boardMaterial.HasProperty("_EmissionColor"))
-				{
-					boardMaterial.EnableKeyword("_EMISSION");
-					boardMaterial.SetColor("_EmissionColor", boardColor * 0.06f);
-				}
-			}
-		}
-
-		if (titleLabel != null)
-		{
-			titleLabel.text = leaderboardTitle;
-		}
-
-		if (subtitleLabel != null)
-		{
-			subtitleLabel.text = leaderboardSubtitle;
-		}
-
-		for (int i = 0; i < rowLabels.Count; i++)
-		{
-			TextMeshProUGUI rowLabel = rowLabels[i];
-			if (i >= runtimeEntries.Count)
-			{
-				rowLabel.text = string.Empty;
-				continue;
-			}
-
-			RuntimeEntry entry = runtimeEntries[i];
-			string timeText = entry.Seconds >= 0f ? ArenaRunTimerDisplay.FormatTime(entry.Seconds) : "--:--.---";
-			rowLabel.text = $"{i + 1}.  {entry.PlayerName.ToUpperInvariant(),-12}  {timeText}";
-			rowLabel.color = entry.IsPlayer ? highlightColor : entryColor;
-		}
-	}
-
-	private bool TryBindExistingHierarchy()
-	{
-		Transform plaqueTransform = transform.Find("Leaderboard Plaque");
-		Transform canvasTransform = transform.Find("Leaderboard Canvas");
-		if (plaqueTransform == null || canvasTransform == null)
-		{
-			return false;
-		}
-
-		boardRenderer = plaqueTransform.GetComponent<MeshRenderer>();
-		boardMaterial = boardRenderer != null ? boardRenderer.sharedMaterial : null;
-		titleLabel = canvasTransform.Find("Title")?.GetComponent<TextMeshProUGUI>();
-		subtitleLabel = canvasTransform.Find("Subtitle")?.GetComponent<TextMeshProUGUI>();
-
-		rowLabels.Clear();
-		for (int i = 0; i < maxEntries; i++)
-		{
-			TextMeshProUGUI rowLabel = canvasTransform.Find($"Row {i + 1}")?.GetComponent<TextMeshProUGUI>();
-			if (rowLabel == null)
-			{
-				rowLabels.Clear();
-				return false;
-			}
-
-			rowLabels.Add(rowLabel);
-		}
-
-		return boardRenderer != null && titleLabel != null && subtitleLabel != null;
-	}
-
-	private void ApplyUnpaintableLayer()
-	{
-		int unpaintableLayer = LayerMask.NameToLayer("Unpaintable");
-		if (unpaintableLayer < 0)
-		{
-			return;
-		}
-
-		SetLayerRecursively(gameObject, unpaintableLayer);
-	}
-
-	private void SortEntries()
-	{
-		runtimeEntries.Sort(static (left, right) =>
-		{
-			bool leftHasTime = left.Seconds >= 0f;
-			bool rightHasTime = right.Seconds >= 0f;
-
-			if (leftHasTime != rightHasTime)
-			{
-				return leftHasTime ? -1 : 1;
-			}
-
-			if (!leftHasTime)
-			{
-				return string.Compare(left.PlayerName, right.PlayerName, StringComparison.OrdinalIgnoreCase);
-			}
-
-			int timeCompare = left.Seconds.CompareTo(right.Seconds);
-			if (timeCompare != 0)
-			{
-				return timeCompare;
-			}
-
-			if (left.IsPlayer != right.IsPlayer)
-			{
-				return left.IsPlayer ? -1 : 1;
-			}
-
-			return string.Compare(left.PlayerName, right.PlayerName, StringComparison.OrdinalIgnoreCase);
-		});
-	}
-
-	private Material CreateBoardMaterial()
-	{
-		Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-		if (shader == null)
-		{
-			shader = Shader.Find("Standard");
-		}
-
-		Material material = new Material(shader)
-		{
-			name = "Leaderboard Plaque Material",
-		};
-
-		if (material.HasProperty("_BaseColor"))
-		{
-			material.SetColor("_BaseColor", boardColor);
-		}
-		else if (material.HasProperty("_Color"))
-		{
-			material.SetColor("_Color", boardColor);
-		}
-
-		if (material.HasProperty("_EmissionColor"))
-		{
-			material.EnableKeyword("_EMISSION");
-			material.SetColor("_EmissionColor", boardColor * 0.06f);
-		}
-
-		return material;
-	}
-
-	private static TextMeshProUGUI CreateTextLabel(Transform parent, string name, Vector2 anchoredPosition, Vector2 size, float fontSize, TextAlignmentOptions alignment)
-	{
-		GameObject labelObject = new GameObject(name);
-		labelObject.transform.SetParent(parent, false);
-		labelObject.layer = parent.gameObject.layer;
-
-		RectTransform labelRect = labelObject.AddComponent<RectTransform>();
-		labelRect.anchorMin = new Vector2(0.5f, 0f);
-		labelRect.anchorMax = new Vector2(0.5f, 0f);
-		labelRect.pivot = new Vector2(0.5f, 1f);
-		labelRect.anchoredPosition = anchoredPosition;
-		labelRect.sizeDelta = size;
-
-		TextMeshProUGUI label = labelObject.AddComponent<TextMeshProUGUI>();
-		label.font = TMP_Settings.defaultFontAsset;
-		label.fontSize = fontSize;
-		label.enableWordWrapping = false;
-		label.alignment = alignment;
-		label.raycastTarget = false;
-		label.outlineWidth = 0.12f;
-		label.outlineColor = new Color(1f, 1f, 1f, 0.08f);
-		return label;
-	}
-
-	private static void SetLayerRecursively(GameObject root, int layer)
-	{
-		root.layer = layer;
-		for (int i = 0; i < root.transform.childCount; i++)
-		{
-			SetLayerRecursively(root.transform.GetChild(i).gameObject, layer);
-		}
-	}
-}
