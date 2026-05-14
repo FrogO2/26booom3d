@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f05a2636126bb043b29c885698383ed, type: 3}
   m_Name: BloodRevealRendererFeature
   m_EditorClassIdentifier: Assembly-CSharp::BloodRevealRendererFeature
-  m_Active: 0
+  m_Active: 1
   renderPassEvent: 500
   revealShader: {fileID: 4800000, guid: 143ccfbfc60de804683ecd18b04186df, type: 3}
 --- !u!114 &-3330109864168671474
@@ -42,7 +42,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
   m_Name: FullScreenPassRendererFeature
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.FullScreenPassRendererFeature
-  m_Active: 0
+  m_Active: 1
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 0
@@ -137,7 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1aaaea856f969a40bfb47a2e7b3ec87, type: 3}
   m_Name: BloodFxRendererFeature
   m_EditorClassIdentifier: Assembly-CSharp::BloodFxRendererFeature
-  m_Active: 0
+  m_Active: 1
   renderPassEvent: 550
   bloodFxShader: {fileID: 4800000, guid: 8113ea693c7e8474ba7f3f96e967deb7, type: 3}
 --- !u!114 &2722790858799294100
@@ -178,7 +178,7 @@ MonoBehaviour:
     m_Bits: 256
   alwaysVisibleAndNoBloodLayerMask:
     serializedVersion: 2
-    m_Bits: 576
+    m_Bits: 832
 --- !u!114 &6144031677933946039
 MonoBehaviour:
   m_ObjectHideFlags: 0

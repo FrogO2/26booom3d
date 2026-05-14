@@ -14,9 +14,10 @@ Shader "MyCustom/BloodLust"
         _DashColor ("Dash Color", Color) = (1.0, 1.0, 1.0, 1.0)
         _DashRotation ("Dash Rotation", Float) = 0
         
-        // 新增：控制冲刺速度线的中心渐变范围
         _DashInner ("Dash Mask Inner ", Range(0, 1)) = 0.1
         _DashOuter ("Dash Mask Outer ", Range(0, 1.5)) = 0.6
+
+        _DashCenterOffset ("Dash Center Offset", Vector) = (0,0,0,0)
     }
 
     HLSLINCLUDE
@@ -35,9 +36,9 @@ Shader "MyCustom/BloodLust"
     float _DashIntensity;
     float4 _DashColor;
     float _DashRotation;
-    // 新增变量声明
     float _DashInner;
     float _DashOuter;
+    float2 _DashCenterOffset;
 
     float2 RotateUV(float2 uv, float angle)
     {
@@ -68,7 +69,7 @@ Shader "MyCustom/BloodLust"
         finalColor = lerp(finalColor, _VignetteColor.rgb, killVignette * _VignetteColor.a);
 
        // ==========================================
-        // 2. 冲刺速度线逻辑 (持续流逝版)
+        // 2. 冲刺速度线逻辑 
         // ==========================================
         
         float2 speedUV = RotateUV(uv, _DashRotation);
@@ -90,22 +91,20 @@ Shader "MyCustom/BloodLust"
         float alpha1 = 1.0 - abs(t1 * 2.0 - 1.0);
         float alpha2 = 1.0 - abs(t2 * 2.0 - 1.0);
 
-        // 分别计算两层的 UV
-        float2 uv1 = (speedUV - 0.5) * scale1 + 0.5;
-        float2 uv2 = (speedUV - 0.5) * scale2 + 0.5;
+        float2 vanishPoint = float2(0.5, 0.5) + _DashCenterOffset;
 
-        // 采样两层图片，并乘上各自的透明度
+        // 让速度线从新的消失点发散出来
+        float2 uv1 = (speedUV - vanishPoint) * scale1 + vanishPoint;
+        float2 uv2 = (speedUV - vanishPoint) * scale2 + vanishPoint;
+
         float3 sample1 = SAMPLE_TEXTURE2D(_SpeedLineTex, sampler_SpeedLineTex, uv1).rgb * alpha1;
         float3 sample2 = SAMPLE_TEXTURE2D(_SpeedLineTex, sampler_SpeedLineTex, uv2).rgb * alpha2;
         
-        // 将两层无缝叠加
         float3 seamlessSpeedLine = sample1 + sample2;
 
-        // 保持之前的遮罩逻辑不变：中心淡出 + 边缘淡出
         float dashMask = smoothstep(_DashInner, _DashOuter, dist);
         float outerFadeMask = 1.0 - smoothstep(0.45, 0.7, dist); 
 
-        // 最终混合到画面上
         finalColor += seamlessSpeedLine * _DashIntensity * _DashColor.rgb * dashMask * outerFadeMask;
 
         return float4(finalColor, color.a);
