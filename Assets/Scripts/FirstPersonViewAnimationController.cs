@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -88,6 +89,8 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 	[SerializeField, Range(0f, 5f)] private float attackEarliestInterruptTime = 0.2f;
 	[SerializeField] private string attackStateName1 = "Attack 1 R";
 	[SerializeField] private string attackStateName2 = "Attack 2 R";
+	[SerializeField, Range(0f, 1f)] private float attack1ImpactNormalizedTime = 0.42f;
+	[SerializeField, Range(0f, 1f)] private float attack2ImpactNormalizedTime = 0.42f;
 
 	private static readonly int IsLeftWallingHash = Animator.StringToHash("isLeftWalling");
 	private static readonly int IsRightWallingHash = Animator.StringToHash("isRightWalling");
@@ -112,6 +115,12 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 	private int currentAttackNumber;
 	private int attackIntentNumber;
 	private float currentAttackStartTime;
+	private int attackSequenceId;
+
+	public event Action<int, int> AttackStateEnteredEvent;
+	public bool IsAttackActive => attackActive;
+	public int CurrentAttackNumber => currentAttackNumber;
+	public int AttackSequenceId => attackSequenceId;
 
 	private void Awake()
 	{
@@ -515,11 +524,14 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 				attackStateEntered = true;
 				currentAttackNumber = activeAttackNumber;
 				currentAttackStartTime = Time.time;
+				attackSequenceId++;
 
 				if (attackIntentNumber == currentAttackNumber)
 				{
 					attackIntentNumber = 0;
 				}
+
+				AttackStateEnteredEvent?.Invoke(currentAttackNumber, attackSequenceId);
 			}
 
 			float elapsedTime = Time.time - currentAttackStartTime;
@@ -552,6 +564,49 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 				SetAttackNumber(0);
 			}
 		}
+	}
+
+	public bool TrySnapCurrentAttackToImpactFrame(int attackNumber)
+	{
+		if (weaponAnimator == null || !attackActive || attackNumber <= 0)
+		{
+			return false;
+		}
+
+		int activeAttackNumber = GetActiveAttackNumber();
+		if (activeAttackNumber != attackNumber && currentAttackNumber != attackNumber)
+		{
+			return false;
+		}
+
+		string stateName = GetAttackStateName(attackNumber);
+		if (string.IsNullOrEmpty(stateName))
+		{
+			return false;
+		}
+
+		weaponAnimator.Play(stateName, 0, GetImpactNormalizedTime(attackNumber));
+		weaponAnimator.Update(0f);
+		currentAttackNumber = attackNumber;
+		return true;
+	}
+
+	private string GetAttackStateName(int attackNumber)
+	{
+		switch (attackNumber)
+		{
+			case 1:
+				return attackStateName1;
+			case 2:
+				return attackStateName2;
+			default:
+				return string.Empty;
+		}
+	}
+
+	private float GetImpactNormalizedTime(int attackNumber)
+	{
+		return attackNumber == 2 ? attack2ImpactNormalizedTime : attack1ImpactNormalizedTime;
 	}
 
 	private void UpdateWeaponMotion()

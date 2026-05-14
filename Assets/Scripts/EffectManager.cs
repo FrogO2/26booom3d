@@ -5,21 +5,21 @@ public class EffectManager : MonoBehaviour
 {
     public static EffectManager Instance;
 
-    [Header("È«ÆÁÌØÐ§²ÄÖÊ")]
+    [Header("È«ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½")]
     public Material postProcessMaterial;
 
-    [Header("==== »÷É±ÌØÐ§ (Ë²¼ä) ====")]
+    [Header("==== ï¿½ï¿½É±ï¿½ï¿½Ð§ (Ë²ï¿½ï¿½) ====")]
     public float killDuration = 0.35f;
     public AnimationCurve killCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 0));
     private Coroutine killCoroutine;
 
-    [Header("==== ³ÖÐø³å´ÌÌØÐ§ (°´×¡) ====")]
-    [Tooltip("ÌØÐ§µ­ÈëºÍµ­³öµÄËÙ¶È£¬ÖµÔ½´ó±ä»¯Ô½¿ì")]
+    [Header("==== ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ (ï¿½ï¿½×¡) ====")]
+    [Tooltip("ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶È£ï¿½ÖµÔ½ï¿½ï¿½ä»¯Ô½ï¿½ï¿½")]
     public float sprintTransitionSpeed = 5f;
 
-    // É¾³ýÁËËùÓÐ Camera Ïà¹ØµÄ±äÁ¿£¡
+    // É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Camera ï¿½ï¿½ØµÄ±ï¿½ï¿½ï¿½ï¿½ï¿½
 
-    // ÄÚ²¿×´Ì¬×·×Ù
+    // ï¿½Ú²ï¿½×´Ì¬×·ï¿½ï¿½
     private bool isSprinting = false;
     private float currentSprintIntensity = 0f;
 
@@ -53,7 +53,7 @@ public class EffectManager : MonoBehaviour
         float elapsed = 0f;
         while (elapsed < killDuration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
             float intensity = killCurve.Evaluate(elapsed / killDuration);
             if (postProcessMaterial != null) postProcessMaterial.SetFloat("_Intensity", intensity);
             yield return null;
@@ -77,14 +77,14 @@ public class EffectManager : MonoBehaviour
     private void UpdateSprintEffect()
     {
         float targetIntensity = isSprinting ? 1f : 0f;
-        currentSprintIntensity = Mathf.MoveTowards(currentSprintIntensity, targetIntensity, sprintTransitionSpeed * Time.deltaTime);
+        currentSprintIntensity = Mathf.MoveTowards(currentSprintIntensity, targetIntensity, sprintTransitionSpeed * Time.unscaledDeltaTime);
 
         if (postProcessMaterial != null)
         {
             postProcessMaterial.SetFloat("_DashIntensity", currentSprintIntensity);
         }
 
-        // É¾³ýÁËÕâÀï¸²¸Ç FOV µÄ´úÂë£¡½«¿ØÖÆÈ¨³¹µ×»¹¸ø FirstPersonController£¡
+        // É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¸²ï¿½ï¿½ FOV ï¿½Ä´ï¿½ï¿½ë£¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¨ï¿½ï¿½ï¿½×»ï¿½ï¿½ï¿½ FirstPersonControllerï¿½ï¿½
     }
 
     void OnDisable()

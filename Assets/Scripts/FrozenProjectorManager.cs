@@ -24,6 +24,16 @@ public static class FrozenProjectorManager
 	private static Material captureDepthMaterial;
 	private static readonly List<AsyncHDRequest> PendingHDRequests = new List<AsyncHDRequest>();
 	private static readonly List<PendingCapture> PendingCaptures = new List<PendingCapture>();
+	private static readonly Dictionary<int, AsyncProjectorState> ProjectorAsyncStates = new Dictionary<int, AsyncProjectorState>();
+
+	public enum AsyncProjectorState
+	{
+		None,
+		Rendering,
+		ReadbackPending,
+		Complete,
+		Failed,
+	}
 
 	public static void SetMaxRetainedProjectors(int maxProjectors)
 	{
@@ -43,6 +53,7 @@ public static class FrozenProjectorManager
 		CaptureProjectorVisibility(sourceCamera, projectionMask, captureResolution, projector, skipInitialDepthCapture);
 
 		Projectors.Add(projector);
+		ProjectorAsyncStates[projector.id] = AsyncProjectorState.None;
 		TrimToLimit();
 		return projector.id;
 	}
@@ -71,6 +82,24 @@ public static class FrozenProjectorManager
 	public static void ClearAll()
 	{
 		Projectors.Clear();
+		ProjectorAsyncStates.Clear();
+	}
+
+	public static bool HasPendingHighResCapture(int projectorId)
+	{
+		return ProjectorAsyncStates.TryGetValue(projectorId, out AsyncProjectorState state)
+			&& (state == AsyncProjectorState.Rendering || state == AsyncProjectorState.ReadbackPending);
+	}
+
+	public static bool IsHighResReady(int projectorId)
+	{
+		return ProjectorAsyncStates.TryGetValue(projectorId, out AsyncProjectorState state)
+			&& state == AsyncProjectorState.Complete;
+	}
+
+	public static AsyncProjectorState GetAsyncProjectorState(int projectorId)
+	{
+		return ProjectorAsyncStates.TryGetValue(projectorId, out AsyncProjectorState state) ? state : AsyncProjectorState.None;
 	}
 
 	// Poll pending captures and readbacks each frame.
@@ -131,6 +160,7 @@ public static class FrozenProjectorManager
 			{
 				// All rows rendered — request async readback and move to next phase.
 				AsyncGPUReadbackRequest readbackReq = AsyncGPUReadback.Request(cap.renderTexture, 0, TextureFormat.RGBAFloat);
+				ProjectorAsyncStates[cap.projectorId] = AsyncProjectorState.ReadbackPending;
 				PendingHDRequests.Add(new AsyncHDRequest
 				{
 					projectorId = cap.projectorId,
@@ -157,6 +187,11 @@ public static class FrozenProjectorManager
 				NativeArray<Color> raw = req.request.GetData<Color>();
 				projectorHDAtlas.SetPixels(raw.ToArray(), req.slotIndex, 0);
 				projectorHDAtlas.Apply(false, false);
+				ProjectorAsyncStates[req.projectorId] = AsyncProjectorState.Complete;
+			}
+			else
+			{
+				ProjectorAsyncStates[req.projectorId] = AsyncProjectorState.Failed;
 			}
 
 			req.renderTexture.Release();
@@ -174,6 +209,8 @@ public static class FrozenProjectorManager
 		{
 			return;
 		}
+
+		ProjectorAsyncStates[projectorId] = AsyncProjectorState.Rendering;
 
 		EnsureHDAtlas(hdResolution);
 
@@ -341,6 +378,11 @@ public static class FrozenProjectorManager
 
 		projectorIndex = -1;
 		return false;
+	}
+
+	private static void RemoveProjectorState(int projectorId)
+	{
+		ProjectorAsyncStates.Remove(projectorId);
 	}
 
 	private static void CaptureVisibleDepth(Camera sourceCamera, LayerMask projectionMask, int captureResolution, float nearDistance, float farDistance, int depthSliceIndex)
@@ -535,7 +577,9 @@ public static class FrozenProjectorManager
 	{
 		while (Projectors.Count > maxRetainedProjectors)
 		{
+			int projectorId = Projectors[0].id;
 			Projectors.RemoveAt(0);
+			RemoveProjectorState(projectorId);
 		}
 	}
 

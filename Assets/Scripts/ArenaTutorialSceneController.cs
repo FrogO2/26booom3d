@@ -106,6 +106,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 			return;
 		}
 
+		EnsureKillCoordinator();
 		sceneIntroOverlay = null;
 		EnsureSceneBuilt();
 		ResetArenaState();
@@ -130,7 +131,6 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		TryShowInitialPrompt();
 		UpdatePromptVisuals();
 		UpdateCounterVisuals();
-		HandleFakeAttackKill();
 		AnimateExitArrow();
 	}
 
@@ -181,6 +181,22 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		playerCamera = player.GetComponentInChildren<Camera>(true);
 		player.tag = "Player";
 		return true;
+	}
+
+	private void EnsureKillCoordinator()
+	{
+		if (player == null)
+		{
+			return;
+		}
+
+		ArenaKillCoordinator coordinator = player.GetComponent<ArenaKillCoordinator>();
+		if (coordinator == null)
+		{
+			coordinator = player.gameObject.AddComponent<ArenaKillCoordinator>();
+		}
+
+		coordinator.Initialize(this);
 	}
 
 	public void BakeGeneratedContentIntoScene()
@@ -647,6 +663,11 @@ public class ArenaTutorialSceneController : MonoBehaviour
 			enemyInstance.AddComponent<AudioSource>();
 		}
 
+		if (enemyInstance.GetComponent<EnemyEffect>() == null)
+		{
+			enemyInstance.AddComponent<EnemyEffect>();
+		}
+
 		if (enemyInstance.GetComponent<LocomotionSimpleAgent>() == null)
 		{
 			enemyInstance.AddComponent<LocomotionSimpleAgent>();
@@ -696,7 +717,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 	private void BuildEncounterZones()
 	{
 		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 7f), new Vector3(14f, 3f, 5f), "Tutorial 1/3\nMove: WASD, Jump: Space, Sprint: Shift.", PromptColorMode.Solid, new Color(0.26f, 0.90f, 1f));
-		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 18f), new Vector3(14f, 3f, 6f), "Tutorial 2/3\nLeft Click triggers spray and a temporary kill check.", PromptColorMode.AdaptiveContrast, Color.white);
+		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 18f), new Vector3(14f, 3f, 6f), "Tutorial 2/3\nLeft Click swings the blade. Kill-confirmed hits trigger blood and hit-stop.", PromptColorMode.AdaptiveContrast, Color.white);
 		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 29f), new Vector3(14f, 3f, 6f), "Tutorial 3/3\nEnter the arena ahead. Defeat every enemy before leaving.", PromptColorMode.AdaptiveHueShift, Color.white);
 
 		CreateEncounterZone(courseOrigin + new Vector3(0f, 1.5f, 37f), new Vector3(14f, 3.2f, 6f), TriggerKind.ArenaStart, null, PromptColorMode.Solid, new Color(1f, 0.4f, 0.4f));
@@ -985,18 +1006,35 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		}
 	}
 
-	private void HandleFakeAttackKill()
+	internal bool CanAttemptArenaKill => arenaStarted && !arenaCleared;
+
+	internal ArenaBakedEnemyTarget GetBestKillCandidate()
 	{
-		if (!arenaStarted || arenaCleared || Mouse.current == null || !Mouse.current.leftButton.wasPressedThisFrame)
+		if (!CanAttemptArenaKill)
 		{
-			return;
+			return null;
 		}
 
-		ArenaBakedEnemyTarget candidate = SelectKillCandidate();
-		if (candidate != null)
+		return SelectKillCandidate();
+	}
+
+	internal bool TryExecuteArenaKill(ArenaBakedEnemyTarget target, int attackNumber, Vector3 hitPoint, Vector3 hitDirection, float destroyDelay)
+	{
+		if (!CanAttemptArenaKill || target == null || !target.IsAlive)
 		{
-			candidate.Kill();
+			return false;
 		}
+
+		target.Kill(new ArenaEnemyKillContext
+		{
+			AttackNumber = attackNumber,
+			HitPoint = hitPoint,
+			HitDirection = hitDirection,
+			DestroyDelay = destroyDelay,
+			PlayEffects = true,
+		});
+
+		return true;
 	}
 
 	private ArenaBakedEnemyTarget SelectKillCandidate()
@@ -1417,6 +1455,15 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 }
 
+internal struct ArenaEnemyKillContext
+{
+	public int AttackNumber;
+	public Vector3 HitPoint;
+	public Vector3 HitDirection;
+	public float DestroyDelay;
+	public bool PlayEffects;
+}
+
 public class ArenaBakedTriggerZone : MonoBehaviour
 {
 	private ArenaTutorialSceneController controller;
@@ -1483,12 +1530,28 @@ public class ArenaBakedEnemyTarget : MonoBehaviour
 
 	public void Kill()
 	{
+		Kill(new ArenaEnemyKillContext
+		{
+			AttackNumber = 0,
+			HitPoint = GetAimPoint(),
+			HitDirection = -transform.forward,
+			DestroyDelay = 0.05f,
+			PlayEffects = false,
+		});
+	}
+
+	internal void Kill(ArenaEnemyKillContext killContext)
+	{
 		if (!IsAlive)
 		{
 			return;
 		}
 
 		IsAlive = false;
+		Vector3 hitPoint = killContext.HitPoint.sqrMagnitude > 0.001f ? killContext.HitPoint : GetAimPoint();
+		Vector3 hitDirection = killContext.HitDirection.sqrMagnitude > 0.001f ? killContext.HitDirection : -transform.forward;
+		EnemyEffect enemyEffect = GetComponent<EnemyEffect>();
+		bool useDeathEffects = killContext.PlayEffects && enemyEffect != null;
 
 		LocomotionSimpleAgent locomotionAgent = GetComponent<LocomotionSimpleAgent>();
 		if (locomotionAgent != null)
@@ -1520,32 +1583,40 @@ public class ArenaBakedEnemyTarget : MonoBehaviour
 			agent.enabled = false;
 		}
 
-		Animator animator = GetComponent<Animator>();
-		if (animator != null)
-		{
-			animator.enabled = false;
-		}
-
 		AudioSource audioSource = GetComponent<AudioSource>();
 		if (audioSource != null)
 		{
 			audioSource.Stop();
 		}
 
-		Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
-		for (int i = 0; i < renderers.Length; i++)
+		if (useDeathEffects)
 		{
-			renderers[i].enabled = false;
+			enemyEffect.PlayHitEffects(hitPoint, hitDirection);
+			enemyEffect.ActivateRagdoll(hitDirection);
+		}
+		else
+		{
+			Animator animator = GetComponent<Animator>();
+			if (animator != null)
+			{
+				animator.enabled = false;
+			}
+
+			Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+			for (int i = 0; i < renderers.Length; i++)
+			{
+				renderers[i].enabled = false;
+			}
+
+			Collider[] colliders = GetComponentsInChildren<Collider>(true);
+			for (int i = 0; i < colliders.Length; i++)
+			{
+				colliders[i].enabled = false;
+			}
 		}
 
-		Collider[] colliders = GetComponentsInChildren<Collider>(true);
-		for (int i = 0; i < colliders.Length; i++)
-		{
-			colliders[i].enabled = false;
-		}
-
-		controller.NotifyEnemyKilled(this);
-		Destroy(gameObject, 0.05f);
+		controller?.NotifyEnemyKilled(this);
+		Destroy(gameObject, useDeathEffects ? Mathf.Max(0.5f, killContext.DestroyDelay) : Mathf.Max(0.05f, killContext.DestroyDelay));
 	}
 }
 

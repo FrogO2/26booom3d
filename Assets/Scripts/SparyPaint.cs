@@ -71,12 +71,6 @@ public class SprayPaint : MonoBehaviour
 			return;
 		}
 
-		if (attackAction != null && attackAction.WasPressedThisFrame())
-		{
-			TriggerSpray();
-			return;
-		}
-
 		if (refreshLatestProjectorEveryFrame && latestProjectorId >= 0)
 		{
 			if (!FrozenProjectorManager.RefreshProjector(latestProjectorId, projectionCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution))
@@ -98,12 +92,16 @@ public class SprayPaint : MonoBehaviour
 		attackAction = actionMap.FindAction(attackActionName, true);
 	}
 
-	private void TriggerSpray()
+	public int TriggerSprayFromCurrentCamera()
 	{
-		Camera projectionCamera = GetProjectionCamera();
+		return TriggerSpray(GetProjectionCamera());
+	}
+
+	private int TriggerSpray(Camera projectionCamera)
+	{
 		if (projectionCamera == null)
 		{
-			return;
+			return -1;
 		}
 
 		FrozenProjectorManager.SetMaxRetainedProjectors(maxRetainedSprays);
@@ -113,7 +111,7 @@ public class SprayPaint : MonoBehaviour
 		int projectorId = FrozenProjectorManager.AddProjector(projectionCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution, useFastInitialVisibility);
 		if (projectorId < 0)
 		{
-			return;
+			return -1;
 		}
 
 		latestProjectorId = projectorId;
@@ -124,6 +122,8 @@ public class SprayPaint : MonoBehaviour
 		{
 			FrozenProjectorManager.ScheduleAsyncHDCapture(projectorId, asyncHighResResolution, projectionMask, depthCaptureShader);
 		}
+
+		return projectorId;
 	}
 
 	private Camera GetProjectionCamera()
