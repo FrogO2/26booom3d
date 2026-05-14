@@ -5,23 +5,31 @@ public class EffectManager : MonoBehaviour
 {
     public static EffectManager Instance;
 
-    [Header("È«ï¿½ï¿½ï¿½ï¿½Ğ§ï¿½ï¿½ï¿½ï¿½")]
+    [Header("È«ÆÁÌØĞ§²ÄÖÊ")]
     public Material postProcessMaterial;
 
-    [Header("==== ï¿½ï¿½É±ï¿½ï¿½Ğ§ (Ë²ï¿½ï¿½) ====")]
+    [Header("==== »÷É±ÌØĞ§ ====")]
     public float killDuration = 0.35f;
     public AnimationCurve killCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 0));
     private Coroutine killCoroutine;
 
-    [Header("==== ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ§ (ï¿½ï¿½×¡) ====")]
-    [Tooltip("ï¿½ï¿½Ğ§ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶È£ï¿½ÖµÔ½ï¿½ï¿½ä»¯Ô½ï¿½ï¿½")]
+    [Header("==== ³ÖĞø³å´ÌÌØĞ§ ====")]
     public float sprintTransitionSpeed = 5f;
 
-    // É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Camera ï¿½ï¿½ØµÄ±ï¿½ï¿½ï¿½ï¿½ï¿½
+    [Header("==== ÔË¶¯·½Ïò·´À¡ (ºËĞÄ) ====")]
+    [Tooltip("ÍÏÈëÍæ¼ÒÉíÉÏµÄ CharacterController ÒÔ»ñÈ¡ÕæÊµÎïÀíËÙ¶È")]
+    public CharacterController playerController;
+    [Tooltip("ÍÏÈëÖ÷Ïà»ú£¬ÓÃÓÚ¼ÆËãÏà¶ÔÊÓÒ°µÄÔË¶¯·½Ïò")]
+    public Transform cameraTransform;
+    [Tooltip("Æ«ÒÆÁéÃô¶È£ºÖµÔ½´ó£¬×óÓÒºáÒÆÊ±ËÙ¶ÈÏßÆ«ÒÆÔ½¿äÕÅ")]
+    public float directionShiftMultiplier = 0.015f;
+    [Tooltip("×î´óÆ«ÒÆÏŞÖÆ£º·ÀÖ¹ÏûÊ§µãÅÜµ½ÆÁÄ»ÍâÃæÈ¥")]
+    public float maxShift = 0.3f;
 
-    // ï¿½Ú²ï¿½×´Ì¬×·ï¿½ï¿½
     private bool isSprinting = false;
     private float currentSprintIntensity = 0f;
+    // ×·×Ùµ±Ç°µÄÏûÊ§µãÆ«ÒÆÁ¿£¬ÓÃÓÚÆ½»¬¹ı¶É
+    private Vector2 currentCenterOffset = Vector2.zero;
 
     void Awake()
     {
@@ -34,6 +42,7 @@ public class EffectManager : MonoBehaviour
         {
             postProcessMaterial.SetFloat("_Intensity", 0f);
             postProcessMaterial.SetFloat("_DashIntensity", 0f);
+            postProcessMaterial.SetVector("_DashCenterOffset", Vector2.zero);
         }
     }
 
@@ -53,7 +62,7 @@ public class EffectManager : MonoBehaviour
         float elapsed = 0f;
         while (elapsed < killDuration)
         {
-            elapsed += Time.unscaledDeltaTime;
+            elapsed += Time.deltaTime;
             float intensity = killCurve.Evaluate(elapsed / killDuration);
             if (postProcessMaterial != null) postProcessMaterial.SetFloat("_Intensity", intensity);
             yield return null;
@@ -76,15 +85,43 @@ public class EffectManager : MonoBehaviour
 
     private void UpdateSprintEffect()
     {
+        // 1. ´¦ÀíÍ¸Ã÷¶ÈµÄµ­Èëµ­³ö
         float targetIntensity = isSprinting ? 1f : 0f;
-        currentSprintIntensity = Mathf.MoveTowards(currentSprintIntensity, targetIntensity, sprintTransitionSpeed * Time.unscaledDeltaTime);
+        currentSprintIntensity = Mathf.MoveTowards(currentSprintIntensity, targetIntensity, sprintTransitionSpeed * Time.deltaTime);
 
         if (postProcessMaterial != null)
         {
             postProcessMaterial.SetFloat("_DashIntensity", currentSprintIntensity);
         }
 
-        // É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¸²ï¿½ï¿½ FOV ï¿½Ä´ï¿½ï¿½ë£¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¨ï¿½ï¿½ï¿½×»ï¿½ï¿½ï¿½ FirstPersonControllerï¿½ï¿½
+        // 2. ´¦Àí¶¯Ì¬ÔË¶¯·½ÏòµÄÆ«ÒÆ
+        if (playerController != null && cameraTransform != null)
+        {
+            // ½«Íæ¼ÒµÄÊÀ½çËÙ¶È×ª»»µ½Ïà»úµÄ¾Ö²¿×ø±êÏµÖĞ
+            // localVelocity.x ¾ÍÊÇ×óÓÒÒÆ¶¯µÄËÙ¶È£¬localVelocity.y ¾ÍÊÇÉÏÏÂ(ÌøÔ¾/ÏÂÂä)µÄËÙ¶È
+            Vector3 localVelocity = cameraTransform.InverseTransformDirection(playerController.velocity);
+
+            // ¼ÆËãÄ¿±êÆ«ÒÆÁ¿
+            Vector2 targetOffset = new Vector2(localVelocity.x, localVelocity.y) * directionShiftMultiplier;
+
+            // ÏŞÖÆ×î´óÆ«ÒÆ£¬·ÀÖ¹Ğ§¹û´©°ï
+            targetOffset.x = Mathf.Clamp(targetOffset.x, -maxShift, maxShift);
+            targetOffset.y = Mathf.Clamp(targetOffset.y, -maxShift, maxShift);
+
+            // Èç¹ûÍæ¼ÒËÉ¿ªÁË³å´Ì¼ü£¬ÈÃÏûÊ§µã¿ìËÙ»ØÕıµ½ÆÁÄ»ÖĞ¼ä
+            if (!isSprinting)
+            {
+                targetOffset = Vector2.zero;
+            }
+
+            // Æ½»¬²åÖµ£¬·ÀÖ¹Í»±äÔì³ÉµÄ»­Ãæ¶¶¶¯
+            currentCenterOffset = Vector2.Lerp(currentCenterOffset, targetOffset, Time.deltaTime * 8f);
+
+            if (postProcessMaterial != null)
+            {
+                postProcessMaterial.SetVector("_DashCenterOffset", currentCenterOffset);
+            }
+        }
     }
 
     void OnDisable()
@@ -93,6 +130,7 @@ public class EffectManager : MonoBehaviour
         {
             postProcessMaterial.SetFloat("_Intensity", 0f);
             postProcessMaterial.SetFloat("_DashIntensity", 0f);
+            postProcessMaterial.SetVector("_DashCenterOffset", Vector2.zero);
         }
     }
 }

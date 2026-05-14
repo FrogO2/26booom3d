@@ -116,6 +116,15 @@ Shader "Hidden/MyProject/BloodRevealMask"
 
 				float2 uv = input.texcoord.xy;
 				float4 sceneColor = SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_LinearClamp, uv, _BlitMipLevel);
+				
+                
+				float revealWithoutBlood = SAMPLE_TEXTURE2D(_BloodObjectMaskTex, sampler_BloodObjectMaskTex, uv).r;
+				if (revealWithoutBlood >= 0.999)
+				{
+					
+					return sceneColor;
+				}
+
 				float rawDepth = SampleSceneDepth(uv);
 
 				#if UNITY_REVERSED_Z
@@ -130,10 +139,12 @@ Shader "Hidden/MyProject/BloodRevealMask"
 				}
 				#endif
 
-				float revealWithoutBlood = SAMPLE_TEXTURE2D(_BloodObjectMaskTex, sampler_BloodObjectMaskTex, uv).r;
+                // (删除掉下方原有的 float revealWithoutBlood = ... 这一行)
 
 				float3 worldPosition = ComputeWorldSpacePosition(uv, rawDepth, UNITY_MATRIX_I_VP);
-				float visibility = saturate(revealWithoutBlood);
+                
+                // 因为上面已经拦截了，这里的 visibility 初始值直接为 0 即可
+				float visibility = 0.0;
 
 				[loop]
 				for (int i = 0; i < _RevealProjectorCount; i++)
