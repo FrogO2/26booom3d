@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
+using UnityEngine.Rendering.RenderGraphModule.Util;
 using UnityEngine.Rendering.Universal;
 
 public class BloodFxPass : ScriptableRenderPass
 {
 	private const string PassName = "Blood FX Pass";
+	private const string StackCopyPassName = "Blood FX Stack Copy";
 
 	private Material bloodFxMaterial;
 
@@ -51,6 +53,10 @@ public class BloodFxPass : ScriptableRenderPass
 			return;
 		}
 
+		bool preserveStackColor = cameraData.renderType == CameraRenderType.Base &&
+			!cameraData.resolveFinalTarget &&
+			resourceData.cameraColor.IsValid();
+
 		TextureDesc destinationDesc = renderGraph.GetTextureDesc(source);
 		destinationDesc.name = "CameraColor-BloodFx";
 		destinationDesc.clearBuffer = false;
@@ -68,6 +74,12 @@ public class BloodFxPass : ScriptableRenderPass
 			{
 				Blitter.BlitTexture(context.cmd, data.source, Vector2.one, data.material, 0);
 			});
+		}
+
+		if (preserveStackColor)
+		{
+			renderGraph.AddBlitPass(destination, resourceData.cameraColor, Vector2.one, Vector2.zero, passName: StackCopyPassName);
+			return;
 		}
 
 		resourceData.cameraColor = destination;

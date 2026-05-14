@@ -1,20 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-4105532241285433866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f05a2636126bb043b29c885698383ed, type: 3}
-  m_Name: BloodRevealRendererFeature
-  m_EditorClassIdentifier: Assembly-CSharp::BloodRevealRendererFeature
-  m_Active: 0
-  renderPassEvent: 500
-  revealShader: {fileID: 4800000, guid: 143ccfbfc60de804683ecd18b04186df, type: 3}
 --- !u!114 &-3330109864168671474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30,26 +15,6 @@ MonoBehaviour:
   m_Active: 0
   renderPassEvent: 500
   revealShader: {fileID: 4800000, guid: 143ccfbfc60de804683ecd18b04186df, type: 3}
---- !u!114 &-2921451753908217840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
-  m_Name: FullScreenPassRendererFeature
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.FullScreenPassRendererFeature
-  m_Active: 0
-  injectionPoint: 550
-  fetchColorBuffer: 1
-  requirements: 0
-  passMaterial: {fileID: 2100000, guid: f4e26b5cfcba1fc4f8fcce2c1405d53e, type: 2}
-  passIndex: 0
-  bindDepthStencilAttachment: 0
-  m_Version: 1
 --- !u!114 &-998509853328156088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,7 +40,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
-  m_Name: PC_Renderer
+  m_Name: simple_Renderer 1
   m_EditorClassIdentifier: 
   debugShaders:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7, type: 3}
@@ -90,13 +55,8 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 2800000, guid: 24ec0e140fb444a44ab96ee80844e18e, type: 3}
     probeVolumeBlendStatesCS: {fileID: 7200000, guid: b9a23f869c4fd45f19c5ada54dd82176, type: 3}
   m_RendererFeatures:
-  - {fileID: 7833122117494664109}
   - {fileID: 6144031677933946039}
-  - {fileID: 6068469105922823365}
-  - {fileID: 1656400991818783669}
-  - {fileID: -4105532241285433866}
-  - {fileID: -2921451753908217840}
-  m_RendererFeatureMap: ad6b866f10d7b46cb704003442fc4355c554f6ec7f883754b59bf612edb7fc16f6b544b82d3806c710d8dbbb1beb74d7
+  m_RendererFeatureMap: b704003442fc4355
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -125,21 +85,6 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
---- !u!114 &1656400991818783669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1aaaea856f969a40bfb47a2e7b3ec87, type: 3}
-  m_Name: BloodFxRendererFeature
-  m_EditorClassIdentifier: Assembly-CSharp::BloodFxRendererFeature
-  m_Active: 0
-  renderPassEvent: 550
-  bloodFxShader: {fileID: 4800000, guid: 8113ea693c7e8474ba7f3f96e967deb7, type: 3}
 --- !u!114 &2722790858799294100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,30 +100,6 @@ MonoBehaviour:
   m_Active: 1
   renderPassEvent: 550
   bloodFxShader: {fileID: 4800000, guid: 8113ea693c7e8474ba7f3f96e967deb7, type: 3}
---- !u!114 &6068469105922823365
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e51cd0a2d39742b49b756a60bf064b3a, type: 3}
-  m_Name: BloodObjectMaskRendererFeature
-  m_EditorClassIdentifier: Assembly-CSharp::BloodObjectMaskRendererFeature
-  m_Active: 1
-  renderPassEvent: 500
-  maskShader: {fileID: 4800000, guid: fdd4a32fd35173a48b41355a1972c5c8, type: 3}
-  alwaysVisibleLayerMask:
-    serializedVersion: 2
-    m_Bits: 128
-  noBloodLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
-  alwaysVisibleAndNoBloodLayerMask:
-    serializedVersion: 2
-    m_Bits: 576
 --- !u!114 &6144031677933946039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,29 +136,3 @@ MonoBehaviour:
   m_Active: 1
   renderPassEvent: 500
   revealShader: {fileID: 4800000, guid: 143ccfbfc60de804683ecd18b04186df, type: 3}
---- !u!114 &7833122117494664109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
-  m_Name: ScreenSpaceAmbientOcclusion
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  m_Settings:
-    AOMethod: 0
-    Downsample: 0
-    AfterOpaque: 0
-    Source: 1
-    NormalSamples: 1
-    Intensity: 0.4
-    DirectLightingStrength: 0.25
-    Radius: 0.3
-    Samples: 1
-    BlurQuality: 0
-    Falloff: 100
-    SampleCount: -1

@@ -96,6 +96,34 @@ public class FirstPersonController : MonoBehaviour
 	private RaycastHit leftWallHit;
 	private RaycastHit rightWallHit;
 
+	public Camera PlayerCamera => playerCamera;
+	public Transform CameraRoot => cameraRoot;
+	public InputActionAsset InputActions => inputActions;
+	public string ActionMapName => actionMapName;
+	public Vector2 MoveInput => moveInput;
+	public Vector2 LookInput => lookInput;
+	public Vector3 PlanarVelocity => planarVelocity;
+	public Vector3 WallNormal => wallNormal;
+	public float Pitch => pitch;
+	public float StandingCameraHeight => standingCameraHeight;
+	public float CrouchingCameraHeight => crouchingCameraHeight;
+	public float StanceLerpSpeed => stanceLerpSpeed;
+	public float WalkSpeed => walkSpeed;
+	public float SprintSpeed => sprintSpeed;
+	public float CrouchSpeed => crouchSpeed;
+	public float WallRunSpeed => wallRunSpeed;
+	public float SlideDuration => slideDuration;
+	public float PlanarSpeed => planarVelocity.magnitude;
+	public float SlideProgress01 => isSliding ? 1f - Mathf.Clamp01(slideTimer / Mathf.Max(0.01f, slideDuration)) : 0f;
+	public bool IsGrounded => isGrounded;
+	public bool IsCrouching => isCrouching;
+	public bool IsSliding => isSliding;
+	public bool IsWallRunning => isWallRunning;
+	public bool IsLeftWalling => isWallRunning && wallOnLeft;
+	public bool IsRightWalling => isWallRunning && wallOnRight;
+	public bool IsSprinting => sprintAction != null && sprintAction.IsPressed() && moveInput.y > 0.1f && isGrounded && !isCrouching && !isSliding;
+	public bool UseExternalViewAnimation { get; set; }
+
 	private void Awake()
 	{
 		characterController = GetComponent<CharacterController>();
@@ -160,7 +188,11 @@ public class FirstPersonController : MonoBehaviour
 		HandleJump();
 		HandleMovement();
 		HandleStance();
-		HandleCameraEffects();
+
+		if (!UseExternalViewAnimation)
+		{
+			HandleCameraEffects();
+		}
         // Debug.Log($"Crouch: {isCrouching}, Grounded: {isGrounded}, Sliding: {isSliding}, WallRunning: {isWallRunning}, Vertical Velocity: {verticalVelocity:F2}");
 	}
 
@@ -229,7 +261,7 @@ public class FirstPersonController : MonoBehaviour
 
 		pitch = Mathf.Clamp(pitch - pitchDelta, minPitch, maxPitch);
 
-		if (cameraRoot != null)
+		if (!UseExternalViewAnimation && cameraRoot != null)
 		{
 			cameraRoot.localRotation = Quaternion.Euler(pitch, 0f, currentCameraTilt);
 		}
@@ -396,7 +428,7 @@ public class FirstPersonController : MonoBehaviour
 		characterController.height = nextHeight;
 		characterController.center = Vector3.up * (nextHeight * 0.5f);
 
-		if (cameraRoot != null)
+		if (!UseExternalViewAnimation && cameraRoot != null)
 		{
 			Vector3 localPosition = cameraRoot.localPosition;
 			float targetCameraHeight = isCrouching ? crouchingCameraHeight : standingCameraHeight;

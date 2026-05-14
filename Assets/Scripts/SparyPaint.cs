@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 public class SprayPaint : MonoBehaviour
 {
@@ -63,8 +64,9 @@ public class SprayPaint : MonoBehaviour
 	private void Update()
 	{
 		FrozenProjectorManager.Tick(hdCaptureRowsPerFrame);
+		Camera projectionCamera = GetProjectionCamera();
 
-		if (targetCamera == null)
+		if (projectionCamera == null)
 		{
 			return;
 		}
@@ -77,7 +79,7 @@ public class SprayPaint : MonoBehaviour
 
 		if (refreshLatestProjectorEveryFrame && latestProjectorId >= 0)
 		{
-			if (!FrozenProjectorManager.RefreshProjector(latestProjectorId, targetCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution))
+			if (!FrozenProjectorManager.RefreshProjector(latestProjectorId, projectionCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution))
 			{
 				latestProjectorId = -1;
 			}
@@ -98,11 +100,17 @@ public class SprayPaint : MonoBehaviour
 
 	private void TriggerSpray()
 	{
+		Camera projectionCamera = GetProjectionCamera();
+		if (projectionCamera == null)
+		{
+			return;
+		}
+
 		FrozenProjectorManager.SetMaxRetainedProjectors(maxRetainedSprays);
 		BloodRevealManager.SetHiddenColor(hiddenColor);
 
 		bool useFastInitialVisibility = enableAsyncHighRes && depthCaptureShader != null;
-		int projectorId = FrozenProjectorManager.AddProjector(targetCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution, useFastInitialVisibility);
+		int projectorId = FrozenProjectorManager.AddProjector(projectionCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution, useFastInitialVisibility);
 		if (projectorId < 0)
 		{
 			return;
@@ -116,6 +124,51 @@ public class SprayPaint : MonoBehaviour
 		{
 			FrozenProjectorManager.ScheduleAsyncHDCapture(projectorId, asyncHighResResolution, projectionMask, depthCaptureShader);
 		}
+	}
+
+	private Camera GetProjectionCamera()
+	{
+		Camera candidate = targetCamera != null ? targetCamera : Camera.main;
+		if (candidate == null)
+		{
+			return null;
+		}
+
+		UniversalAdditionalCameraData additionalCameraData = candidate.GetUniversalAdditionalCameraData();
+		if (additionalCameraData == null || additionalCameraData.renderType != CameraRenderType.Overlay)
+		{
+			return candidate;
+		}
+
+		Camera baseCamera = FindBaseCameraForOverlay(candidate);
+		return baseCamera != null ? baseCamera : candidate;
+	}
+
+	private static Camera FindBaseCameraForOverlay(Camera overlayCamera)
+	{
+		Camera[] cameras = Camera.allCameras;
+
+		for (int i = 0; i < cameras.Length; i++)
+		{
+			Camera candidate = cameras[i];
+			if (candidate == null || candidate == overlayCamera)
+			{
+				continue;
+			}
+
+			UniversalAdditionalCameraData additionalCameraData = candidate.GetUniversalAdditionalCameraData();
+			if (additionalCameraData == null || additionalCameraData.renderType != CameraRenderType.Base)
+			{
+				continue;
+			}
+
+			if (additionalCameraData.cameraStack != null && additionalCameraData.cameraStack.Contains(overlayCamera))
+			{
+				return candidate;
+			}
+		}
+
+		return Camera.main != overlayCamera ? Camera.main : null;
 	}
 
 	public void ClearAllSpray()
