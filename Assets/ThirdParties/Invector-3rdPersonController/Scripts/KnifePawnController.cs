@@ -290,19 +290,20 @@ public class KnifePawnController : MonoBehaviour
 		isDead = true;
 		StopMoving();
 
+		if (playHitEffects && enemyEffect != null)
+		{
+			enemyEffect.PlayHitEffects(hitPoint, hitDirection);
+		}
+
 		if (locomotion != null)
 		{
-			locomotion.TriggerDeath();
+			locomotion.TriggerDeath(hitDirection);
+			return;
 		}
 
 		if (enemyEffect == null)
 		{
 			return;
-		}
-
-		if (playHitEffects)
-		{
-			enemyEffect.PlayHitEffects(hitPoint, hitDirection);
 		}
 
 		enemyEffect.ActivateRagdoll(hitDirection);

@@ -5,30 +5,30 @@ public class EffectManager : MonoBehaviour
 {
     public static EffectManager Instance;
 
-    [Header("È«ÆÁÌØĞ§²ÄÖÊ")]
+    [Header("å…¨å±ç‰¹æ•ˆæè´¨")]
     public Material postProcessMaterial;
 
-    [Header("==== »÷É±ÌØĞ§ ====")]
+    [Header("==== å‡»æ€ç‰¹æ•ˆ ====")]
     public float killDuration = 0.35f;
     public AnimationCurve killCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 0));
     private Coroutine killCoroutine;
 
-    [Header("==== ³ÖĞø³å´ÌÌØĞ§ ====")]
+    [Header("==== æŒç»­å†²åˆºç‰¹æ•ˆ ====")]
     public float sprintTransitionSpeed = 5f;
 
-    [Header("==== ÔË¶¯·½Ïò·´À¡ (ºËĞÄ) ====")]
-    [Tooltip("ÍÏÈëÍæ¼ÒÉíÉÏµÄ CharacterController ÒÔ»ñÈ¡ÕæÊµÎïÀíËÙ¶È")]
+    [Header("==== è¿åŠ¨æ–¹å‘åé¦ˆ (æ ¸å¿ƒ) ====")]
+    [Tooltip("æ‹–å…¥ç©å®¶èº«ä¸Šçš„ CharacterController ä»¥è·å–çœŸå®ç‰©ç†é€Ÿåº¦")]
     public CharacterController playerController;
-    [Tooltip("ÍÏÈëÖ÷Ïà»ú£¬ÓÃÓÚ¼ÆËãÏà¶ÔÊÓÒ°µÄÔË¶¯·½Ïò")]
+    [Tooltip("æ‹–å…¥ä¸»ç›¸æœºï¼Œç”¨äºè®¡ç®—ç›¸å¯¹è§†é‡çš„è¿åŠ¨æ–¹å‘")]
     public Transform cameraTransform;
-    [Tooltip("Æ«ÒÆÁéÃô¶È£ºÖµÔ½´ó£¬×óÓÒºáÒÆÊ±ËÙ¶ÈÏßÆ«ÒÆÔ½¿äÕÅ")]
+    [Tooltip("åç§»çµæ•åº¦ï¼šå€¼è¶Šå¤§ï¼Œå·¦å³æ¨ªç§»æ—¶é€Ÿåº¦çº¿åç§»è¶Šå¤¸å¼ ")]
     public float directionShiftMultiplier = 0.015f;
-    [Tooltip("×î´óÆ«ÒÆÏŞÖÆ£º·ÀÖ¹ÏûÊ§µãÅÜµ½ÆÁÄ»ÍâÃæÈ¥")]
+    [Tooltip("æœ€å¤§åç§»é™åˆ¶ï¼šé˜²æ­¢æ¶ˆå¤±ç‚¹è·‘åˆ°å±å¹•å¤–é¢å»")]
     public float maxShift = 0.3f;
 
     private bool isSprinting = false;
     private float currentSprintIntensity = 0f;
-    // ×·×Ùµ±Ç°µÄÏûÊ§µãÆ«ÒÆÁ¿£¬ÓÃÓÚÆ½»¬¹ı¶É
+    // è¿½è¸ªå½“å‰çš„æ¶ˆå¤±ç‚¹åç§»é‡ï¼Œç”¨äºå¹³æ»‘è¿‡æ¸¡
     private Vector2 currentCenterOffset = Vector2.zero;
 
     void Awake()
@@ -85,7 +85,7 @@ public class EffectManager : MonoBehaviour
 
     private void UpdateSprintEffect()
     {
-        // 1. ´¦ÀíÍ¸Ã÷¶ÈµÄµ­Èëµ­³ö
+        // 1. å¤„ç†é€æ˜åº¦çš„æ·¡å…¥æ·¡å‡º
         float targetIntensity = isSprinting ? 1f : 0f;
         currentSprintIntensity = Mathf.MoveTowards(currentSprintIntensity, targetIntensity, sprintTransitionSpeed * Time.deltaTime);
 
@@ -94,27 +94,27 @@ public class EffectManager : MonoBehaviour
             postProcessMaterial.SetFloat("_DashIntensity", currentSprintIntensity);
         }
 
-        // 2. ´¦Àí¶¯Ì¬ÔË¶¯·½ÏòµÄÆ«ÒÆ
+        // 2. å¤„ç†åŠ¨æ€è¿åŠ¨æ–¹å‘çš„åç§»
         if (playerController != null && cameraTransform != null)
         {
-            // ½«Íæ¼ÒµÄÊÀ½çËÙ¶È×ª»»µ½Ïà»úµÄ¾Ö²¿×ø±êÏµÖĞ
-            // localVelocity.x ¾ÍÊÇ×óÓÒÒÆ¶¯µÄËÙ¶È£¬localVelocity.y ¾ÍÊÇÉÏÏÂ(ÌøÔ¾/ÏÂÂä)µÄËÙ¶È
+            // å°†ç©å®¶çš„ä¸–ç•Œé€Ÿåº¦è½¬æ¢åˆ°ç›¸æœºçš„å±€éƒ¨åæ ‡ç³»ä¸­
+            // localVelocity.x å°±æ˜¯å·¦å³ç§»åŠ¨çš„é€Ÿåº¦ï¼ŒlocalVelocity.y å°±æ˜¯ä¸Šä¸‹(è·³è·ƒ/ä¸‹è½)çš„é€Ÿåº¦
             Vector3 localVelocity = cameraTransform.InverseTransformDirection(playerController.velocity);
 
-            // ¼ÆËãÄ¿±êÆ«ÒÆÁ¿
+            // è®¡ç®—ç›®æ ‡åç§»é‡
             Vector2 targetOffset = new Vector2(localVelocity.x, localVelocity.y) * directionShiftMultiplier;
 
-            // ÏŞÖÆ×î´óÆ«ÒÆ£¬·ÀÖ¹Ğ§¹û´©°ï
+            // é™åˆ¶æœ€å¤§åç§»ï¼Œé˜²æ­¢æ•ˆæœç©¿å¸®
             targetOffset.x = Mathf.Clamp(targetOffset.x, -maxShift, maxShift);
             targetOffset.y = Mathf.Clamp(targetOffset.y, -maxShift, maxShift);
 
-            // Èç¹ûÍæ¼ÒËÉ¿ªÁË³å´Ì¼ü£¬ÈÃÏûÊ§µã¿ìËÙ»ØÕıµ½ÆÁÄ»ÖĞ¼ä
+            // å¦‚æœç©å®¶æ¾å¼€äº†å†²åˆºé”®ï¼Œè®©æ¶ˆå¤±ç‚¹å¿«é€Ÿå›æ­£åˆ°å±å¹•ä¸­é—´
             if (!isSprinting)
             {
                 targetOffset = Vector2.zero;
             }
 
-            // Æ½»¬²åÖµ£¬·ÀÖ¹Í»±äÔì³ÉµÄ»­Ãæ¶¶¶¯
+            // å¹³æ»‘æ’å€¼ï¼Œé˜²æ­¢çªå˜é€ æˆçš„ç”»é¢æŠ–åŠ¨
             currentCenterOffset = Vector2.Lerp(currentCenterOffset, targetOffset, Time.deltaTime * 8f);
 
             if (postProcessMaterial != null)

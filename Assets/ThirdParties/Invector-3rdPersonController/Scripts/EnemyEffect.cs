@@ -10,7 +10,7 @@ public class EnemyEffect : MonoBehaviour
     [SerializeField] AudioSource audioSource;
 
     [Header("Ragdoll")]
-    [SerializeField] float ragdollImpulse = 4f;
+    [SerializeField] float ragdollImpulse = 40f;
     [SerializeField] bool disableMainColliderOnRagdoll = true;
 
     Animator animator;
@@ -79,11 +79,6 @@ public class EnemyEffect : MonoBehaviour
         }
     }
 
-    public void ActivateRagdoll()
-    {
-        ActivateRagdoll(Vector3.zero);
-    }
-
     public void ActivateRagdoll(Vector3 hitDirection)
     {
         if (ragdollActive)
@@ -137,21 +132,12 @@ public class EnemyEffect : MonoBehaviour
             col.enabled = true;
         }
 
-        if (hitDirection.sqrMagnitude > 0.001f)
+        if (hitDirection.sqrMagnitude <= 0.001f)
         {
-            Rigidbody impulseBody = FindClosestRagdollBody();
-            if (impulseBody != null)
-            {
-                impulseBody.AddForce(hitDirection.normalized * ragdollImpulse, ForceMode.Impulse);
-            }
+            return;
         }
-    }
 
-    Rigidbody FindClosestRagdollBody()
-    {
-        Rigidbody closest = null;
-        float minDistance = float.MaxValue;
-
+        Vector3 impulse = hitDirection.normalized * ragdollImpulse;
         for (int index = 0; index < ragdollBodies.Length; index++)
         {
             Rigidbody body = ragdollBodies[index];
@@ -160,14 +146,7 @@ public class EnemyEffect : MonoBehaviour
                 continue;
             }
 
-            float distance = Vector3.Distance(body.worldCenterOfMass, transform.position);
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                closest = body;
-            }
+            body.AddForce(impulse, ForceMode.Impulse);
         }
-
-        return closest;
     }
 }

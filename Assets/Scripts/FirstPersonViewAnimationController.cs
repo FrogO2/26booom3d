@@ -102,6 +102,7 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 	private Quaternion weaponPivotBaseLocalRotation;
 	private Transform weaponMotionTarget;
 	private Vector3 weaponModelBaseLocalPosition;
+	private Quaternion weaponMotionBaseLocalRotation;
 	private float currentCameraHeight;
 	private float currentTilt;
 	private float bobTime;
@@ -243,6 +244,7 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 		if (weaponMotionTarget != null)
 		{
 			weaponModelBaseLocalPosition = weaponMotionTarget.localPosition;
+			weaponMotionBaseLocalRotation = weaponMotionTarget.localRotation;
 		}
 
 		if (playerCamera != null && baseFieldOfView <= 0f)
@@ -372,11 +374,21 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 
 	private float GetNormalizedSpeed()
 	{
+		float maxSpeed = GetReferenceSpeed();
+		return maxSpeed > 0.01f ? Mathf.Clamp01(controller.PlanarSpeed / maxSpeed) : 0f;
+	}
+
+	private float GetReferenceSpeed()
+	{
 		float maxSpeed = controller.WalkSpeed;
 
 		if (controller.IsWallRunning)
 		{
 			maxSpeed = controller.WallRunSpeed;
+		}
+		else if (controller.IsSliding)
+		{
+			maxSpeed = Mathf.Max(controller.SprintSpeed, controller.WalkSpeed);
 		}
 		else if (controller.IsCrouching)
 		{
@@ -387,7 +399,7 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 			maxSpeed = controller.SprintSpeed;
 		}
 
-		return maxSpeed > 0.01f ? Mathf.Clamp01(controller.PlanarSpeed / maxSpeed) : 0f;
+		return maxSpeed;
 	}
 
 	private void GetSlideShake(out Vector3 positionOffset, out Vector3 rotationOffset)
@@ -614,10 +626,14 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 		float deltaTime = Time.deltaTime;
 		float weight = Mathf.Max(0f, weaponAnimationWeight);
 		Vector2 lookInput = controller.LookInput;
-		Vector2 moveInput = controller.MoveInput;
 		float speedFactor = GetNormalizedSpeed();
+		float referenceSpeed = Mathf.Max(GetReferenceSpeed(), 0.01f);
+		Vector3 localPlanarVelocity = transform.InverseTransformDirection(controller.PlanarVelocity);
+		Vector2 localVelocity01 = new Vector2(
+			Mathf.Clamp(localPlanarVelocity.x / referenceSpeed, -1f, 1f),
+			Mathf.Clamp(localPlanarVelocity.z / referenceSpeed, -1f, 1f));
 
-		if (weaponPivot != null)
+		if (weaponMotionTarget != null)
 		{
 			Vector3 targetRotation = new Vector3(
 				-lookInput.y * weaponLookRotationAmount.x,
@@ -625,19 +641,15 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 				-lookInput.x * weaponLookRotationAmount.z) * weight;
 
 			currentWeaponRotation = Vector3.Lerp(currentWeaponRotation, targetRotation, weaponRotationLerpSpeed * deltaTime);
-			weaponPivot.localRotation = weaponPivotBaseLocalRotation * Quaternion.Euler(currentWeaponRotation);
-		}
-
-		if (weaponMotionTarget != null)
-		{
 			float bobLift = controller.IsGrounded && !controller.IsSliding ? Mathf.Abs(Mathf.Sin(bobTime)) * weaponMoveOffsetAmount.y * speedFactor : 0f;
 			Vector3 targetOffset = new Vector3(
-				-moveInput.x * weaponMoveOffsetAmount.x,
+				-localVelocity01.x * weaponMoveOffsetAmount.x,
 				bobLift,
-				-Mathf.Max(0f, moveInput.y) * weaponMoveOffsetAmount.z) * weight;
+				-localVelocity01.y * weaponMoveOffsetAmount.z) * weight;
 
 			currentWeaponOffset = Vector3.Lerp(currentWeaponOffset, targetOffset, weaponMoveLerpSpeed * deltaTime);
 			weaponMotionTarget.localPosition = weaponModelBaseLocalPosition + currentWeaponOffset;
+			weaponMotionTarget.localRotation = weaponMotionBaseLocalRotation * Quaternion.Euler(currentWeaponRotation);
 		}
 	}
 
@@ -669,6 +681,7 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 		if (weaponMotionTarget != null)
 		{
 			weaponMotionTarget.localPosition = weaponModelBaseLocalPosition;
+			weaponMotionTarget.localRotation = weaponMotionBaseLocalRotation;
 		}
 
 		if (playerCamera != null)

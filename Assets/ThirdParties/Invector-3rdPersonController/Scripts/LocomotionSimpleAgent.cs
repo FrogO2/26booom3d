@@ -135,6 +135,11 @@ public class LocomotionSimpleAgent : MonoBehaviour
 
 	public void TriggerDeath()
 	{
+		TriggerDeath(Vector3.zero);
+	}
+
+	public void TriggerDeath(Vector3 hitDirection)
+	{
 		if (IsDead)
 		{
 			return;
@@ -152,7 +157,7 @@ public class LocomotionSimpleAgent : MonoBehaviour
 
 		if (enemyEffect != null)
 		{
-			enemyEffect.ActivateRagdoll();
+			enemyEffect.ActivateRagdoll(hitDirection);
 			return;
 		}
 
