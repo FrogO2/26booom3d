@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e2c2f874f7e808a4bb99b90c5c0d3652
+timeCreated: 1486611435
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/DecalManager/Decals/vDecal_Barrel.prefab
+  uploadId: 705020

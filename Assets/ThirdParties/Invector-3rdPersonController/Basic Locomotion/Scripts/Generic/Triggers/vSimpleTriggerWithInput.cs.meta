@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: cd7027ac3df66894a9772c31dde5e330
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Scripts/Generic/Triggers/vSimpleTriggerWithInput.cs
+  uploadId: 705020

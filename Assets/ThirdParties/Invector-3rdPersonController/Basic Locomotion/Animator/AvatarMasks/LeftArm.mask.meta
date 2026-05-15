@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1144b210e763c6341932fb8fc99e5e21
+timeCreated: 1459448729
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Animator/AvatarMasks/LeftArm.mask
+  uploadId: 705020

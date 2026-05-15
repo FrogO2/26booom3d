@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 795f336bc230ef247b0206beca796d22
+timeCreated: 1498054874
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Scripts/Generic/Attributes/Editor/vCheckPropertyDrawer.cs
+  uploadId: 705020

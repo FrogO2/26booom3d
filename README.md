@@ -4,7 +4,7 @@ a 2026 booom project on painting the world red
 以下内容供项目组成员确认进度，不是特别细致，爱来自FrogO2。
 
 距离提交还有
-![:FrogO2](https://count.getloli.com/@FrogO2?name=FrogO2&theme=original-new&padding=1&offset=0&align=top&scale=1&pixelated=1&darkmode=auto&num=7)
+![:FrogO2](https://count.getloli.com/@FrogO2?name=FrogO2&theme=original-new&padding=1&offset=0&align=top&scale=1&pixelated=1&darkmode=auto&num=2)
 天
 
 ## 基础能力

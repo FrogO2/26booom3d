@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 901c53f5a7bf1ec45a6277d139dd3e76
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/DecalManager/BulletEffect/Resources/materials/WoodBits.mat
+  uploadId: 705020

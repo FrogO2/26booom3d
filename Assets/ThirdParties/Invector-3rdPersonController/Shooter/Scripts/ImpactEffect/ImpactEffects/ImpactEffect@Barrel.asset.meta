@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fcc7248b6f746954384a23fff2e8676e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/ImpactEffect/ImpactEffects/ImpactEffect@Barrel.asset
+  uploadId: 705020

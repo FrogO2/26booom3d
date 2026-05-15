@@ -1,13 +1,11 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Serialization;
 
 public class SprayPaint : MonoBehaviour
 {
 	[Header("References")]
 	[SerializeField] private Camera targetCamera;
-	[SerializeField] private InputActionAsset inputActions;
-	[SerializeField] private string actionMapName = "Player";
-	[SerializeField] private string attackActionName = "Attack";
 
 	[Header("Reveal")]
 	[SerializeField, Min(0.5f)] private float projectionDistance = 30f;
@@ -26,94 +24,124 @@ public class SprayPaint : MonoBehaviour
 	[SerializeField] private Vector2 bloodTextureScale = Vector2.one;
 	[SerializeField] private Vector2 bloodTextureOffset = Vector2.zero;
 
-	[Header("Async HD Depth")]
-	[SerializeField] private bool enableAsyncHighRes;
-	[SerializeField, Min(16)] private int asyncHighResResolution = 256;
+	[Header("HD Depth")]
+	[SerializeField, FormerlySerializedAs("asyncHighResResolution"), Min(16)] private int highResCaptureResolution = 256;
 	[SerializeField] private Shader depthCaptureShader;
-	[SerializeField, Min(1), Tooltip("每帧渲染的扫描行数。越小则每帧 GPU 开销越低，但 HD 数据就绪所需帧数越多。")]
-	private int hdCaptureRowsPerFrame = 64;
 
-	private InputAction attackAction;
 	private int latestProjectorId = -1;
 
 	private void Awake()
 	{
+		ExcludeProtectedLayers();
+
 		if (targetCamera == null)
 		{
 			targetCamera = Camera.main;
 		}
 
-		BindInputAction();
 		FrozenProjectorManager.SetMaxRetainedProjectors(maxRetainedSprays);
 		BloodRevealManager.SetHiddenColor(hiddenColor);
 	}
 
-	private void OnEnable()
-	{
-		attackAction?.Enable();
-	}
-
-	private void OnDisable()
-	{
-		attackAction?.Disable();
-	}
-
 	private void Update()
 	{
-		FrozenProjectorManager.Tick(hdCaptureRowsPerFrame);
+		Camera projectionCamera = GetProjectionCamera();
 
-		if (targetCamera == null)
+		if (projectionCamera == null)
 		{
-			return;
-		}
-
-		if (attackAction != null && attackAction.WasPressedThisFrame())
-		{
-			TriggerSpray();
 			return;
 		}
 
 		if (refreshLatestProjectorEveryFrame && latestProjectorId >= 0)
 		{
-			if (!FrozenProjectorManager.RefreshProjector(latestProjectorId, targetCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution))
+			if (!FrozenProjectorManager.RefreshProjector(latestProjectorId, projectionCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution))
 			{
 				latestProjectorId = -1;
 			}
 		}
 	}
 
-	private void BindInputAction()
+	public int TriggerSprayFromCurrentCamera()
 	{
-		if (inputActions == null)
-		{
-			Debug.LogWarning($"{nameof(SprayPaint)} on {name} has no InputActionAsset assigned.", this);
-			return;
-		}
-
-		InputActionMap actionMap = inputActions.FindActionMap(actionMapName, true);
-		attackAction = actionMap.FindAction(attackActionName, true);
+		return TriggerSpray(GetProjectionCamera());
 	}
 
-	private void TriggerSpray()
+	private int TriggerSpray(Camera projectionCamera)
 	{
+		if (projectionCamera == null)
+		{
+			return -1;
+		}
+
 		FrozenProjectorManager.SetMaxRetainedProjectors(maxRetainedSprays);
 		BloodRevealManager.SetHiddenColor(hiddenColor);
 
-		bool useFastInitialVisibility = enableAsyncHighRes && depthCaptureShader != null;
-		int projectorId = FrozenProjectorManager.AddProjector(targetCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution, useFastInitialVisibility);
+		int projectorId = FrozenProjectorManager.AddProjector(projectionCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution);
 		if (projectorId < 0)
 		{
-			return;
+			return -1;
 		}
 
 		latestProjectorId = projectorId;
 		BloodRevealManager.AddReveal(projectorId);
 		BloodFxManager.AddBloodFx(projectorId, ResolveProjectionTexture(), ResolveProjectionColor(), bloodTextureScale, bloodTextureOffset);
 
-		if (enableAsyncHighRes && depthCaptureShader != null)
+		return projectorId;
+	}
+
+	public void CaptureHighResForProjector(int projectorId)
+	{
+		if (projectorId < 0 || depthCaptureShader == null)
 		{
-			FrozenProjectorManager.ScheduleAsyncHDCapture(projectorId, asyncHighResResolution, projectionMask, depthCaptureShader);
+			return;
 		}
+
+		FrozenProjectorManager.CaptureHighResDepth(projectorId, highResCaptureResolution, projectionMask, depthCaptureShader);
+	}
+
+	private Camera GetProjectionCamera()
+	{
+		Camera candidate = targetCamera != null ? targetCamera : Camera.main;
+		if (candidate == null)
+		{
+			return null;
+		}
+
+		UniversalAdditionalCameraData additionalCameraData = candidate.GetUniversalAdditionalCameraData();
+		if (additionalCameraData == null || additionalCameraData.renderType != CameraRenderType.Overlay)
+		{
+			return candidate;
+		}
+
+		Camera baseCamera = FindBaseCameraForOverlay(candidate);
+		return baseCamera != null ? baseCamera : candidate;
+	}
+
+	private static Camera FindBaseCameraForOverlay(Camera overlayCamera)
+	{
+		Camera[] cameras = Camera.allCameras;
+
+		for (int i = 0; i < cameras.Length; i++)
+		{
+			Camera candidate = cameras[i];
+			if (candidate == null || candidate == overlayCamera)
+			{
+				continue;
+			}
+
+			UniversalAdditionalCameraData additionalCameraData = candidate.GetUniversalAdditionalCameraData();
+			if (additionalCameraData == null || additionalCameraData.renderType != CameraRenderType.Base)
+			{
+				continue;
+			}
+
+			if (additionalCameraData.cameraStack != null && additionalCameraData.cameraStack.Contains(overlayCamera))
+			{
+				return candidate;
+			}
+		}
+
+		return Camera.main != overlayCamera ? Camera.main : null;
 	}
 
 	public void ClearAllSpray()
@@ -131,8 +159,25 @@ public class SprayPaint : MonoBehaviour
 		captureResolution = Mathf.Max(16, captureResolution);
 		visibleDepthBias = Mathf.Max(0.001f, visibleDepthBias);
 		maxRetainedSprays = Mathf.Max(1, maxRetainedSprays);
-		asyncHighResResolution = Mathf.Max(16, asyncHighResResolution);
-		hdCaptureRowsPerFrame = Mathf.Max(1, hdCaptureRowsPerFrame);
+		highResCaptureResolution = Mathf.Max(16, highResCaptureResolution);
+		ExcludeProtectedLayers();
+	}
+
+	private void ExcludeProtectedLayers()
+	{
+		projectionMask = RemoveLayerFromMask(projectionMask, "Unpaintable");
+		projectionMask = RemoveLayerFromMask(projectionMask, "Unpaintable&Unmaskable");
+	}
+
+	private static LayerMask RemoveLayerFromMask(LayerMask mask, string layerName)
+	{
+		int layer = LayerMask.NameToLayer(layerName);
+		if (layer < 0)
+		{
+			return mask;
+		}
+
+		return mask & ~(1 << layer);
 	}
 
 	private Texture ResolveProjectionTexture()

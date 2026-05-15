@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d8bab0df5d3f0a045a31549c871c8e49
+timeCreated: 1487965763
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/3DModels/Textures/VbotBlackShooterEdition/BlackShooterEdition/Body.mat
+  uploadId: 705020

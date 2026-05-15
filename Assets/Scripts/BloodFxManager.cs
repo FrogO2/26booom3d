@@ -60,15 +60,31 @@ public static class BloodFxManager
 		int count = 0;
 		int startIndex = Mathf.Max(0, BloodEntries.Count - FrozenProjectorManager.ShaderMaxProjectors);
 
-		for (int i = startIndex; i < BloodEntries.Count && count < FrozenProjectorManager.ShaderMaxProjectors; i++)
+        // 【新增】：获取当前主相机的视锥体平面
+        Camera mainCam = Camera.main;
+        Plane[] frustumPlanes = mainCam != null ? GeometryUtility.CalculateFrustumPlanes(mainCam) : null;
+
+        for (int i = startIndex; i < BloodEntries.Count && count < FrozenProjectorManager.ShaderMaxProjectors; i++)
 		{
 			BloodFxEntry entry = BloodEntries[i];
 			if (!FrozenProjectorManager.TryGetProjector(entry.projectorId, out FrozenProjectorManager.FrozenProjector projector))
 			{
 				continue;
 			}
+            // 【新增】：粗略计算投影仪的包围盒，并进行视锥体剔除
+            if (frustumPlanes != null)
+            {
+                // 用一个粗略的球体或 AABB 来代表投影仪的有效范围
+                Vector3 center = projector.position + projector.forward * (projector.farDistance * 0.5f);
+                float radius = projector.farDistance * 0.5f;
+                Bounds bounds = new Bounds(center, new Vector3(radius * 2, radius * 2, radius * 2));
 
-			BloodPositions[count] = new Vector4(projector.position.x, projector.position.y, projector.position.z, 1f);
+                // 如果这个血迹完全不在屏幕内，直接跳过！不发给显卡！
+                if (!GeometryUtility.TestPlanesAABB(frustumPlanes, bounds))
+                    continue;
+            }
+
+            BloodPositions[count] = new Vector4(projector.position.x, projector.position.y, projector.position.z, 1f);
 			BloodRights[count] = new Vector4(projector.right.x, projector.right.y, projector.right.z, 0f);
 			BloodUps[count] = new Vector4(projector.up.x, projector.up.y, projector.up.z, 0f);
 			BloodForwards[count] = new Vector4(projector.forward.x, projector.forward.y, projector.forward.z, 0f);

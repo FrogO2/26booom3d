@@ -985,10 +985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SprayPaint
   targetCamera: {fileID: 330585545}
-  inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  actionMapName: Player
-  attackActionName: Attack
-  projectionDistance: 3000
+  projectionDistance: 5000
   edgeFeather: 0.12
   hiddenColor: {r: 1, g: 1, b: 1, a: 1}
   captureResolution: 512
@@ -1003,10 +1000,8 @@ MonoBehaviour:
   bloodTexture: {fileID: 0}
   bloodTextureScale: {x: 1, y: 1}
   bloodTextureOffset: {x: 0, y: 0}
-  enableAsyncHighRes: 1
-  asyncHighResResolution: 1024
+  highResCaptureResolution: 1024
   depthCaptureShader: {fileID: 4800000, guid: b9ac2d1604b69d34fa5c0793cd776658, type: 3}
-  hdCaptureRowsPerFrame: 64
 --- !u!114 &1188481567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1049,7 +1044,6 @@ MonoBehaviour:
   slideDuration: 0.65
   slideCooldown: 0.25
   wallRunSpeed: 9.5
-  wallRunDuration: 1
   wallRunGravity: 6
   wallCheckDistance: 0.9
   wallCheckHeight: 1.1

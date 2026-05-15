@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 225843b6084e75440a6ea970a17c93aa
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Scripts/FootStep/Materials/ParticleSmokeVertlit.mat
+  uploadId: 705020

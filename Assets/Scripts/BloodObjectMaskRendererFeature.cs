@@ -45,6 +45,11 @@ public class BloodObjectMaskRendererFeature : ScriptableRendererFeature
 			return;
 		}
 
+		if (renderingData.cameraData.renderType == CameraRenderType.Overlay)
+		{
+			return;
+		}
+
 		maskPass.Setup(
 			maskShader,
 			alwaysVisibleLayerMask,
@@ -113,7 +118,7 @@ public class BloodObjectMaskRendererFeature : ScriptableRendererFeature
 			UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
 			UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
 
-			if (cameraData.camera.cameraType != CameraType.Game || resourceData.isActiveTargetBackBuffer)
+			if (cameraData.cameraType != CameraType.Game || resourceData.isActiveTargetBackBuffer)
 			{
 				return;
 			}

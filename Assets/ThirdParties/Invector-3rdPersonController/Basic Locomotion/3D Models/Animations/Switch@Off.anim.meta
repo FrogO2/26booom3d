@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d9d8b41638106c847abc9ed23e3fbc6c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/3D Models/Animations/Switch@Off.anim
+  uploadId: 705020

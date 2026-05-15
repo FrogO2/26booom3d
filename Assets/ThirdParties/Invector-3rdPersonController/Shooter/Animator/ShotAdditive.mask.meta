@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c119733724ece7148b6cf3b2460830a7
+timeCreated: 1439571544
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Animator/ShotAdditive.mask
+  uploadId: 705020

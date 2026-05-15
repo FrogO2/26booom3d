@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 3b24bb8aeafbfb1498256cb11ce9178b
+timeCreated: 1433611647
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Scripts/FootStep/Editor/vFootStepEditor.cs
+  uploadId: 705020

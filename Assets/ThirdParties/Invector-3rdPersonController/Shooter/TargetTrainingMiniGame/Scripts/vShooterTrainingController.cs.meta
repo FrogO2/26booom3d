@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 4b1c25e3921d23142b08a1b4a752721f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/TargetTrainingMiniGame/Scripts/vShooterTrainingController.cs
+  uploadId: 705020

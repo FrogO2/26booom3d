@@ -89,20 +89,33 @@ Shader "Hidden/MyProject/BloodProjectorFx"
 				// Stored value is reverse-Z normalised: R = (far - viewZ) / (far - near).
 				// Decode: viewZ = far - R * (far - near).
 				float4 hdSample = SAMPLE_TEXTURE2D_ARRAY(_ProjectorHDAtlas, sampler_ProjectorHDAtlas, projectorUv, baseSlice);
+				// 设定一个软过渡区间，用于抹平锯齿（推荐 0.1 到 0.2 米之间）
+				float softFadeRange = 0.15;
+
+				// 【1. 修复 HD Atlas 的锯齿】
 				if (hdSample.a > 0.5)
 				{
 					float viewZ_hd = farDistance - hdSample.r * (farDistance - nearDistance);
-					if (projectedDepth > viewZ_hd + depthBias)
+					float depthDiff_hd = projectedDepth - viewZ_hd;
+
+					// 如果超出了【容差 + 软过渡】的极限，彻底放弃
+					if (depthDiff_hd > depthBias + softFadeRange)
 					{
-						projectorUv = 0.0;
-						mask = 0.0;
-						return false;
+						projectorUv = 0.0; mask = 0.0; return false;
 					}
-					mask = 1.0 - smoothstep(1.0 - feather, 1.0, edgeDistance);
-					return true;
+
+					float baseMask_hd = 1.0 - smoothstep(1.0 - feather, 1.0, edgeDistance);
+					
+					// 软衰减核心：超出 bias 的部分，平滑渐变到 0
+					float depthFade_hd = saturate(1.0 - max(0.0, depthDiff_hd - depthBias) / softFadeRange);
+					
+					mask = baseMask_hd * depthFade_hd;
+					return mask > 0.01; // 剔除微弱杂色
 				}
 
-				// Select the finest cascade whose far distance covers the projected depth.
+				// ==========================================
+				// 下面是获取 visibilitySample 的代码 (保持不变)
+				// ==========================================
 				int projectorSlot = baseSlice / MAX_CASCADES_PER_PROJECTOR;
 				float4 cascadeFars = _ProjectorCascadeFarDistances[projectorSlot];
 				int cascadeIndex = cascadeCount - 1;
@@ -113,15 +126,26 @@ Shader "Hidden/MyProject/BloodProjectorFx"
 				int depthSliceIndex = baseSlice + cascadeIndex;
 				float4 visibilitySample = SAMPLE_TEXTURE2D_ARRAY(_ProjectorVisibilityAtlas, sampler_ProjectorVisibilityAtlas, projectorUv, depthSliceIndex);
 
-				if (visibilitySample.a <= 0.5 || projectedDepth > visibilitySample.r + depthBias)
+				if (visibilitySample.a <= 0.5)
 				{
-					projectorUv = 0.0;
-					mask = 0.0;
-					return false;
+					projectorUv = 0.0; mask = 0.0; return false;
 				}
 
-				mask = 1.0 - smoothstep(1.0 - feather, 1.0, edgeDistance);
-				return true;
+				// 【2. 修复普通 Atlas 的锯齿】
+				float depthDiff = projectedDepth - visibilitySample.r;
+
+				if (depthDiff > depthBias + softFadeRange)
+				{
+					projectorUv = 0.0; mask = 0.0; return false;
+				}
+
+				float baseMask = 1.0 - smoothstep(1.0 - feather, 1.0, edgeDistance);
+				
+				// 软衰减核心
+				float depthFade = saturate(1.0 - max(0.0, depthDiff - depthBias) / softFadeRange);
+				
+				mask = baseMask * depthFade;
+				return mask > 0.01;
 			}
 
 			float4 Frag(Varyings input) : SV_Target0
@@ -171,7 +195,22 @@ Shader "Hidden/MyProject/BloodProjectorFx"
 
 					float4 projectedColor = bloodSample * _BloodProjectorColors[i];
 					float alpha = saturate(projectedColor.a * mask * (1.0 - noBloodMask));
-					result.rgb = lerp(result.rgb, projectedColor.rgb, alpha);
+					
+					
+					// 1. 提取当前底层场景像素的真实亮度 (Luminance)
+					// 这包含了原本该位置的阴影、光照强弱等所有立体信息
+					float luminance = dot(sceneColor.rgb, float3(0.299, 0.587, 0.114));
+					
+					// 2. 将底层光影叠加到血迹颜色上
+					// 乘以 2.0 是为了补偿吸收导致的整体偏暗，你可以根据游戏美术风格微调这个系数 (比如 1.5 ~ 2.5)
+					float3 litBloodColor = projectedColor.rgb * luminance * 2.0;
+
+					// (可选的写实向方案：如果你做的是暗黑恐怖游戏，可以注释掉上面两行，直接用正片叠底)
+					// float3 litBloodColor = result.rgb * projectedColor.rgb * 1.5;
+					
+					// 3. 应用受光影影响的血迹
+					result.rgb = lerp(result.rgb, litBloodColor, alpha);
+					
 				}
 
 				return result;

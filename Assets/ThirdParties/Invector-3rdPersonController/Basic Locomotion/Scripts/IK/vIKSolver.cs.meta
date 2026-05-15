@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 5f2b3ca9b2c658a47b99571d9f96e74d
+timeCreated: 1541778644
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Scripts/IK/vIKSolver.cs
+  uploadId: 705020

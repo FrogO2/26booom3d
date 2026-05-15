@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: c1e83b0485525f1418768f711221c54a
+timeCreated: 1476291778
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Melee Combat/Simple Melee AI/Scripts/Editor/vSimpleMeleeAI_WeaponsControl_Editor.cs
+  uploadId: 705020

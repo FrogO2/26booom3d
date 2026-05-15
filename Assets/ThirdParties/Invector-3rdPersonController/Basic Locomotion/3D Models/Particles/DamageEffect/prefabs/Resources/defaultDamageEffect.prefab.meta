@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b8f2fe1ee1a01724cb72f5b0e6bd2eef
+timeCreated: 1461863965
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/3D Models/Particles/DamageEffect/prefabs/Resources/defaultDamageEffect.prefab
+  uploadId: 705020

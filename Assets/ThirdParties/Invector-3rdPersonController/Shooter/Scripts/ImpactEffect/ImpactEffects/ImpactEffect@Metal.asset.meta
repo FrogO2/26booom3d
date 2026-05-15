@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bafe0df184460ad48959c8cfbaa6df5d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/ImpactEffect/ImpactEffects/ImpactEffect@Metal.asset
+  uploadId: 705020

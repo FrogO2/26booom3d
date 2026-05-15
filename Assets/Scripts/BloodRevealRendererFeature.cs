@@ -46,6 +46,11 @@ public class BloodRevealRendererFeature : ScriptableRendererFeature
 			return;
 		}
 
+		if (renderingData.cameraData.renderType == CameraRenderType.Overlay)
+		{
+			return;
+		}
+
 		revealPass.Setup(revealMaterial);
 		renderer.EnqueuePass(revealPass);
 	}

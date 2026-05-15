@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 08f92fb4bee6e6740aeed128f64eec90
+timeCreated: 1487965763
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/3DModels/Textures/VbotBlackShooterEdition/BlackShooterEdition/Rubber.mat
+  uploadId: 705020

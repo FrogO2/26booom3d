@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: dfea19d1d34dd174d87195f78cb44ae7
+timeCreated: 1460037360
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Basic Locomotion/Scripts/FootStep/AudioSource/AudioSource.prefab
+  uploadId: 705020

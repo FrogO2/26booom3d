@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 22773fb6a3ebd59429b49fd6e288058e
+timeCreated: 1431957514
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Prefabs/Weapon/_bullets/vDefaultBullet.prefab
+  uploadId: 705020

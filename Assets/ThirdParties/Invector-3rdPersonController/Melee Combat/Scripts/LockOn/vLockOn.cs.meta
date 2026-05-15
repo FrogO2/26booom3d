@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 47c91cac344662340bbbedbdbed00328
+timeCreated: 1498605023
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - aimImagePrefab: {fileID: 22467274, guid: f2c21a5084b380e45af41fac8083c307, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Melee Combat/Scripts/LockOn/vLockOn.cs
+  uploadId: 705020

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e1a8fa6bf2308344993f0b8168b5a00c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/Shooter/Scripts/ImpactEffect/ImpactEffects/ImpactEffect@Dirt.asset
+  uploadId: 705020

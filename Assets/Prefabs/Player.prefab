@@ -187,7 +187,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6301509035296075085
 Transform:
   m_ObjectHideFlags: 0
@@ -300,9 +300,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SprayPaint
   targetCamera: {fileID: 5827110942582263581}
-  inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  actionMapName: Player
-  attackActionName: Attack
   projectionDistance: 3000
   edgeFeather: 0.05
   hiddenColor: {r: 1, g: 1, b: 1, a: 1}
@@ -310,7 +307,7 @@ MonoBehaviour:
   visibleDepthBias: 0.05
   projectionMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 247
   maxRetainedSprays: 16
   refreshLatestProjectorEveryFrame: 0
   bloodColor: {r: 1, g: 0, b: 0, a: 0.9490196}
@@ -318,7 +315,5 @@ MonoBehaviour:
   bloodTexture: {fileID: 0}
   bloodTextureScale: {x: 1, y: 1}
   bloodTextureOffset: {x: 0, y: 0}
-  enableAsyncHighRes: 1
-  asyncHighResResolution: 1024
+  highResCaptureResolution: 1024
   depthCaptureShader: {fileID: 4800000, guid: b9ac2d1604b69d34fa5c0793cd776658, type: 3}
-  hdCaptureRowsPerFrame: 64

@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
+using UnityEngine.Rendering.RenderGraphModule.Util;
 using UnityEngine.Rendering.Universal;
 
 public class BloodRevealPass : ScriptableRenderPass
 {
 	private const string PassName = "Blood Reveal Pass";
+	private const string StackCopyPassName = "Blood Reveal Stack Copy";
 
 	private Material revealMaterial;
 
@@ -38,7 +40,7 @@ public class BloodRevealPass : ScriptableRenderPass
 		UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
 		UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
 
-		if (cameraData.camera.cameraType != CameraType.Game || resourceData.isActiveTargetBackBuffer)
+		if (cameraData.cameraType != CameraType.Game || resourceData.isActiveTargetBackBuffer)
 		{
 			return;
 		}
@@ -50,6 +52,10 @@ public class BloodRevealPass : ScriptableRenderPass
 		{
 			return;
 		}
+
+		bool preserveStackColor = cameraData.renderType == CameraRenderType.Base &&
+			!cameraData.resolveFinalTarget &&
+			resourceData.cameraColor.IsValid();
 
 		TextureDesc destinationDesc = renderGraph.GetTextureDesc(source);
 		destinationDesc.name = "CameraColor-BloodReveal";
@@ -68,6 +74,12 @@ public class BloodRevealPass : ScriptableRenderPass
 			{
 				Blitter.BlitTexture(context.cmd, data.source, Vector2.one, data.material, 0);
 			});
+		}
+
+		if (preserveStackColor)
+		{
+			renderGraph.AddBlitPass(destination, resourceData.cameraColor, Vector2.one, Vector2.zero, passName: StackCopyPassName);
+			return;
 		}
 
 		resourceData.cameraColor = destination;

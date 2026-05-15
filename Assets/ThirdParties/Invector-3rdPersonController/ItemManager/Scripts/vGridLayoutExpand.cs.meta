@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 139c0f2f51dd5c04aa68798d11add020
+timeCreated: 1468611562
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector-3rdPersonController/ItemManager/Scripts/vGridLayoutExpand.cs
+  uploadId: 705020
