@@ -8,11 +8,16 @@ public class EffectManager : MonoBehaviour
     private const float ParticlePlaneDepth = 0.42f;
     private const float MinimumEmitterDepthPadding = 0.12f;
     private const float MinimumParticleScreenSpeed = 1.35f;
-    private const float MinParticleLifetime = 0.08f;
-    private const float MaxParticleLifetime = 0.24f;
-    private const float MinParticleSize = 0.0045f;
-    private const float MaxParticleSize = 0.0135f;
     private const float MaxEmissionRate = 72f;
+    private const float SustainedDownwardShareThreshold = 0.6f;
+    private const float SustainedDownwardActivationTime = 0.7f;
+    private const float DownwardBurstShareThreshold = 0.45f;
+    private const float DownwardBurstAccelerationThreshold = 40f;
+    private const float DownwardBurstHoldTime = 0.25f;
+    private const float LegacyParticleLifetimeSetting = 0.48f;
+    private const float LegacyParticleThicknessSetting = 0.009f;
+    private const float LegacyParticleStretchLengthSetting = 2.2f;
+    private const float LegacyMaxParticlesCountSetting = 400f;
 
     [Header("全屏特效材质")]
     public Material postProcessMaterial;
@@ -45,18 +50,22 @@ public class EffectManager : MonoBehaviour
     [SerializeField, Range(0.55f, 0.98f)] private float screenEdgePlacementRatio = 0.86f;
     [Tooltip("后向补充速度线的发射比例，避免身后完全空白")]
     [SerializeField, Range(0f, 1f)] private float rearEmissionRatio = 0.35f;
+    [Tooltip("中心留白区域缩放比例（按屏幕等比缩放）；0 表示关闭")]
+    [SerializeField, Range(0f, 0.9f)] private float centerExclusionScale = 0.35f;
+    [Tooltip("中心留白边缘的羽化宽度；越大过渡越柔和")]
+    [SerializeField, Range(0f, 0.25f)] private float centerExclusionFeather = 0.08f;
     [Tooltip("前进/后退速度映射到屏幕上下边缘的权重")]
     [SerializeField, Range(0.2f, 1.4f)] private float forwardScreenBias = 0.85f;
-    [Tooltip("单条速度线基础寿命，越大线越长")]
-    [SerializeField, Range(0.12f, 0.8f)] private float particleLifetime = 0.48f;
-    [Tooltip("单条速度线基础粗细")]
-    [SerializeField, Range(0.004f, 0.02f)] private float particleThickness = 0.009f;
-    [Tooltip("速度线拉伸长度，直接影响视觉长度")]
-    [SerializeField, Range(0.25f, 3f)] private float particleStretchLength = 2.2f;
-    [Tooltip("额外拖尾拉伸，默认保持 0，这样速度差异主要体现在移动速度")]
-    [SerializeField, Range(0f, 1f)] private float particleVelocityStretch = 0f;
-    [Tooltip("粒子系统最大粒子数，越多越密集但性能开销越大")]
-    [SerializeField, Range(100f, 1000f)] private float maxParticlesCount = 400f;
+    [Tooltip("速度线粒子的实际寿命，和 prefab 的 Start Lifetime 是同一套数值")]
+    [SerializeField, Range(0.05f, 2f)] private float particleLifetime = 0.37f;
+    [Tooltip("速度线粒子的实际粗细，和 prefab 的 Start Size 是同一套数值")]
+    [SerializeField, Range(0.1f, 5f)] private float particleThickness = 1.1f;
+    [Tooltip("速度线的实际拉伸长度，和 prefab Renderer 的 Length Scale 是同一套数值")]
+    [SerializeField, Range(1f, 80f)] private float particleStretchLength = 30.5f;
+    [Tooltip("速度线 Renderer 的 Velocity Scale；默认保持和 prefab 一致")]
+    [SerializeField, Range(0f, 5f)] private float particleVelocityStretch = 0f;
+    [Tooltip("粒子系统最大粒子数；默认会和 prefab 对齐")]
+    [SerializeField, Range(16f, 2000f)] private float maxParticlesCount = 400f;
     [Tooltip("整体效果强度，会同时影响发射量和透明度")]
     [SerializeField, Range(0.4f, 2.2f)] private float effectStrength = 1.15f;
     [Tooltip("下落时额外增强可见性，亮背景下可以调高")]
@@ -75,8 +84,29 @@ public class EffectManager : MonoBehaviour
     private ParticleSystem speedLineRearParticleSystem;
     private ParticleSystemRenderer speedLineParticleRenderer;
     private ParticleSystemRenderer speedLineRearParticleRenderer;
+    private ParticleSystem.Particle[] speedLineParticleBuffer;
+    private ParticleSystem.Particle[] speedLineRearParticleBuffer;
     private Vector3 lastPlayerPosition;
+    private Vector3 latchedPlanarMoveDirection;
+    private Vector2 lastDirectionalMoveInput;
+    private float lastDownwardSpeed;
+    private float sustainedDownwardTime;
+    private float downwardBurstTimeRemaining;
+    [SerializeField, HideInInspector] private bool particleVisualSettingsInitializedFromPrefab;
+    [SerializeField, HideInInspector] private GameObject lastSyncedParticleVisualPrefab;
+    [SerializeField, HideInInspector] private float lastSyncedParticleLifetime;
+    [SerializeField, HideInInspector] private float lastSyncedParticleThickness;
+    [SerializeField, HideInInspector] private float lastSyncedParticleStretchLength;
+    [SerializeField, HideInInspector] private float lastSyncedParticleVelocityStretch;
+    [SerializeField, HideInInspector] private float lastSyncedMaxParticlesCount;
     private bool hasLastPlayerPosition;
+    private bool hasLatchedPlanarMoveDirection;
+    private bool hadDirectionalMoveInput;
+
+    private void OnValidate()
+    {
+        SyncParticleVisualSettingsFromPrefabIfNeeded();
+    }
 
     private void Awake()
     {
@@ -260,21 +290,104 @@ public class EffectManager : MonoBehaviour
             return;
         }
 
+        SyncParticleVisualSettingsFromPrefabIfNeeded();
+
+        ParticleSystem prefabParticleSystem = speedLinePrefab.GetComponent<ParticleSystem>();
         ParticleSystemRenderer prefabRenderer = speedLinePrefab.GetComponent<ParticleSystemRenderer>();
-        if (prefabRenderer == null || prefabRenderer.sharedMaterial == null)
+        if (prefabParticleSystem == null && prefabRenderer == null)
         {
             return;
         }
 
-        if (speedLineParticleRenderer != null && speedLineParticleRenderer.sharedMaterial != prefabRenderer.sharedMaterial)
+        ApplySpeedLinePrefabVisualSettings(speedLineParticleSystem, speedLineParticleRenderer, prefabParticleSystem, prefabRenderer);
+        ApplySpeedLinePrefabVisualSettings(speedLineRearParticleSystem, speedLineRearParticleRenderer, prefabParticleSystem, prefabRenderer);
+    }
+
+    private void ApplySpeedLinePrefabVisualSettings(
+        ParticleSystem targetSystem,
+        ParticleSystemRenderer targetRenderer,
+        ParticleSystem prefabParticleSystem,
+        ParticleSystemRenderer prefabRenderer)
+    {
+        if (targetSystem != null && prefabParticleSystem != null)
         {
-            speedLineParticleRenderer.sharedMaterial = prefabRenderer.sharedMaterial;
+            ParticleSystem.MainModule targetMain = targetSystem.main;
+            targetMain.startLifetimeMultiplier = Mathf.Max(0.01f, particleLifetime);
+            targetMain.startSizeMultiplier = Mathf.Max(0.01f, particleThickness);
+            targetMain.maxParticles = Mathf.Max(1, Mathf.RoundToInt(maxParticlesCount));
         }
 
-        if (speedLineRearParticleRenderer != null && speedLineRearParticleRenderer.sharedMaterial != prefabRenderer.sharedMaterial)
+        if (targetRenderer == null || prefabRenderer == null)
         {
-            speedLineRearParticleRenderer.sharedMaterial = prefabRenderer.sharedMaterial;
+            return;
         }
+
+        if (prefabRenderer.sharedMaterial != null && targetRenderer.sharedMaterial != prefabRenderer.sharedMaterial)
+        {
+            targetRenderer.sharedMaterial = prefabRenderer.sharedMaterial;
+        }
+
+        targetRenderer.lengthScale = Mathf.Max(0.01f, particleStretchLength);
+        targetRenderer.velocityScale = Mathf.Max(0f, particleVelocityStretch);
+    }
+
+    private void SyncParticleVisualSettingsFromPrefabIfNeeded()
+    {
+        if (speedLinePrefab == null)
+        {
+            return;
+        }
+
+        ParticleSystem prefabParticleSystem = speedLinePrefab.GetComponent<ParticleSystem>();
+        ParticleSystemRenderer prefabRenderer = speedLinePrefab.GetComponent<ParticleSystemRenderer>();
+        if (prefabParticleSystem == null && prefabRenderer == null)
+        {
+            return;
+        }
+
+        bool hasLegacyValues = Mathf.Approximately(particleLifetime, LegacyParticleLifetimeSetting)
+            && Mathf.Approximately(particleThickness, LegacyParticleThicknessSetting)
+            && Mathf.Approximately(particleStretchLength, LegacyParticleStretchLengthSetting)
+            && Mathf.Approximately(maxParticlesCount, LegacyMaxParticlesCountSetting);
+
+        bool settingsStillMatchLastSync = particleVisualSettingsInitializedFromPrefab
+            && Mathf.Approximately(particleLifetime, lastSyncedParticleLifetime)
+            && Mathf.Approximately(particleThickness, lastSyncedParticleThickness)
+            && Mathf.Approximately(particleStretchLength, lastSyncedParticleStretchLength)
+            && Mathf.Approximately(particleVelocityStretch, lastSyncedParticleVelocityStretch)
+            && Mathf.Approximately(maxParticlesCount, lastSyncedMaxParticlesCount);
+
+        bool shouldSync = !particleVisualSettingsInitializedFromPrefab
+            || hasLegacyValues
+            || lastSyncedParticleVisualPrefab != speedLinePrefab
+            || settingsStillMatchLastSync;
+
+        if (!shouldSync)
+        {
+            return;
+        }
+
+        if (prefabParticleSystem != null)
+        {
+            ParticleSystem.MainModule prefabMain = prefabParticleSystem.main;
+            particleLifetime = Mathf.Max(0.01f, prefabMain.startLifetimeMultiplier);
+            particleThickness = Mathf.Max(0.01f, prefabMain.startSizeMultiplier);
+            maxParticlesCount = Mathf.Max(1f, prefabMain.maxParticles);
+        }
+
+        if (prefabRenderer != null)
+        {
+            particleStretchLength = Mathf.Max(0.01f, prefabRenderer.lengthScale);
+            particleVelocityStretch = Mathf.Max(0f, prefabRenderer.velocityScale);
+        }
+
+        particleVisualSettingsInitializedFromPrefab = true;
+        lastSyncedParticleVisualPrefab = speedLinePrefab;
+        lastSyncedParticleLifetime = particleLifetime;
+        lastSyncedParticleThickness = particleThickness;
+        lastSyncedParticleStretchLength = particleStretchLength;
+        lastSyncedParticleVelocityStretch = particleVelocityStretch;
+        lastSyncedMaxParticlesCount = maxParticlesCount;
     }
 
     private int ResolveSpeedLineLayer()
@@ -303,10 +416,13 @@ public class EffectManager : MonoBehaviour
     private ParticleSystem CreateSpeedLineParticleSystem(int layer, bool isRear)
     {
 #if UNITY_EDITOR
-        GameObject pathPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/SpeedLine.prefab");
-        if (pathPrefab != null)
+        if (speedLinePrefab == null)
         {
-            speedLinePrefab = pathPrefab;
+            GameObject pathPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/SpeedLine.prefab");
+            if (pathPrefab != null)
+            {
+                speedLinePrefab = pathPrefab;
+            }
         }
 #endif
 
@@ -325,11 +441,10 @@ public class EffectManager : MonoBehaviour
 
         if (particleSystem != null)
         {
-            // 保证方向主要由脚本写入的速度向量决定，避免预制体 Start Speed 抢方向
+            // Start Speed 会沿粒子初始发射方向推着跑，和脚本的拖尾速度冲突，所以运行时固定为 0。
             ParticleSystem.MainModule main = particleSystem.main;
             main.startSpeed = 0f;
 
-            // 确保速度模块启用
             ParticleSystem.VelocityOverLifetimeModule velocityOverLifetime = particleSystem.velocityOverLifetime;
             velocityOverLifetime.enabled = true;
         }
@@ -370,7 +485,7 @@ public class EffectManager : MonoBehaviour
             return;
         }
 
-        Camera refCamera = weaponCamera != null ? weaponCamera : Camera.main;
+        Camera refCamera = ResolveSpeedLineCamera(targetSystem);
         if (refCamera == null)
         {
             return;
@@ -398,12 +513,68 @@ public class EffectManager : MonoBehaviour
         emitterTransform.localRotation = Quaternion.identity;
     }
 
+    private Camera ResolveSpeedLineCamera(ParticleSystem targetSystem = null)
+    {
+        int targetLayer = targetSystem != null ? targetSystem.gameObject.layer : (speedLineRoot != null ? speedLineRoot.layer : -1);
+
+        if (cameraTransform != null)
+        {
+            Camera cameraOnTransform = cameraTransform.GetComponent<Camera>();
+            if (IsCameraUsableForLayer(cameraOnTransform, targetLayer))
+            {
+                return cameraOnTransform;
+            }
+        }
+
+        if (IsCameraUsableForLayer(weaponCamera, targetLayer))
+        {
+            return weaponCamera;
+        }
+
+        if (IsCameraUsableForLayer(Camera.main, targetLayer))
+        {
+            return Camera.main;
+        }
+
+        if (cameraTransform != null)
+        {
+            Camera cameraOnTransform = cameraTransform.GetComponent<Camera>();
+            if (cameraOnTransform != null)
+            {
+                return cameraOnTransform;
+            }
+        }
+
+        if (weaponCamera != null)
+        {
+            return weaponCamera;
+        }
+
+        return Camera.main;
+    }
+
+    private static bool IsCameraUsableForLayer(Camera candidate, int targetLayer)
+    {
+        if (candidate == null || !candidate.isActiveAndEnabled)
+        {
+            return false;
+        }
+
+        if (targetLayer < 0)
+        {
+            return true;
+        }
+
+        return (candidate.cullingMask & (1 << targetLayer)) != 0;
+    }
+
     private void UpdateSpeedLineParticles()
     {
         EnsureSpeedLineParticles();
 
         if (playerController == null || speedLineParticleSystem == null)
         {
+            ResetSpeedLineMotionState();
             ApplySpeedLineState(0f, Vector3.zero, Vector3.zero);
             return;
         }
@@ -411,18 +582,20 @@ public class EffectManager : MonoBehaviour
         Transform referenceTransform = cameraTransform != null ? cameraTransform : (weaponCamera != null ? weaponCamera.transform : null);
         if (referenceTransform == null)
         {
+            ResetSpeedLineMotionState();
             ApplySpeedLineState(0f, Vector3.zero, Vector3.zero);
             return;
         }
 
-        Vector3 worldVelocity = ResolvePlayerWorldVelocity();
-        Vector3 motionVector = BuildSpeedLineMotion(referenceTransform, worldVelocity);
-        float sensedSpeed = worldVelocity.magnitude;
+        Vector3 rawWorldVelocity = ResolvePlayerWorldVelocity();
+        float sensedSpeed = ResolveSpeedLineSpeed(rawWorldVelocity);
+        Vector3 directionLockedVelocity = ResolveDirectionLockedVelocity(rawWorldVelocity);
+        Vector3 motionVector = BuildSpeedLineMotion(referenceTransform, directionLockedVelocity);
         float clampedFullSpeed = Mathf.Max(minimumVisibleSpeed + 0.01f, fullVisibleSpeed);
         float targetIntensity = Mathf.InverseLerp(minimumVisibleSpeed, clampedFullSpeed, sensedSpeed);
         currentSpeedLineIntensity = Mathf.MoveTowards(currentSpeedLineIntensity, targetIntensity, speedLineResponse * Time.deltaTime);
 
-        ApplySpeedLineState(sensedSpeed, motionVector, worldVelocity);
+        ApplySpeedLineState(sensedSpeed, motionVector, directionLockedVelocity);
 
         if (postProcessMaterial != null)
         {
@@ -455,6 +628,141 @@ public class EffectManager : MonoBehaviour
 
         // 优先使用实际位移速度，确保方向与真实移动一致。
         return frameVelocity;
+    }
+
+    private Vector3 ResolveDirectionLockedVelocity(Vector3 rawWorldVelocity)
+    {
+        Vector3 planarVelocity = ResolveSpeedLinePlanarVelocity(rawWorldVelocity);
+        float planarSpeed = planarVelocity.magnitude;
+        bool isSliding = firstPersonController != null && firstPersonController.IsSliding;
+        bool hasMoveInput = !isSliding && UpdateLatchedMoveDirection();
+        float retainedVerticalVelocity = ResolveRetainedVerticalVelocity(rawWorldVelocity);
+
+        if (isSliding && planarSpeed > 0.0001f)
+        {
+            latchedPlanarMoveDirection = planarVelocity.normalized;
+            hasLatchedPlanarMoveDirection = true;
+        }
+
+        if (planarSpeed <= 0.0001f)
+        {
+            if (!hasMoveInput)
+            {
+                hasLatchedPlanarMoveDirection = false;
+            }
+
+            return new Vector3(0f, retainedVerticalVelocity, 0f);
+        }
+
+        if (!hasLatchedPlanarMoveDirection)
+        {
+            latchedPlanarMoveDirection = planarVelocity.normalized;
+            hasLatchedPlanarMoveDirection = true;
+        }
+
+        Vector3 directionLockedVelocity = latchedPlanarMoveDirection * planarSpeed;
+        directionLockedVelocity.y = retainedVerticalVelocity;
+        return directionLockedVelocity;
+    }
+
+    private float ResolveSpeedLineSpeed(Vector3 rawWorldVelocity)
+    {
+        float rawSpeed = rawWorldVelocity.magnitude;
+        if (firstPersonController != null && firstPersonController.IsSliding)
+        {
+            return Mathf.Max(rawSpeed, firstPersonController.PlanarSpeed);
+        }
+
+        return rawSpeed;
+    }
+
+    private Vector3 ResolveSpeedLinePlanarVelocity(Vector3 rawWorldVelocity)
+    {
+        if (firstPersonController != null && firstPersonController.IsSliding)
+        {
+            Vector3 slidePlanarVelocity = Vector3.ProjectOnPlane(firstPersonController.PlanarVelocity, Vector3.up);
+            if (slidePlanarVelocity.sqrMagnitude > 0.0001f)
+            {
+                return slidePlanarVelocity;
+            }
+        }
+
+        return Vector3.ProjectOnPlane(rawWorldVelocity, Vector3.up);
+    }
+
+    private float ResolveRetainedVerticalVelocity(Vector3 rawWorldVelocity)
+    {
+        float totalSpeed = rawWorldVelocity.magnitude;
+        float downwardSpeed = Mathf.Max(0f, -rawWorldVelocity.y);
+        float downwardShare = downwardSpeed / Mathf.Max(totalSpeed, 0.0001f);
+        float deltaTime = Mathf.Max(Time.deltaTime, 0.0001f);
+        float downwardAcceleration = Mathf.Max(0f, downwardSpeed - lastDownwardSpeed) / deltaTime;
+        float burstActivationSpeed = minimumVisibleSpeed * 0.9f;
+
+        bool crossedStrongDownwardSpeed = downwardShare >= DownwardBurstShareThreshold
+            && downwardSpeed >= burstActivationSpeed
+            && lastDownwardSpeed < burstActivationSpeed;
+        bool hasSuddenDownwardImpulse = downwardShare >= DownwardBurstShareThreshold
+            && downwardAcceleration >= DownwardBurstAccelerationThreshold;
+
+        if (crossedStrongDownwardSpeed || hasSuddenDownwardImpulse)
+        {
+            downwardBurstTimeRemaining = DownwardBurstHoldTime;
+        }
+
+        float retainedVerticalVelocity = 0f;
+        if (downwardBurstTimeRemaining > 0f && downwardSpeed > 0.0001f)
+        {
+            downwardBurstTimeRemaining = Mathf.Max(0f, downwardBurstTimeRemaining - Time.deltaTime);
+            retainedVerticalVelocity = rawWorldVelocity.y;
+        }
+
+        if (downwardShare >= SustainedDownwardShareThreshold)
+        {
+            sustainedDownwardTime += Time.deltaTime;
+            if (sustainedDownwardTime >= SustainedDownwardActivationTime)
+            {
+                retainedVerticalVelocity = rawWorldVelocity.y;
+            }
+        }
+        else
+        {
+            sustainedDownwardTime = 0f;
+        }
+
+        if (downwardSpeed <= 0.0001f)
+        {
+            downwardBurstTimeRemaining = 0f;
+        }
+
+        lastDownwardSpeed = downwardSpeed;
+        return retainedVerticalVelocity;
+    }
+
+    private bool UpdateLatchedMoveDirection()
+    {
+        Vector2 moveInput = firstPersonController != null ? firstPersonController.MoveInput : Vector2.zero;
+        bool hasMoveInput = moveInput.sqrMagnitude > 0.0001f;
+
+        if (hasMoveInput)
+        {
+            bool inputChanged = !hadDirectionalMoveInput || (moveInput - lastDirectionalMoveInput).sqrMagnitude > 0.0001f;
+            if (inputChanged || !hasLatchedPlanarMoveDirection)
+            {
+                Transform directionReference = playerController != null ? playerController.transform : transform;
+                Vector3 nextDirection = (directionReference.right * moveInput.x) + (directionReference.forward * moveInput.y);
+                nextDirection = Vector3.ProjectOnPlane(nextDirection, Vector3.up);
+                if (nextDirection.sqrMagnitude > 0.0001f)
+                {
+                    latchedPlanarMoveDirection = nextDirection.normalized;
+                    hasLatchedPlanarMoveDirection = true;
+                }
+            }
+        }
+
+        lastDirectionalMoveInput = moveInput;
+        hadDirectionalMoveInput = hasMoveInput;
+        return hasMoveInput;
     }
 
     private Vector3 BuildSpeedLineMotion(Transform referenceTransform, Vector3 worldVelocity)
@@ -515,6 +823,13 @@ public class EffectManager : MonoBehaviour
         float primaryEmissionRate = suppressEmission ? 0f : emissionRate;
         float rearEmissionRate = suppressEmission ? 0f : emissionRate * rearEmissionRatio;
 
+        if (centerExclusionScale > 0.0001f)
+        {
+            float centerExclusionFactor = EvaluateEmitterCenterExclusionFactor(screenMotion, centerExclusionScale);
+            primaryEmissionRate *= centerExclusionFactor;
+            rearEmissionRate *= centerExclusionFactor;
+        }
+
         Vector3 trailVelocity = Vector3.zero;
         if (!suppressEmission && worldVelocity.sqrMagnitude > 0.0001f)
         {
@@ -524,6 +839,34 @@ public class EffectManager : MonoBehaviour
 
         ApplySpeedLineParticleEmission(speedLineParticleSystem, primaryEmissionRate, trailVelocity);
         ApplySpeedLineParticleEmission(speedLineRearParticleSystem, rearEmissionRate, trailVelocity);
+    }
+
+    private static float EvaluateEmitterCenterExclusionFactor(Vector2 screenMotion, float centerExclusionScale)
+    {
+        if (centerExclusionScale <= 0.0001f || screenMotion.sqrMagnitude < 0.0001f)
+        {
+            return 1f;
+        }
+
+        Vector2 directionNormalized = screenMotion.normalized;
+        float halfExtent = Mathf.Clamp01(centerExclusionScale) * 0.5f;
+
+        float minX = 0.5f - halfExtent;
+        float maxX = 0.5f + halfExtent;
+        float minY = 0.5f - halfExtent;
+        float maxY = 0.5f + halfExtent;
+
+        Vector2 emitterEdgePos = new Vector2(0.5f, 0.5f) + directionNormalized * 0.5f;
+
+        bool insideExclusionX = emitterEdgePos.x >= minX && emitterEdgePos.x <= maxX;
+        bool insideExclusionY = emitterEdgePos.y >= minY && emitterEdgePos.y <= maxY;
+
+        if (insideExclusionX && insideExclusionY)
+        {
+            return 0f;
+        }
+
+        return 1f;
     }
 
     private static void ApplySpeedLineParticleEmission(ParticleSystem targetSystem, float emissionRate, Vector3 trailVelocity)
@@ -595,7 +938,21 @@ public class EffectManager : MonoBehaviour
             speedLineRearParticleSystem.Clear(true);
         }
 
+        ResetSpeedLineMotionState();
         currentSpeedLineIntensity = 0f;
         isSprinting = false;
+    }
+
+    private void ResetSpeedLineMotionState()
+    {
+        hasLastPlayerPosition = false;
+        hasLatchedPlanarMoveDirection = false;
+        hadDirectionalMoveInput = false;
+        lastDownwardSpeed = 0f;
+        sustainedDownwardTime = 0f;
+        downwardBurstTimeRemaining = 0f;
+        lastPlayerPosition = Vector3.zero;
+        latchedPlanarMoveDirection = Vector3.zero;
+        lastDirectionalMoveInput = Vector2.zero;
     }
 }
