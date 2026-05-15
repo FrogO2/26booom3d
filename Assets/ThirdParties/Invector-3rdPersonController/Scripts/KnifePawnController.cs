@@ -82,13 +82,12 @@ public class KnifePawnController : MonoBehaviour
 	{
 		if (isDead)
 		{
-			StopMoving();
 			return;
 		}
 
 		TryResolvePlayer();
 
-		if (player == null || !agent.isOnNavMesh)
+		if (player == null || !CanControlAgent())
 		{
 			StopMoving();
 			return;
@@ -189,6 +188,9 @@ public class KnifePawnController : MonoBehaviour
 
 	void ChasePlayer()
 	{
+		if (!CanControlAgent())
+			return;
+
 		if (Time.time < nextDestinationRefreshTime)
 			return;
 
@@ -222,10 +224,18 @@ public class KnifePawnController : MonoBehaviour
 
 	void StopMoving()
 	{
+		if (!CanControlAgent())
+			return;
+
 		agent.isStopped = true;
 
 		if (agent.hasPath)
 			agent.ResetPath();
+	}
+
+	bool CanControlAgent()
+	{
+		return agent != null && agent.enabled && agent.isOnNavMesh;
 	}
 
 	void ApplyChaseSettings()
@@ -298,15 +308,18 @@ public class KnifePawnController : MonoBehaviour
 		if (locomotion != null)
 		{
 			locomotion.TriggerDeath(hitDirection);
+			enabled = false;
 			return;
 		}
 
 		if (enemyEffect == null)
 		{
+			enabled = false;
 			return;
 		}
 
 		enemyEffect.ActivateRagdoll(hitDirection);
+		enabled = false;
 	}
 
 	Vector3 GetTargetPoint(Transform target)
