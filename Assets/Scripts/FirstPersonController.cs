@@ -346,6 +346,58 @@ public class FirstPersonController : MonoBehaviour
 		}
 	}
 
+	public void ResetToSpawn(Vector3 worldPosition, Quaternion worldRotation)
+	{
+		ClearInputState();
+		moveInput = Vector2.zero;
+		lookInput = Vector2.zero;
+		planarVelocity = Vector3.zero;
+		slideDirection = Vector3.zero;
+		wallNormal = Vector3.zero;
+		wallRunDirection = Vector3.zero;
+		verticalVelocity = 0f;
+		coyoteTimer = 0f;
+		jumpBufferTimer = 0f;
+		slideTimer = 0f;
+		slideCooldownTimer = 0f;
+		currentCameraTilt = 0f;
+		airJumpsUsed = 0;
+		isGrounded = false;
+		isCrouching = false;
+		isSliding = false;
+		isWallRunning = false;
+		wallOnLeft = false;
+		wallOnRight = false;
+		leftWallHit = default;
+		rightWallHit = default;
+		lookInputSuppressionRemaining = 0f;
+
+		if (characterController != null)
+		{
+			characterController.enabled = false;
+		}
+
+		transform.SetPositionAndRotation(worldPosition, worldRotation);
+		pitch = 0f;
+
+		if (characterController != null)
+		{
+			characterController.height = standingHeight;
+			characterController.center = Vector3.up * (standingHeight * 0.5f);
+			characterController.enabled = true;
+		}
+
+		if (cameraRoot != null)
+		{
+			Vector3 localPosition = cameraRoot.localPosition;
+			localPosition.y = standingCameraHeight;
+			cameraRoot.localPosition = localPosition;
+			cameraRoot.localRotation = Quaternion.Euler(0f, 0f, 0f);
+		}
+
+		ProbeGround();
+	}
+
 	private void UpdateActionLockStates()
 	{
 		if (lookInputSuppressionRemaining > 0f)

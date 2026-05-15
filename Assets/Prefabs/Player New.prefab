@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 3209846624040536956}
   - component: {fileID: 1111875359389461258}
   - component: {fileID: 7476736219927684053}
+  - component: {fileID: 7454232545217134608}
   m_Layer: 6
   m_Name: Player New
   m_TagString: Untagged
@@ -375,6 +376,22 @@ MonoBehaviour:
   postHitStopLookSuppressionDuration: 0.08
   enemyDestroyDelay: 20
   forwardWeight: 1
+--- !u!114 &7454232545217134608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3101519512393357500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94f14678432100a488a325505534e061, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelStartAttackGate
+  firstPersonController: {fileID: 617225787082939090}
+  attackController: {fileID: 1111875359389461258}
+  gateOnStart: 1
+  releaseLookSuppressionDuration: 0.08
 --- !u!1 &4289796391585695779
 GameObject:
   m_ObjectHideFlags: 0

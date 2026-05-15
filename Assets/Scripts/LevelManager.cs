@@ -21,29 +21,44 @@ public class LevelManager : MonoBehaviour
 	[SerializeField] private ArenaRunTimerDisplay runTimerDisplay;
 	[SerializeField] private ArenaWallLeaderboardDisplay wallLeaderboardDisplay;
 	[SerializeField] private ArenaTutorialSceneController tutorialSceneController;
+	[SerializeField] private FirstPersonController firstPersonController;
 	[SerializeField] private FirstPersonViewAnimationController attackController;
 	[SerializeField] private LevelStartAttackGate levelStartAttackGate;
 	[SerializeField] private SprayPaint sprayPaint;
+	[SerializeField] private Transform playerResetPoint;
+	[SerializeField] private InputActionAsset inputActions;
+	[SerializeField] private string actionMapName = "Player";
+	[SerializeField] private string reloadActionName = "Reload";
 
 	[Header("Run Tracking")]
 	[SerializeField] private string playerLeaderboardName = "PLAYER";
 
 	[Header("Level Control")]
 	[SerializeField] private RetryKeyAction retryKeyAction = RetryKeyAction.SoftReset;
-	[SerializeField] private KeyCode retryKey = KeyCode.R;
 
 	private bool encounterEventsBound;
 	private bool sceneLoadRequested;
 	private bool scoreSubmitted;
+	private Transform playerTransform;
+	private CharacterController playerCharacterController;
+	private Camera playerCamera;
+	private InputAction reloadAction;
+	private Vector3 defaultPlayerResetPosition;
+	private Quaternion defaultPlayerResetRotation = Quaternion.identity;
+	private bool defaultPlayerResetCaptured;
 
 	private void Awake()
 	{
 		AutoAssignReferences();
+		CaptureDefaultPlayerResetPoseIfNeeded();
+		BindReloadAction();
 	}
 
 	private void OnEnable()
 	{
 		AutoAssignReferences();
+		CaptureDefaultPlayerResetPoseIfNeeded();
+		BindReloadAction();
 		EnsureSceneBuilt();
 		SubscribeEncounterEvents();
 		sceneLoadRequested = false;
@@ -56,6 +71,7 @@ public class LevelManager : MonoBehaviour
 
 	private void OnDisable()
 	{
+		DisableReloadAction();
 		UnsubscribeEncounterEvents();
 		PersistLeaderboardEntries();
 	}
@@ -84,6 +100,7 @@ public class LevelManager : MonoBehaviour
 		}
 
 		AutoAssignReferences();
+		BindReloadAction();
 		EnsureSceneBuilt();
 		SubscribeEncounterEvents();
 	}
@@ -97,16 +114,17 @@ public class LevelManager : MonoBehaviour
 		{
 			tutorialSceneController.SoftResetLevelRuntime();
 			AutoAssignReferences();
+			BindReloadAction();
 			EnsureSceneBuilt();
 			SubscribeEncounterEvents();
-			runTimerDisplay?.ResetRun();
-			levelStartAttackGate?.BeginGate();
-			return;
+		}
+		else
+		{
+			ResetAllEnemies();
+			ResetPlayerToStart();
 		}
 
-		attackController?.ResetViewState();
-		sprayPaint?.ClearAllSpray();
-		runTimerDisplay?.ResetRun();
+		ResetRunState();
 		arenaEncounterFlow?.ResetEncounter();
 		levelStartAttackGate?.BeginGate();
 	}
@@ -184,18 +202,12 @@ public class LevelManager : MonoBehaviour
 
 	private void HandleRetryInput()
 	{
-		if (retryKeyAction == RetryKeyAction.Disabled)
+		if (retryKeyAction == RetryKeyAction.Disabled || reloadAction == null)
 		{
 			return;
 		}
 
-		bool retryPressed = Input.GetKeyDown(retryKey);
-		if (!retryPressed && retryKey == KeyCode.R && Keyboard.current != null)
-		{
-			retryPressed = Keyboard.current.rKey.wasPressedThisFrame;
-		}
-
-		if (!retryPressed)
+		if (!reloadAction.WasPressedThisFrame())
 		{
 			return;
 		}
@@ -285,6 +297,46 @@ public class LevelManager : MonoBehaviour
 			attackController = FindAnyObjectByType<FirstPersonViewAnimationController>();
 		}
 
+		if (firstPersonController == null)
+		{
+			firstPersonController = FindAnyObjectByType<FirstPersonController>();
+		}
+
+		if (firstPersonController != null)
+		{
+			playerTransform = firstPersonController.transform;
+			playerCharacterController = firstPersonController.GetComponent<CharacterController>();
+			playerCamera = firstPersonController.PlayerCamera;
+
+			if (inputActions == null)
+			{
+				inputActions = firstPersonController.InputActions;
+			}
+
+			if (string.IsNullOrWhiteSpace(actionMapName))
+			{
+				actionMapName = firstPersonController.ActionMapName;
+			}
+		}
+		else
+		{
+			GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
+			if (taggedPlayer != null)
+			{
+				playerTransform = taggedPlayer.transform;
+				playerCharacterController = taggedPlayer.GetComponent<CharacterController>();
+				if (playerCharacterController == null)
+				{
+					playerCharacterController = taggedPlayer.GetComponentInChildren<CharacterController>(true);
+				}
+
+				if (playerCamera == null)
+				{
+					playerCamera = taggedPlayer.GetComponentInChildren<Camera>(true);
+				}
+			}
+		}
+
 		if (levelStartAttackGate == null)
 		{
 			levelStartAttackGate = FindAnyObjectByType<LevelStartAttackGate>();
@@ -292,8 +344,139 @@ public class LevelManager : MonoBehaviour
 
 		if (sprayPaint == null)
 		{
-			sprayPaint = FindAnyObjectByType<SprayPaint>();
+			sprayPaint = playerTransform != null ? playerTransform.GetComponent<SprayPaint>() : null;
+			if (sprayPaint == null)
+			{
+				sprayPaint = FindAnyObjectByType<SprayPaint>();
+			}
 		}
+
+		if (inputActions == null)
+		{
+			PlayerInput playerInput = FindAnyObjectByType<PlayerInput>();
+			if (playerInput != null)
+			{
+				inputActions = playerInput.actions;
+			}
+		}
+	}
+
+	private void BindReloadAction()
+	{
+		DisableReloadAction();
+
+		if (inputActions == null || string.IsNullOrWhiteSpace(actionMapName) || string.IsNullOrWhiteSpace(reloadActionName))
+		{
+			return;
+		}
+
+		InputActionMap actionMap = inputActions.FindActionMap(actionMapName, false);
+		if (actionMap == null)
+		{
+			return;
+		}
+
+		reloadAction = actionMap.FindAction(reloadActionName, false);
+		if (isActiveAndEnabled && reloadAction != null)
+		{
+			reloadAction.Enable();
+		}
+	}
+
+	private void DisableReloadAction()
+	{
+		if (reloadAction == null)
+		{
+			return;
+		}
+
+		reloadAction.Disable();
+		reloadAction = null;
+	}
+
+	private void ResetAllEnemies()
+	{
+		if (arenaEncounterFlow == null)
+		{
+			return;
+		}
+
+		var enemies = arenaEncounterFlow.EnemyTargets;
+		for (int i = 0; i < enemies.Count; i++)
+		{
+			if (enemies[i] != null)
+			{
+				enemies[i].ResetToInitialState();
+			}
+		}
+	}
+
+	private void ResetPlayerToStart()
+	{
+		if (playerResetPoint == null)
+		{
+			if (!defaultPlayerResetCaptured)
+			{
+				Debug.LogWarning($"{nameof(LevelManager)} on {name} is missing a player reset point and could not capture a default player pose for soft reset.", this);
+				return;
+			}
+
+			ResetPlayerToPose(defaultPlayerResetPosition, defaultPlayerResetRotation);
+			return;
+		}
+
+		ResetPlayerToPose(playerResetPoint.position, playerResetPoint.rotation);
+	}
+
+	private void ResetPlayerToPose(Vector3 position, Quaternion rotation)
+	{
+		if (firstPersonController != null)
+		{
+			firstPersonController.ResetToSpawn(position, rotation);
+			return;
+		}
+
+		if (playerTransform == null)
+		{
+			Debug.LogWarning($"{nameof(LevelManager)} on {name} could not resolve a player transform for soft reset.", this);
+			return;
+		}
+
+		if (playerCharacterController != null)
+		{
+			playerCharacterController.enabled = false;
+		}
+
+		playerTransform.SetPositionAndRotation(position, rotation);
+
+		if (playerCharacterController != null)
+		{
+			playerCharacterController.enabled = true;
+		}
+
+		if (playerCamera != null && playerCamera.transform.parent != null)
+		{
+			playerCamera.transform.parent.localRotation = Quaternion.identity;
+		}
+	}
+
+	private void CaptureDefaultPlayerResetPoseIfNeeded()
+	{
+		if (defaultPlayerResetCaptured || playerTransform == null)
+		{
+			return;
+		}
+
+		defaultPlayerResetPosition = playerTransform.position;
+		defaultPlayerResetRotation = playerTransform.rotation;
+		defaultPlayerResetCaptured = true;
+	}
+
+	private void ResetRunState()
+	{
+		attackController?.ResetViewState();
+		sprayPaint?.ClearAllSpray();
+		runTimerDisplay?.ResetRun();
 	}
 
 	private void EnsureSceneBuilt()
@@ -345,14 +528,19 @@ public class LevelManager : MonoBehaviour
 
 	private void OnValidate()
 	{
-		if (retryKey == KeyCode.None)
-		{
-			retryKey = KeyCode.R;
-		}
-		
 		if (string.IsNullOrWhiteSpace(playerLeaderboardName))
 		{
 			playerLeaderboardName = "PLAYER";
+		}
+
+		if (string.IsNullOrWhiteSpace(actionMapName))
+		{
+			actionMapName = "Player";
+		}
+
+		if (string.IsNullOrWhiteSpace(reloadActionName))
+		{
+			reloadActionName = "Reload";
 		}
 	}
 }
