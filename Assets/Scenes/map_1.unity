@@ -2838,9 +2838,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 344359066}
     - target: {fileID: 8863113254741270379, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 344359065}
+    - target: {fileID: 8863113254741270379, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8863113254741270379, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
+      propertyPath: playerCamera
+      value: 
+      objectReference: {fileID: 1076834937}
+    - target: {fileID: 8863113254741270379, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
+      propertyPath: playerController
+      value: 
+      objectReference: {fileID: 344359069}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8628,7 +8640,7 @@ PrefabInstance:
     - target: {fileID: 7897535227668698659, guid: 8c9f885b67e1f2c4ca7a7c5859f05709, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 344359065}
     - target: {fileID: 7897535227668698659, guid: 8c9f885b67e1f2c4ca7a7c5859f05709, type: 3}
       propertyPath: attackDistance
       value: 2
@@ -9185,7 +9197,7 @@ PrefabInstance:
     - target: {fileID: 7897535227668698659, guid: 8c9f885b67e1f2c4ca7a7c5859f05709, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 344359065}
     - target: {fileID: 7897535227668698659, guid: 8c9f885b67e1f2c4ca7a7c5859f05709, type: 3}
       propertyPath: attackDistance
       value: 2
@@ -11890,6 +11902,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3315ee48ccc2bce4fa73c4b39288def4, type: 3}
+--- !u!20 &1076834937 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 6081312420319626514, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
+  m_PrefabInstance: {fileID: 1862380911}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1082510521
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11996,6 +12013,17 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 841ead33fe03d384490d092ed7b35b4c, type: 2}
   m_BuildHeightMesh: 0
+--- !u!114 &1110101683 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 178063012924383657, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
+  m_PrefabInstance: {fileID: 81139173}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110101674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea30ae1ec4d05d74c9be4c2b59286916, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectManager
 --- !u!4 &1110906555 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4474712263105832, guid: 3315ee48ccc2bce4fa73c4b39288def4, type: 3}
@@ -13621,7 +13649,7 @@ PrefabInstance:
     - target: {fileID: 7897535227668698659, guid: 8c9f885b67e1f2c4ca7a7c5859f05709, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 344359065}
     - target: {fileID: 7897535227668698659, guid: 8c9f885b67e1f2c4ca7a7c5859f05709, type: 3}
       propertyPath: attackDistance
       value: 2
@@ -14175,7 +14203,7 @@ PrefabInstance:
     - target: {fileID: 7897535227668698659, guid: 8c9f885b67e1f2c4ca7a7c5859f05709, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 344359065}
     - target: {fileID: 7897535227668698659, guid: 8c9f885b67e1f2c4ca7a7c5859f05709, type: 3}
       propertyPath: attackDistance
       value: 2
@@ -15411,6 +15439,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3101519512393357500, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 3642760886919590806, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 335.35
@@ -15451,6 +15483,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7476736219927684053, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
+      propertyPath: effectManager
+      value: 
+      objectReference: {fileID: 1110101683}
+    - target: {fileID: 7476736219927684053, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
+      propertyPath: levelStartAttackGate
+      value: 
+      objectReference: {fileID: 344359066}
+    - target: {fileID: 7476736219927684053, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
+      propertyPath: firstPersonController
+      value: 
+      objectReference: {fileID: 344359067}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16439,7 +16483,7 @@ PrefabInstance:
     - target: {fileID: 7897535227668698659, guid: 8c9f885b67e1f2c4ca7a7c5859f05709, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 344359065}
     - target: {fileID: 7897535227668698659, guid: 8c9f885b67e1f2c4ca7a7c5859f05709, type: 3}
       propertyPath: attackDistance
       value: 2
