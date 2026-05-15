@@ -77,6 +77,13 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 	[SerializeField] private float slideShakeRotationAmplitude = 1.5f;
 	[SerializeField] private float slideShakeFrequency = 23f;
 
+	[Header("Airborne Speed Shake")]
+	[SerializeField] private float airborneShakeSpeedThreshold = 7f;
+	[SerializeField] private float airborneShakeSpeedRange = 7f;
+	[SerializeField] private float airborneShakePositionAmplitude = 0.035f;
+	[SerializeField] private float airborneShakeRotationAmplitude = 1.5f;
+	[SerializeField] private float airborneShakeFrequency = 23f;
+
 	[Header("Weapon Motion")]
 	[SerializeField] private float weaponAnimationWeight = 1f;
 	[SerializeField] private Vector3 weaponLookRotationAmount = new Vector3(1.1f, 2f, 1.35f);
@@ -92,9 +99,16 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 	[SerializeField, Range(0f, 1f)] private float attack1ImpactNormalizedTime = 0.42f;
 	[SerializeField, Range(0f, 1f)] private float attack2ImpactNormalizedTime = 0.42f;
 
+	[Header("Death Presentation")]
+	[SerializeField] private float deathCameraHeight = 0.1f;
+	[SerializeField] private float deathCameraPitch = -70f;
+	[SerializeField] private float deathPresentationBlendSpeed = 4f;
+	[SerializeField] private string deathStateName = "Death";
+
 	private static readonly int IsLeftWallingHash = Animator.StringToHash("isLeftWalling");
 	private static readonly int IsRightWallingHash = Animator.StringToHash("isRightWalling");
 	private static readonly int IsSlidingHash = Animator.StringToHash("isSliding");
+	private static readonly int IsDeadHash = Animator.StringToHash("isDead");
 	private static readonly int AttackNumHash = Animator.StringToHash("attackNum");
 
 	private InputAction attackAction;
@@ -117,6 +131,8 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 	private int attackIntentNumber;
 	private float currentAttackStartTime;
 	private int attackSequenceId;
+	private bool attackInputLocked;
+	private bool deathPresentationActive;
 	private bool weaponAnimatorUpdateModeOverridden;
 	private AnimatorUpdateMode previousWeaponAnimatorUpdateMode = AnimatorUpdateMode.Normal;
 
@@ -166,6 +182,13 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 		}
 
 		controller.UseExternalViewAnimation = true;
+
+		if (deathPresentationActive)
+		{
+			UpdateDeathPresentation();
+			UpdateWeaponAnimatorState();
+			return;
+		}
 
 		UpdateCameraAnimation();
 		UpdateWeaponAnimatorState();
@@ -341,8 +364,9 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 		}
 
 		GetSlideShake(out Vector3 slidePositionOffset, out Vector3 slideRotationOffset);
-		currentCameraOffset = Vector3.Lerp(currentCameraOffset, targetCameraOffset + slidePositionOffset, bobBlendSpeed * deltaTime);
-		currentCameraRotationOffset = Vector3.Lerp(currentCameraRotationOffset, targetCameraRotationOffset + slideRotationOffset, bobBlendSpeed * deltaTime);
+		GetAirborneSpeedShake(out Vector3 airbornePositionOffset, out Vector3 airborneRotationOffset);
+		currentCameraOffset = Vector3.Lerp(currentCameraOffset, targetCameraOffset + slidePositionOffset + airbornePositionOffset, bobBlendSpeed * deltaTime);
+		currentCameraRotationOffset = Vector3.Lerp(currentCameraRotationOffset, targetCameraRotationOffset + slideRotationOffset + airborneRotationOffset, bobBlendSpeed * deltaTime);
 
 		float targetHeight = controller.IsCrouching ? controller.CrouchingCameraHeight : controller.StandingCameraHeight;
 		currentCameraHeight = Mathf.Lerp(currentCameraHeight, targetHeight, controller.StanceLerpSpeed * deltaTime);
@@ -425,6 +449,32 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 		rotationOffset = new Vector3(noiseY, noiseZ * 0.4f, noiseX) * (slideShakeRotationAmplitude * decay);
 	}
 
+	private void GetAirborneSpeedShake(out Vector3 positionOffset, out Vector3 rotationOffset)
+	{
+		positionOffset = Vector3.zero;
+		rotationOffset = Vector3.zero;
+
+		if (controller.IsGrounded || controller.IsSliding || controller.IsWallRunning)
+		{
+			return;
+		}
+
+		float speedExcess = controller.TotalSpeed - airborneShakeSpeedThreshold;
+		if (speedExcess <= 0f)
+		{
+			return;
+		}
+
+		float strength = speedExcess / Mathf.Max(0.01f, airborneShakeSpeedRange);
+		float noiseTime = Time.time * airborneShakeFrequency;
+		float noiseX = (Mathf.PerlinNoise(noiseTime, 0.19f) - 0.5f) * 2f;
+		float noiseY = (Mathf.PerlinNoise(0.41f, noiseTime) - 0.5f) * 2f;
+		float noiseZ = (Mathf.PerlinNoise(noiseTime, 0.79f) - 0.5f) * 2f;
+
+		positionOffset = new Vector3(noiseX, noiseY, 0f) * (airborneShakePositionAmplitude * strength);
+		rotationOffset = new Vector3(noiseY, noiseZ * 0.4f, noiseX) * (airborneShakeRotationAmplitude * strength);
+	}
+
 	private void UpdateWeaponAnimatorState()
 	{
 		if (weaponAnimator == null)
@@ -435,11 +485,12 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 		weaponAnimator.SetBool(IsLeftWallingHash, controller.IsLeftWalling);
 		weaponAnimator.SetBool(IsRightWallingHash, controller.IsRightWalling);
 		weaponAnimator.SetBool(IsSlidingHash, controller.IsSliding);
+		weaponAnimator.SetBool(IsDeadHash, deathPresentationActive);
 	}
 
 	private void HandleAttackInput()
 	{
-		if (weaponAnimator == null || attackAction == null || !attackAction.WasPressedThisFrame())
+		if (attackInputLocked || weaponAnimator == null || attackAction == null || !attackAction.WasPressedThisFrame())
 		{
 			return;
 		}
@@ -451,6 +502,98 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 		}
 
 		BufferAttackIntent();
+	}
+
+	public void SetAttackInputLocked(bool locked, bool clearQueuedInput = true)
+	{
+		attackInputLocked = locked;
+
+		if (locked)
+		{
+			ClearAttackState(clearQueuedInput);
+		}
+	}
+
+	private bool hasForcedDeathAnim = false;
+	public void SetDeathPresentationActive(bool active)
+	{
+		// 只在从未死亡->死亡的那一帧强制切入死亡动画
+		bool wasDead = deathPresentationActive;
+		deathPresentationActive = active;
+		SetWeaponAnimatorUsesUnscaledTime(deathPresentationActive);
+
+		if (weaponAnimator != null)
+		{
+			weaponAnimator.SetBool(IsDeadHash, deathPresentationActive);
+		}
+
+		if (deathPresentationActive)
+		{
+			ClearAttackState(clearQueuedInput: true);
+			currentCameraOffset = Vector3.zero;
+			currentCameraRotationOffset = Vector3.zero;
+			currentWeaponOffset = Vector3.zero;
+			currentWeaponRotation = Vector3.zero;
+			currentTilt = 0f;
+
+			if (weaponMotionTarget != null)
+			{
+				weaponMotionTarget.localPosition = weaponModelBaseLocalPosition;
+				weaponMotionTarget.localRotation = weaponMotionBaseLocalRotation;
+			}
+
+			if (!wasDead && !hasForcedDeathAnim)
+			{
+				ForceDeathAnimationImmediate();
+				hasForcedDeathAnim = true;
+			}
+		}
+		else
+		{
+			hasForcedDeathAnim = false;
+		}
+	}
+
+	private void ForceDeathAnimationImmediate()
+	{
+		if (weaponAnimator == null || string.IsNullOrWhiteSpace(deathStateName))
+		{
+			return;
+		}
+
+		weaponAnimator.Play(deathStateName, 0, 0f);
+		weaponAnimator.Update(0f);
+	}
+
+	private void UpdateDeathPresentation()
+	{
+		if (cameraRoot == null)
+		{
+			return;
+		}
+
+		float deltaTime = Time.unscaledDeltaTime;
+		float blend = Mathf.Max(0f, deathPresentationBlendSpeed) * deltaTime;
+
+		if (playerCamera != null)
+		{
+			playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, baseFieldOfView, fieldOfViewLerpSpeed * deltaTime);
+		}
+
+		if (weaponCamera != null && playerCamera != null)
+		{
+			weaponCamera.fieldOfView = playerCamera.fieldOfView;
+		}
+
+		currentCameraOffset = Vector3.zero;
+		currentCameraRotationOffset = Vector3.zero;
+		currentWeaponOffset = Vector3.zero;
+		currentWeaponRotation = Vector3.zero;
+		currentTilt = 0f;
+		currentCameraHeight = Mathf.Lerp(currentCameraHeight, deathCameraHeight, blend);
+
+		cameraRoot.localPosition = new Vector3(cameraRootBaseLocalPosition.x, currentCameraHeight, cameraRootBaseLocalPosition.z);
+		cameraRoot.localRotation = Quaternion.Slerp(cameraRoot.localRotation, Quaternion.Euler(deathCameraPitch, 0f, 0f), blend);
 	}
 
 	private void StartAttack(int attackNumber)
@@ -709,6 +852,7 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 	public void ResetViewState()
 	{
 		SetWeaponAnimatorUsesUnscaledTime(false);
+		deathPresentationActive = false;
 		currentTilt = 0f;
 		currentCameraOffset = Vector3.zero;
 		currentCameraRotationOffset = Vector3.zero;
@@ -748,6 +892,7 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 			weaponAnimator.SetBool(IsLeftWallingHash, false);
 			weaponAnimator.SetBool(IsRightWallingHash, false);
 			weaponAnimator.SetBool(IsSlidingHash, false);
+			weaponAnimator.SetBool(IsDeadHash, false);
 		}
 	}
 }

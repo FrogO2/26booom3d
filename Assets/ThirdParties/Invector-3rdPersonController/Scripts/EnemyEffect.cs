@@ -149,4 +149,47 @@ public class EnemyEffect : MonoBehaviour
             body.AddForce(impulse, ForceMode.Impulse);
         }
     }
+
+    public void ResetRuntimeState()
+    {
+        ragdollActive = false;
+
+        if (rootRigidbody != null)
+        {
+            rootRigidbody.linearVelocity = Vector3.zero;
+            rootRigidbody.angularVelocity = Vector3.zero;
+            rootRigidbody.isKinematic = true;
+            rootRigidbody.useGravity = false;
+        }
+
+        if (rootCollider != null)
+        {
+            rootCollider.enabled = true;
+        }
+
+        for (int index = 0; index < ragdollBodies.Length; index++)
+        {
+            Rigidbody body = ragdollBodies[index];
+            if (body == null || body == rootRigidbody)
+            {
+                continue;
+            }
+
+            body.linearVelocity = Vector3.zero;
+            body.angularVelocity = Vector3.zero;
+            body.isKinematic = true;
+            body.useGravity = false;
+        }
+
+        for (int index = 0; index < ragdollColliders.Length; index++)
+        {
+            Collider col = ragdollColliders[index];
+            if (col == null || col == rootCollider)
+            {
+                continue;
+            }
+
+            col.enabled = false;
+        }
+    }
 }

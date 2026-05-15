@@ -116,6 +116,7 @@ public class FirstPersonController : MonoBehaviour
 	public Vector2 MoveInput => moveInput;
 	public Vector2 LookInput => lookInput;
 	public Vector3 PlanarVelocity => planarVelocity;
+	public Vector3 WorldVelocity => planarVelocity + Vector3.up * verticalVelocity;
 	public Vector3 WallNormal => wallNormal;
 	public float Pitch => pitch;
 	public float StandingCameraHeight => standingCameraHeight;
@@ -127,6 +128,7 @@ public class FirstPersonController : MonoBehaviour
 	public float WallRunSpeed => wallRunSpeed;
 	public float SlideDuration => slideDuration;
 	public float PlanarSpeed => planarVelocity.magnitude;
+	public float TotalSpeed => WorldVelocity.magnitude;
 	public float SlideProgress01 => isSliding ? 1f - Mathf.Clamp01(slideTimer / Mathf.Max(0.01f, slideDuration)) : 0f;
 	public bool IsGrounded => isGrounded;
 	public bool IsCrouching => isCrouching;

@@ -22,7 +22,17 @@ namespace Invector
         /// <param name="damage"></param>
         public static void ApplyDamage(this GameObject receiver, vDamage damage)
         {
+            if (receiver == null)
+            {
+                return;
+            }
+
             var receivers = receiver.GetComponents<vIDamageReceiver>();
+            if ((receivers == null || receivers.Length == 0) && receiver.transform.parent != null)
+            {
+                receivers = receiver.GetComponentsInParent<vIDamageReceiver>(true);
+            }
+
             if (receivers != null)
                 for (int i = 0; i < receivers.Length; i++)
                     receivers[i].TakeDamage(damage);
@@ -35,7 +45,12 @@ namespace Invector
         /// <returns>return true if gameObject contains a <see cref="vIDamageReceiver"/></returns>
         public static bool CanReceiveDamage(this GameObject receiver)
         {
-            return receiver.GetComponent<vIDamageReceiver>() != null;
+            if (receiver == null)
+            {
+                return false;
+            }
+
+            return receiver.GetComponent<vIDamageReceiver>() != null || receiver.GetComponentInParent<vIDamageReceiver>() != null;
         }
 
         /// <summary>

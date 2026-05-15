@@ -164,6 +164,39 @@ public class LocomotionSimpleAgent : MonoBehaviour
 		anim.SetBool(animIDIsDead, true);
 	}
 
+	public void ResetRuntimeState()
+	{
+		IsDead = false;
+		isAttacking = false;
+		nextAttackTime = 0f;
+		smoothSpeed = 0f;
+		grounded = true;
+
+		if (agent != null)
+		{
+			agent.isStopped = true;
+			if (agent.isOnNavMesh)
+			{
+				agent.ResetPath();
+			}
+
+			if (baseMoveSpeed > 0.001f)
+			{
+				agent.speed = baseMoveSpeed;
+			}
+		}
+
+		if (anim != null)
+		{
+			anim.applyRootMotion = false;
+			anim.SetBool(animIDIsDead, false);
+			anim.SetBool(animIDIsGrounded, true);
+			anim.SetFloat(animIDInputMagnitude, 0f);
+			anim.SetFloat(animIDInputVertical, 0f);
+			anim.ResetTrigger(animIDWeakAttack);
+		}
+	}
+
 	System.Collections.IEnumerator AttackRoutine()
 	{
 		isAttacking = true;

@@ -98,7 +98,7 @@ MonoBehaviour:
     force: {x: 0, y: 0, z: 0}
   overrideDamageSender: {fileID: 0}
   hitBoxes:
-  - {fileID: 9095244358546303281}
+  - {fileID: 0}
   damageModifier: 0
   canApplyDamage: 0
   onDamageHit:
@@ -390,7 +390,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5292054565844893973}
-  - {fileID: 9074624694689350204}
   m_Father: {fileID: 2790293817769582791}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &5124440829949575444
@@ -558,7 +557,7 @@ MonoBehaviour:
     force: {x: 0, y: 0, z: 0}
   overrideDamageSender: {fileID: 0}
   hitBoxes:
-  - {fileID: 521353914566365483}
+  - {fileID: 0}
   damageModifier: 0
   canApplyDamage: 0
   onDamageHit:
@@ -1494,78 +1493,6 @@ Transform:
   - {fileID: 2713722674658433675}
   m_Father: {fileID: 4436709136655320689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2049689271416410514
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9074624694689350204}
-  - component: {fileID: 521353914566365483}
-  - component: {fileID: 9100159576164994236}
-  m_Layer: 8
-  m_Name: hitBox
-  m_TagString: Ignore Ragdoll
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9074624694689350204
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2049689271416410514}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.7070346, y: 0.010087587, z: 0.010087653, w: 0.70703506}
-  m_LocalPosition: {x: -0.000007960179, y: 20.918848, z: 0.0000009407589}
-  m_LocalScale: {x: 15.000009, y: 15.000008, z: 29.884043}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8297670731467911845}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &521353914566365483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2049689271416410514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb97f58541b05b24ab37661346298ff2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  openCloseEvents: 0
-  openCloseWindow: 0
-  selectedToolbar: 0
-  attackObject: {fileID: 0}
-  damagePercentage: 100
-  triggerType: -1
---- !u!65 &9100159576164994236
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2049689271416410514}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2175586025024111762
 GameObject:
   m_ObjectHideFlags: 0
@@ -1723,78 +1650,6 @@ Transform:
   - {fileID: 5682055937696694381}
   m_Father: {fileID: 1042076258260525260}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2515671740246036336
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8703091289483421966}
-  - component: {fileID: 6684573540696573407}
-  - component: {fileID: 5479050559411819298}
-  m_Layer: 8
-  m_Name: hitBox
-  m_TagString: Ignore Ragdoll
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8703091289483421966
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2515671740246036336}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.7070087, y: -0.011785089, z: -0.011785177, w: 0.7070085}
-  m_LocalPosition: {x: -0.000001248375, y: 20.919678, z: 0.000003857735}
-  m_LocalScale: {x: 15.000003, y: 15.000007, z: 29.88528}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1042076258260525260}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6684573540696573407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2515671740246036336}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb97f58541b05b24ab37661346298ff2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  openCloseEvents: 0
-  openCloseWindow: 0
-  selectedToolbar: 0
-  attackObject: {fileID: 0}
-  damagePercentage: 100
-  triggerType: -1
---- !u!65 &5479050559411819298
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2515671740246036336}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2567048758122961839
 GameObject:
   m_ObjectHideFlags: 0
@@ -2146,78 +2001,6 @@ Transform:
   - {fileID: 1766153337833952972}
   m_Father: {fileID: 9035960094703727657}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4207375383173296914
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3841189523305352646}
-  - component: {fileID: 4438447254393135105}
-  - component: {fileID: 5785943566591542710}
-  m_Layer: 8
-  m_Name: hitBox
-  m_TagString: Ignore Ragdoll
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3841189523305352646
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4207375383173296914}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.70451576, y: 0.06048739, z: 0.060497742, w: -0.70451325}
-  m_LocalPosition: {x: -0.000007629399, y: 29.760704, z: -0.000002622605}
-  m_LocalScale: {x: 14.991498, y: 14.999455, z: 42.515305}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 27254997372481841}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4438447254393135105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4207375383173296914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb97f58541b05b24ab37661346298ff2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  openCloseEvents: 0
-  openCloseWindow: 0
-  selectedToolbar: 0
-  attackObject: {fileID: 0}
-  damagePercentage: 100
-  triggerType: -1
---- !u!65 &5785943566591542710
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4207375383173296914}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4459699586174040222
 GameObject:
   m_ObjectHideFlags: 0
@@ -2313,78 +2096,6 @@ Transform:
   - {fileID: 7486984024153011036}
   m_Father: {fileID: 5292054565844893973}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4672682049243892894
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7388032573937779937}
-  - component: {fileID: 239512773247841617}
-  - component: {fileID: 8234124322397706836}
-  m_Layer: 8
-  m_Name: hitBox
-  m_TagString: Ignore Ragdoll
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7388032573937779937
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4672682049243892894}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.7047176, y: -0.05807911, z: -0.058080614, w: -0.70471746}
-  m_LocalPosition: {x: 0.0000072121657, y: 29.768038, z: 0.0000014305118}
-  m_LocalScale: {x: 14.99884, y: 14.999977, z: 42.525753}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8940955025745298508}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &239512773247841617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4672682049243892894}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb97f58541b05b24ab37661346298ff2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  openCloseEvents: 0
-  openCloseWindow: 0
-  selectedToolbar: 0
-  attackObject: {fileID: 0}
-  damagePercentage: 100
-  triggerType: -1
---- !u!65 &8234124322397706836
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4672682049243892894}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4995824654462429871
 GameObject:
   m_ObjectHideFlags: 0
@@ -3123,6 +2834,7 @@ GameObject:
   - component: {fileID: 4177811317485496989}
   - component: {fileID: 8960425476059631714}
   - component: {fileID: 7888302950610009613}
+  - component: {fileID: 1069772305044464854}
   m_Layer: 8
   m_Name: KnifeNPC
   m_TagString: Enemy
@@ -3138,7 +2850,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6182223433763423244}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.4323578, y: 3.20217, z: -52.635967}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3328,6 +3040,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e640ae819b87424d806ca21ed5f9d0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaBakedEnemyTarget
+--- !u!114 &1069772305044464854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6182223433763423244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87268069f1864fe2a3d8099e7ec0e10f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KnifePlayerHitboxKiller
+  attackHitboxActiveDelay: 0.11
+  hitbox: {fileID: 2773768893712383196}
+  knifeController: {fileID: 350337523003739146}
+  locomotion: {fileID: 4177811317485496989}
+  playerDeath: {fileID: 0}
+  playerCharacterController: {fileID: 0}
+  playerCollider: {fileID: 0}
+  queryTriggerInteraction: 1
 --- !u!1 &6199581251956606226
 GameObject:
   m_ObjectHideFlags: 0
@@ -3648,7 +3380,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1686396991735973613}
-  - {fileID: 3841189523305352646}
   m_Father: {fileID: 6111009361013072789}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &5811909109579846019
@@ -3816,7 +3547,7 @@ MonoBehaviour:
     force: {x: 0, y: 0, z: 0}
   overrideDamageSender: {fileID: 0}
   hitBoxes:
-  - {fileID: 4438447254393135105}
+  - {fileID: 0}
   damageModifier: 0
   canApplyDamage: 0
   onDamageHit:
@@ -3870,7 +3601,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 378767801138433891}
-  - {fileID: 7388032573937779937}
   m_Father: {fileID: 540171510817555059}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &5098493669051379311
@@ -4038,7 +3768,7 @@ MonoBehaviour:
     force: {x: 0, y: 0, z: 0}
   overrideDamageSender: {fileID: 0}
   hitBoxes:
-  - {fileID: 239512773247841617}
+  - {fileID: 0}
   damageModifier: 0
   canApplyDamage: 0
   onDamageHit:
@@ -4450,7 +4180,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5137748150214071283}
   - component: {fileID: 2773768893712383196}
-  - component: {fileID: 9095244358546303281}
   m_Layer: 8
   m_Name: hitBox
   m_TagString: Weapon
@@ -4494,24 +4223,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &9095244358546303281
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7651146097850304392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb97f58541b05b24ab37661346298ff2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  openCloseEvents: 0
-  openCloseWindow: 0
-  selectedToolbar: 0
-  attackObject: {fileID: 0}
-  damagePercentage: 100
-  triggerType: -1
 --- !u!1 &7675115641480290577
 GameObject:
   m_ObjectHideFlags: 0
@@ -4674,7 +4385,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3775272902231697601}
-  - {fileID: 8703091289483421966}
   m_Father: {fileID: 2518870916082567782}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &8196583611827723236
@@ -4842,7 +4552,7 @@ MonoBehaviour:
     force: {x: 0, y: 0, z: 0}
   overrideDamageSender: {fileID: 0}
   hitBoxes:
-  - {fileID: 6684573540696573407}
+  - {fileID: 0}
   damageModifier: 0
   canApplyDamage: 0
   onDamageHit:

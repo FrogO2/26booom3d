@@ -64,6 +64,8 @@ public class KnifePawnController : MonoBehaviour
 		if (eyePoint == null)
 			eyePoint = transform;
 
+		EnsurePlayerHitKillers();
+
 		ApplyChaseSettings();
 		StopMoving();
 	}
@@ -118,6 +120,46 @@ public class KnifePawnController : MonoBehaviour
 	public void SetPlayer(Transform target)
 	{
 		player = target;
+		EnsurePlayerHitKillers();
+	}
+
+	public void ResetRuntimeState(Transform target)
+	{
+		player = target != null ? target : player;
+		hasDiscoveredPlayer = false;
+		isDead = false;
+		nextDestinationRefreshTime = 0f;
+		nextAttackTime = 0f;
+
+		ApplyChaseSettings();
+		StopMoving();
+		EnsurePlayerHitKillers();
+	}
+
+	void EnsurePlayerHitKillers()
+	{
+		if (locomotion == null)
+		{
+			locomotion = GetComponent<LocomotionSimpleAgent>();
+		}
+
+		BoxCollider[] hitboxes = GetComponentsInChildren<BoxCollider>(true);
+		for (int index = 0; index < hitboxes.Length; index++)
+		{
+			BoxCollider hitbox = hitboxes[index];
+			if (hitbox == null || !string.Equals(hitbox.name, "hitBox", StringComparison.OrdinalIgnoreCase))
+			{
+				continue;
+			}
+
+			KnifePlayerHitboxKiller hitboxKiller = hitbox.GetComponent<KnifePlayerHitboxKiller>();
+			if (hitboxKiller == null)
+			{
+				hitboxKiller = hitbox.gameObject.AddComponent<KnifePlayerHitboxKiller>();
+			}
+
+			hitboxKiller.Initialize(null, this, locomotion);
+		}
 	}
 
 	bool ShouldDiscoverPlayer()

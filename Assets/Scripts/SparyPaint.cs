@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.Serialization;
 
 public class SprayPaint : MonoBehaviour
 {
@@ -24,9 +23,12 @@ public class SprayPaint : MonoBehaviour
 	[SerializeField] private Vector2 bloodTextureScale = Vector2.one;
 	[SerializeField] private Vector2 bloodTextureOffset = Vector2.zero;
 
-	[Header("HD Depth")]
-	[SerializeField, FormerlySerializedAs("asyncHighResResolution"), Min(16)] private int highResCaptureResolution = 256;
+	[Header("Async HD Depth")]
+	[SerializeField] private bool enableAsyncHighRes;
+	[SerializeField, Min(16)] private int asyncHighResResolution = 256;
 	[SerializeField] private Shader depthCaptureShader;
+	[SerializeField, Min(1), Tooltip("每帧渲染的扫描行数。越小则每帧 GPU 开销越低，但 HD 数据就绪所需帧数越多。")]
+	private int hdCaptureRowsPerFrame = 64;
 
 	private int latestProjectorId = -1;
 
@@ -45,6 +47,7 @@ public class SprayPaint : MonoBehaviour
 
 	private void Update()
 	{
+		FrozenProjectorManager.Tick(hdCaptureRowsPerFrame);
 		Camera projectionCamera = GetProjectionCamera();
 
 		if (projectionCamera == null)
@@ -66,6 +69,24 @@ public class SprayPaint : MonoBehaviour
 		return TriggerSpray(GetProjectionCamera());
 	}
 
+	public void CaptureHighResForProjector(int projectorId)
+	{
+		if (!enableAsyncHighRes || projectorId < 0 || depthCaptureShader == null)
+		{
+			return;
+		}
+
+		FrozenProjectorManager.AsyncProjectorState asyncState = FrozenProjectorManager.GetAsyncProjectorState(projectorId);
+		if (asyncState == FrozenProjectorManager.AsyncProjectorState.Rendering
+			|| asyncState == FrozenProjectorManager.AsyncProjectorState.ReadbackPending
+			|| asyncState == FrozenProjectorManager.AsyncProjectorState.Complete)
+		{
+			return;
+		}
+
+		FrozenProjectorManager.ScheduleAsyncHDCapture(projectorId, asyncHighResResolution, projectionMask, depthCaptureShader);
+	}
+
 	private int TriggerSpray(Camera projectionCamera)
 	{
 		if (projectionCamera == null)
@@ -76,7 +97,8 @@ public class SprayPaint : MonoBehaviour
 		FrozenProjectorManager.SetMaxRetainedProjectors(maxRetainedSprays);
 		BloodRevealManager.SetHiddenColor(hiddenColor);
 
-		int projectorId = FrozenProjectorManager.AddProjector(projectionCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution);
+		bool useFastInitialVisibility = enableAsyncHighRes && depthCaptureShader != null;
+		int projectorId = FrozenProjectorManager.AddProjector(projectionCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution, useFastInitialVisibility);
 		if (projectorId < 0)
 		{
 			return -1;
@@ -87,16 +109,6 @@ public class SprayPaint : MonoBehaviour
 		BloodFxManager.AddBloodFx(projectorId, ResolveProjectionTexture(), ResolveProjectionColor(), bloodTextureScale, bloodTextureOffset);
 
 		return projectorId;
-	}
-
-	public void CaptureHighResForProjector(int projectorId)
-	{
-		if (projectorId < 0 || depthCaptureShader == null)
-		{
-			return;
-		}
-
-		FrozenProjectorManager.CaptureHighResDepth(projectorId, highResCaptureResolution, projectionMask, depthCaptureShader);
 	}
 
 	private Camera GetProjectionCamera()
@@ -159,7 +171,8 @@ public class SprayPaint : MonoBehaviour
 		captureResolution = Mathf.Max(16, captureResolution);
 		visibleDepthBias = Mathf.Max(0.001f, visibleDepthBias);
 		maxRetainedSprays = Mathf.Max(1, maxRetainedSprays);
-		highResCaptureResolution = Mathf.Max(16, highResCaptureResolution);
+		asyncHighResResolution = Mathf.Max(16, asyncHighResResolution);
+		hdCaptureRowsPerFrame = Mathf.Max(1, hdCaptureRowsPerFrame);
 		ExcludeProtectedLayers();
 	}
 

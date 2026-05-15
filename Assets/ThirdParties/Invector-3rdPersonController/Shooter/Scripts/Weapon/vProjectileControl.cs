@@ -12,7 +12,7 @@ namespace Invector.vShooter
         public bool debugTrajetory;
         public bool debugHittedObject;
         public vDamage damage;
-        public float forceMultiplier = 1;
+        public float forceMultiplier = 0.1f;
         public bool destroyOnCast = true;
         [Tooltip("Control Trail renderer")]
         public TrailRenderer trail;

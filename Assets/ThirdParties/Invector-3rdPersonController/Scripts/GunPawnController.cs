@@ -243,6 +243,45 @@ public class GunPawnController : MonoBehaviour
         player = target;
     }
 
+    public void ResetRuntimeState(Transform target)
+    {
+        player = target != null ? target : player;
+        isDead = false;
+        playerDetected = false;
+        shootTimer = continuousFireInterval;
+        currentIKWeight = 0f;
+        onlyArmsLayerWeight = 0f;
+        armAlignmentWeight = 0f;
+        aimReadyTimer = 0f;
+        rightHandIKCurrentWeight = 0f;
+        leftHandIKCurrentWeight = 0f;
+
+        animator.SetFloat(HashInputHorizontal, 0f);
+        animator.SetBool(HashIsAiming, false);
+        if (hasCanAimParameter)
+        {
+            animator.SetBool(HashCanAim, false);
+        }
+
+        if (onlyArmsLayer >= 0)
+        {
+            animator.SetLayerWeight(onlyArmsLayer, 0f);
+        }
+
+        if (shotLayer >= 0)
+        {
+            animator.SetLayerWeight(shotLayer, 1f);
+        }
+
+        if (weapon != null)
+        {
+            weapon.SetActiveAim(false);
+            weapon.SetActiveScope(false);
+        }
+
+        ResetAnimatorAimIK();
+    }
+
     void FacePlayer()
     {
         Vector3 dir = player.position - transform.position;

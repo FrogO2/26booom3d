@@ -38,7 +38,6 @@ public class ArenaEncounterFlow : MonoBehaviour
 
 	public bool HasStarted => arenaStarted;
 	public bool IsCleared => arenaCleared;
-	public IReadOnlyList<ArenaBakedEnemyTarget> EnemyTargets => arenaEnemies;
 
 	private void Awake()
 	{

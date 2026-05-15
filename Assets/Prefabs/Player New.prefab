@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8188891158283629405}
   m_Layer: 9
   m_Name: Weapon Camera
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -146,9 +146,11 @@ GameObject:
   - component: {fileID: 1111875359389461258}
   - component: {fileID: 7476736219927684053}
   - component: {fileID: 7454232545217134608}
+  - component: {fileID: 3216380165791184165}
+  - component: {fileID: 119217218046128150}
   m_Layer: 6
   m_Name: Player New
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -280,8 +282,10 @@ MonoBehaviour:
   bloodTexture: {fileID: 0}
   bloodTextureScale: {x: 1, y: 1}
   bloodTextureOffset: {x: 0, y: 0}
-  highResCaptureResolution: 1024
+  enableAsyncHighRes: 1
+  asyncHighResResolution: 1024
   depthCaptureShader: {fileID: 4800000, guid: b9ac2d1604b69d34fa5c0793cd776658, type: 3}
+  hdCaptureRowsPerFrame: 64
 --- !u!114 &1111875359389461258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,6 +342,11 @@ MonoBehaviour:
   slideShakePositionAmplitude: 0.1
   slideShakeRotationAmplitude: 3
   slideShakeFrequency: 30
+  airborneShakeSpeedThreshold: 7
+  airborneShakeSpeedRange: 7
+  airborneShakePositionAmplitude: 0.035
+  airborneShakeRotationAmplitude: 1.5
+  airborneShakeFrequency: 23
   weaponAnimationWeight: 1
   weaponLookRotationAmount: {x: 3, y: 3, z: 3}
   weaponMoveOffsetAmount: {x: 0.035, y: 0.018, z: 0.025}
@@ -347,8 +356,12 @@ MonoBehaviour:
   attackEarliestInterruptTime: 0.2
   attackStateName1: Attack 1 R
   attackStateName2: Attack 2 R
-  attack1ImpactNormalizedTime: 0.3
-  attack2ImpactNormalizedTime: 0.3
+  attack1ImpactNormalizedTime: 0.4
+  attack2ImpactNormalizedTime: 0.4
+  deathCameraHeight: 0.1
+  deathCameraPitch: -70
+  deathPresentationBlendSpeed: 5
+  deathStateName: Death
 --- !u!114 &7476736219927684053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -392,6 +405,63 @@ MonoBehaviour:
   attackController: {fileID: 1111875359389461258}
   gateOnStart: 1
   releaseLookSuppressionDuration: 0.08
+--- !u!114 &3216380165791184165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3101519512393357500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 997d9d842d584214b93eb8f8bdebc0f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerOneHitDeath
+  firstPersonController: {fileID: 617225787082939090}
+  attackController: {fileID: 1111875359389461258}
+  deathOverlayUi: {fileID: 0}
+  monitorFallDeath: 1
+  fallDeathYThreshold: -100
+  deathTimeScaleToZeroDuration: 0.5
+  deathOverlaySortingOrder: 320
+  restartPromptChannelKey: PlayerDeathRestart
+  restartPromptMessage: R
+  restartPromptAnchoredPosition: {x: 0, y: 0}
+  restartPromptSize: {x: 720, y: 220}
+  restartPromptFontSize: 100
+  restartPromptColor: {r: 1, g: 1, b: 1, a: 1}
+  onStartReceiveDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onReceiveDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  died:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!136 &119217218046128150
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3101519512393357500}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 0.27
+  m_Height: 2.03
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &4289796391585695779
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,7 +706,7 @@ GameObject:
   - component: {fileID: 4178356644034500991}
   m_Layer: 6
   m_Name: vKatana
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -727,7 +797,7 @@ GameObject:
   - component: {fileID: 4787823984616057818}
   m_Layer: 6
   m_Name: Attack Hitbox
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -780,7 +850,7 @@ GameObject:
   - component: {fileID: 4620366834789514786}
   m_Layer: 9
   m_Name: Anchor
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -800,7 +870,7 @@ Transform:
   m_Children:
   - {fileID: 2147945290098908073}
   m_Father: {fileID: 2021860256981208355}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 23.77, y: -125.924, z: -55.714}
 --- !u!95 &4620366834789514786
 Animator:
   serializedVersion: 7
