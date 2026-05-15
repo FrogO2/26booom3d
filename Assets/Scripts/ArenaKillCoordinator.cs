@@ -5,9 +5,11 @@ using UnityEngine;
 public class ArenaKillCoordinator : MonoBehaviour
 {
 	private const string HitboxVisualizerObjectName = "Attack Hitbox";
+	private const float HitStopRecoveryMaxStep = 1f / 30f;
 
 	[Header("References")]
 	[SerializeField] private FirstPersonViewAnimationController attackController;
+	[SerializeField] private FirstPersonController firstPersonController;
 	[SerializeField] private SprayPaint sprayPaint;
 	[SerializeField] private AttackTargetingService targetingService;
 	[SerializeField] private EffectManager effectManager;
@@ -19,12 +21,16 @@ public class ArenaKillCoordinator : MonoBehaviour
 
 	[Header("Hit Stop")]
 	[SerializeField, Min(0f), Tooltip("Minimum pause applied after a confirmed arena kill.")] private float minimumHitStopDuration = 0.05f;
+	[SerializeField, Range(0f, 1f), Tooltip("Time scale used on the first frame after hit stop before ramping back to normal.")] private float postHitStopStartTimeScale = 0.2f;
+	[SerializeField, Min(0f), Tooltip("Duration of the slow-motion ramp back to normal speed after hit stop.")] private float postHitStopRecoveryDuration = 0.12f;
+	[SerializeField, Min(0f), Tooltip("Duration for suppressing look input after hit stop to discard queued mouse delta.")] private float postHitStopLookSuppressionDuration = 0.08f;
 	[SerializeField, Min(0.05f)] private float enemyDestroyDelay = 6f;
 
 	[Header("Kill Direction")]
 	[SerializeField, Range(0f, 1f)] private float forwardWeight = 0.35f;
 
 	private Coroutine killSequenceCoroutine;
+	private Coroutine hitStopRecoveryCoroutine;
 	private bool isSubscribed;
 	private bool timeScaleOverridden;
 	private float previousTimeScale = 1f;
@@ -57,6 +63,7 @@ public class ArenaKillCoordinator : MonoBehaviour
 	private void OnDisable()
 	{
 		Unsubscribe();
+		StopHitStopRecovery();
 		RestoreTimeScale();
 	}
 
@@ -92,6 +99,15 @@ public class ArenaKillCoordinator : MonoBehaviour
 		if (effectManager == null)
 		{
 			effectManager = EffectManager.Instance != null ? EffectManager.Instance : FindAnyObjectByType<EffectManager>();
+		}
+
+		if (firstPersonController == null)
+		{
+			firstPersonController = GetComponent<FirstPersonController>();
+			if (firstPersonController == null)
+			{
+				firstPersonController = GetComponentInChildren<FirstPersonController>(true);
+			}
 		}
 
 		targetingService?.Initialize(ResolveTargetCamera());
@@ -186,6 +202,7 @@ public class ArenaKillCoordinator : MonoBehaviour
 
 	private IEnumerator ApplyHitStop(int projectorId)
 	{
+		StopHitStopRecovery();
 		OverrideTimeScale(0f);
 
 		float elapsed = 0f;
@@ -196,8 +213,53 @@ public class ArenaKillCoordinator : MonoBehaviour
 		}
 
 		sprayPaint?.CaptureHighResForProjector(projectorId);
+		firstPersonController?.SuppressLookInput(postHitStopLookSuppressionDuration);
 
+		if (postHitStopRecoveryDuration <= 0f)
+		{
+			RestoreTimeScale();
+			yield break;
+		}
+
+		StartHitStopRecovery();
+	}
+
+	private void StartHitStopRecovery()
+	{
+		StopHitStopRecovery();
+
+		float targetTimeScale = previousTimeScale;
+		float startTimeScale = Mathf.Clamp(postHitStopStartTimeScale, 0f, targetTimeScale);
+		OverrideTimeScale(startTimeScale);
+		hitStopRecoveryCoroutine = StartCoroutine(RampOutOfHitStop(startTimeScale, targetTimeScale, postHitStopRecoveryDuration));
+	}
+
+	private IEnumerator RampOutOfHitStop(float startTimeScale, float targetTimeScale, float duration)
+	{
+		float elapsed = 0f;
+
+		while (elapsed < duration)
+		{
+			elapsed += Mathf.Min(Time.unscaledDeltaTime, HitStopRecoveryMaxStep);
+			float progress = Mathf.Clamp01(elapsed / duration);
+			float easedProgress = progress * progress;
+			OverrideTimeScale(Mathf.Lerp(startTimeScale, targetTimeScale, easedProgress));
+			yield return null;
+		}
+
+		hitStopRecoveryCoroutine = null;
 		RestoreTimeScale();
+	}
+
+	private void StopHitStopRecovery()
+	{
+		if (hitStopRecoveryCoroutine == null)
+		{
+			return;
+		}
+
+		StopCoroutine(hitStopRecoveryCoroutine);
+		hitStopRecoveryCoroutine = null;
 	}
 
 	private void OverrideTimeScale(float timeScale)
@@ -228,6 +290,9 @@ public class ArenaKillCoordinator : MonoBehaviour
 	private void OnValidate()
 	{
 		MinimumHitStopDuration = minimumHitStopDuration;
+		postHitStopStartTimeScale = Mathf.Clamp01(postHitStopStartTimeScale);
+		postHitStopRecoveryDuration = Mathf.Max(0f, postHitStopRecoveryDuration);
+		postHitStopLookSuppressionDuration = Mathf.Max(0f, postHitStopLookSuppressionDuration);
 		hitboxSize = new Vector3(
 			Mathf.Max(0.05f, hitboxSize.x),
 			Mathf.Max(0.05f, hitboxSize.y),

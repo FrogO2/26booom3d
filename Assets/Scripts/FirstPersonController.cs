@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class FirstPersonController : MonoBehaviour
 {
+	private const float LookSuppressionMaxStep = 1f / 30f;
+
 	[Header("References")]
 	[SerializeField] private Camera playerCamera;
 	[SerializeField] private Transform cameraRoot;
@@ -93,6 +95,8 @@ public class FirstPersonController : MonoBehaviour
 	private bool isWallRunning;
 	private bool wallOnLeft;
 	private bool wallOnRight;
+	private bool lookActionSuppressedByController;
+	private float lookInputSuppressionRemaining;
 	private RaycastHit leftWallHit;
 	private RaycastHit rightWallHit;
 
@@ -157,6 +161,7 @@ public class FirstPersonController : MonoBehaviour
 	private void OnEnable()
 	{
 		EnableActions();
+		UpdateLookSuppressionState();
 
 		if (lockCursor)
 		{
@@ -232,12 +237,51 @@ public class FirstPersonController : MonoBehaviour
 
 	private void SampleInput()
 	{
+		UpdateLookSuppressionState();
 		moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
-		lookInput = lookAction != null ? lookAction.ReadValue<Vector2>() : Vector2.zero;
+		lookInput = lookInputSuppressionRemaining > 0f || lookAction == null ? Vector2.zero : lookAction.ReadValue<Vector2>();
 
 		if (jumpAction != null && jumpAction.WasPressedThisFrame())
 		{
 			jumpBufferTimer = jumpBufferTime;
+		}
+	}
+
+	public void SuppressLookInput(float duration)
+	{
+		lookInputSuppressionRemaining = Mathf.Max(lookInputSuppressionRemaining, Mathf.Max(0f, duration));
+		lookInput = Vector2.zero;
+		UpdateLookSuppressionState();
+	}
+
+	private void UpdateLookSuppressionState()
+	{
+		if (lookInputSuppressionRemaining > 0f)
+		{
+			lookInputSuppressionRemaining = Mathf.Max(0f, lookInputSuppressionRemaining - Mathf.Min(Time.unscaledDeltaTime, LookSuppressionMaxStep));
+		}
+
+		bool shouldSuppressLook = lookInputSuppressionRemaining > 0f;
+		if (lookAction != null)
+		{
+			if (shouldSuppressLook)
+			{
+				if (lookAction.enabled)
+				{
+					lookAction.Disable();
+					lookActionSuppressedByController = true;
+				}
+			}
+			else if (lookActionSuppressedByController && isActiveAndEnabled)
+			{
+				lookAction.Enable();
+				lookActionSuppressedByController = false;
+			}
+		}
+
+		if (shouldSuppressLook)
+		{
+			lookInput = Vector2.zero;
 		}
 	}
 

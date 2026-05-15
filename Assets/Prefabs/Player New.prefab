@@ -160,7 +160,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3101519512393357500}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.32085654, z: -0, w: -0.9471278}
+  m_LocalRotation: {x: -0, y: -0.32085305, z: 0, w: -0.94712895}
   m_LocalPosition: {x: -0, y: 5.27, z: -10.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
@@ -265,13 +265,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SprayPaint
   targetCamera: {fileID: 6081312420319626514}
   projectionDistance: 3000
-  edgeFeather: 0.1
+  edgeFeather: 0.01
   hiddenColor: {r: 1, g: 1, b: 1, a: 1}
   captureResolution: 32
   visibleDepthBias: 0.1
   projectionMask:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 1
   maxRetainedSprays: 16
   refreshLatestProjectorEveryFrame: 0
   bloodColor: {r: 1, g: 0, b: 0, a: 0.83137256}
@@ -314,14 +314,14 @@ MonoBehaviour:
     verticalAmplitude: 0.025
     horizontalAmplitude: 0.012
     pitchAmplitude: 0.85
-    rollAmplitude: 0.7
-    frequency: 7.5
+    rollAmplitude: 0.1
+    frequency: 9
   sprintBob:
     verticalAmplitude: 0.035
     horizontalAmplitude: 0.018
     pitchAmplitude: 1.25
-    rollAmplitude: 1
-    frequency: 9.5
+    rollAmplitude: 0.2
+    frequency: 14
   crouchBob:
     verticalAmplitude: 0.014
     horizontalAmplitude: 0.009
@@ -334,20 +334,20 @@ MonoBehaviour:
     pitchAmplitude: 0.5
     rollAmplitude: 0.5
     frequency: 8.25
-  slideShakePositionAmplitude: 0.035
-  slideShakeRotationAmplitude: 5
-  slideShakeFrequency: 23
+  slideShakePositionAmplitude: 0.1
+  slideShakeRotationAmplitude: 3
+  slideShakeFrequency: 30
   weaponAnimationWeight: 1
-  weaponLookRotationAmount: {x: 15, y: 15, z: 15}
+  weaponLookRotationAmount: {x: 3, y: 3, z: 3}
   weaponMoveOffsetAmount: {x: 0.035, y: 0.018, z: 0.025}
-  weaponRotationLerpSpeed: 12
+  weaponRotationLerpSpeed: 1
   weaponMoveLerpSpeed: 10
   attackComboWindowSeconds: 3
   attackEarliestInterruptTime: 0.2
   attackStateName1: Attack 1 R
   attackStateName2: Attack 2 R
-  attack1ImpactNormalizedTime: 0.42
-  attack2ImpactNormalizedTime: 0.42
+  attack1ImpactNormalizedTime: 0.3
+  attack2ImpactNormalizedTime: 0.3
 --- !u!114 &7476736219927684053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,15 +361,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaKillCoordinator
   attackController: {fileID: 1111875359389461258}
+  firstPersonController: {fileID: 0}
   sprayPaint: {fileID: 3209846624040536956}
   targetingService: {fileID: 0}
   effectManager: {fileID: 0}
   hitboxLocalOffset: {x: 0, y: -0.14, z: 0.81}
   hitboxSize: {x: 1.11, y: 0.52, z: 1.03}
   hitboxVisualizer: {fileID: 4787823984616057818}
-  minimumHitStopDuration: 0.05
-  enemyDestroyDelay: 6
-  forwardWeight: 0.35
+  minimumHitStopDuration: 0.4
+  postHitStopStartTimeScale: 0.2
+  postHitStopRecoveryDuration: 0.5
+  postHitStopLookSuppressionDuration: 0.08
+  enemyDestroyDelay: 20
+  forwardWeight: 1
 --- !u!1 &4289796391585695779
 GameObject:
   m_ObjectHideFlags: 0
@@ -703,7 +707,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6903396811353294747}
   - component: {fileID: 4787823984616057818}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Attack Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}

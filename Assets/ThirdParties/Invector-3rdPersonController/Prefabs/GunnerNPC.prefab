@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4211143081810635260}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandMiddle4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,12 +84,14 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: d8bab0df5d3f0a045a31549c871c8e49, type: 2}
   - {fileID: 2100000, guid: 08f92fb4bee6e6740aeed128f64eec90, type: 2}
-  - {fileID: 2100000, guid: fd5e79ef2b60ebc46848a30476c996d5, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
   - {fileID: 2100000, guid: 4a2bfe4818aecfe48bc7585647db7c94, type: 2}
   - {fileID: 2100000, guid: e6839823f9c76e74eaaa0012a1964f4e, type: 2}
   - {fileID: 2100000, guid: 8ca50cac971f92b4fa234e0b48ccc432, type: 2}
@@ -111,9 +113,11 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -201,7 +205,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3109002255660813755}
   - component: {fileID: 3215266731051728023}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: AimAudioSource
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -372,16 +376,18 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d8bab0df5d3f0a045a31549c871c8e49, type: 2}
-  - {fileID: 2100000, guid: 08f92fb4bee6e6740aeed128f64eec90, type: 2}
-  - {fileID: 2100000, guid: fd5e79ef2b60ebc46848a30476c996d5, type: 2}
-  - {fileID: 2100000, guid: 4a2bfe4818aecfe48bc7585647db7c94, type: 2}
-  - {fileID: 2100000, guid: e6839823f9c76e74eaaa0012a1964f4e, type: 2}
-  - {fileID: 2100000, guid: 8ca50cac971f92b4fa234e0b48ccc432, type: 2}
-  - {fileID: 2100000, guid: 30a527013d66d7149a216f0ef785a164, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -399,9 +405,11 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -488,7 +496,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3487936326417810403}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -526,7 +534,7 @@ GameObject:
   - component: {fileID: 1052548842895491437}
   - component: {fileID: 8491427988176231239}
   - component: {fileID: 5980740282590427906}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: vShotgun
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -577,6 +585,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -599,9 +609,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &416037102043550360
 GameObject:
@@ -615,7 +627,7 @@ GameObject:
   - component: {fileID: 6900567207993213090}
   - component: {fileID: 5870689724931423333}
   - component: {fileID: 1979792914924736759}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:Hips
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -668,10 +680,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 416037102043550360}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 10
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -735,7 +747,7 @@ GameObject:
   - component: {fileID: 8535991246542026397}
   - component: {fileID: 6023935598509405275}
   - component: {fileID: 7143217784889037725}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: ShotgunHolder
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -803,7 +815,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 316688352225945897}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: LeftHandlers
   m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
@@ -838,7 +850,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3185596422810408419}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandRing2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -874,7 +886,7 @@ GameObject:
   - component: {fileID: 4322789020980789733}
   - component: {fileID: 4349243116299723946}
   - component: {fileID: 8862310658993176005}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -927,10 +939,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 531916588515388401}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 10
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -1038,7 +1050,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1460785245773284430}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandPinky4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1117,7 +1129,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 797459850833555837}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightFoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1150,7 +1162,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8880195212005016279}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: WeaponClip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1182,7 +1194,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7772461803119805558}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandThumb4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1214,7 +1226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5002246143494878530}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1255,6 +1267,7 @@ GameObject:
   - component: {fileID: 1419083619188055185}
   - component: {fileID: 5805154288793010184}
   - component: {fileID: 6540199778361514958}
+  - component: {fileID: 1664620665430766162}
   m_Layer: 8
   m_Name: GunnerNPC
   m_TagString: Player
@@ -1308,10 +1321,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 972707495915414702}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 50
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -1368,15 +1381,40 @@ MonoBehaviour:
   enemyEffect: {fileID: 0}
   detectionRange: 20
   fieldOfView: 150
-  shootInterval: 2
-  aimHeightOffset: 1.4
+  playerTag: Player
+  continuousFireInterval: 1
+  fallbackAimReadyDelay: 0.2
+  aimAtTargetTransform: 1
+  aimHeightOffset: 0
+  projectileSpeedMultiplier: 0.1
   turnSpeed: 5
   ikSmoothIn: 5
   ikSmoothOut: 10
+  onlyArmsLayerSpeed: 25
+  armAlignmentWeightSmooth: 24
+  lookAtBodyWeight: 0.791
+  lookAtHeadWeight: 0.85
+  lookAtEyesWeight: 0
+  lookAtClampWeight: 0.5
+  useHeadTrack: 1
+  manualHeadTrackUpdate: 1
+  ignoreHeadTrackAngleLimit: 1
+  armAimRotationSmooth: 30
+  maxVerticalArmAimAngle: 70
+  maxHorizontalArmAimAngle: 20
+  armAlignmentMinDistance: 8
+  smoothArmAlignmentPoint: 1
   aimReferenceAxis: 1
+  weaponIKAdjustList: {fileID: 0}
+  useRightHandIKSolver: 1
+  rightHandIKWeight: 0.2
+  rightHandIKSmooth: 20
   useLeftHandIK: 1
+  useLeftHandIKSolver: 1
   leftHandIKWeight: 1
-  forceLeftHandIKOffset: 1
+  leftHandIKSmoothIn: 10
+  leftHandIKSmoothOut: 25
+  forceLeftHandIKOffset: 0
   leftHandIKLocalPosition: {x: 0.019, y: -0.072, z: -0.001}
   leftHandIKLocalEuler: {x: 342.3112, y: 183.34984, z: 169.3214}
 --- !u!114 &6540199778361514958
@@ -1394,8 +1432,20 @@ MonoBehaviour:
   hitParticles: []
   hitSounds: []
   audioSource: {fileID: 0}
-  ragdollImpulse: 4
+  ragdollImpulse: 60
   disableMainColliderOnRagdoll: 1
+--- !u!114 &1664620665430766162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972707495915414702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e640ae819b87424d806ca21ed5f9d0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaBakedEnemyTarget
 --- !u!1 &1030494444037253493
 GameObject:
   m_ObjectHideFlags: 0
@@ -1406,7 +1456,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4478384681157753076}
   - component: {fileID: 3546492189936467337}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: vBow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1448,6 +1498,8 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1469,9 +1521,11 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -1509,7 +1563,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 360598275473513616}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: defaultHandler
   m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
@@ -1540,7 +1594,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1746349388881954322}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandIndex4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1571,7 +1625,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8829908462707551373}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.013
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1603,7 +1657,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 246409208817871635}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandMiddle3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1640,7 +1694,7 @@ GameObject:
   - component: {fileID: 4914619676920319043}
   - component: {fileID: 7135299981310505092}
   - component: {fileID: 3055874579455618471}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftForeArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1694,10 +1748,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283107334409391554}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 10
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -1857,7 +1911,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1865079125362822647}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandRing3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1891,7 +1945,7 @@ GameObject:
   - component: {fileID: 4107539702588417449}
   - component: {fileID: 3568726127913003357}
   - component: {fileID: 6636758502081807222}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: BowHolder
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -1959,7 +2013,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5745757896529676441}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandThumb2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1993,7 +2047,7 @@ GameObject:
   - component: {fileID: 2279349418859876616}
   - component: {fileID: 3971139759236970654}
   - component: {fileID: 8751446542480049568}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Laser
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -2018,7 +2072,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!120 &3971139759236970654
 LineRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2037,6 +2091,8 @@ LineRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2058,9 +2114,11 @@ LineRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 15}
@@ -2128,7 +2186,6 @@ LineRenderer:
     textureScale: {x: 1, y: 1}
     shadowBias: 0
     generateLightingData: 0
-  m_MaskInteraction: 0
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 0
@@ -2146,7 +2203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   layerMask:
     serializedVersion: 2
-    m_Bits: 32769
+    m_Bits: 1
   aimSprite: {fileID: 8212697142767809140}
   aimSpriteOffset: 0.04
   maxDistance: 100
@@ -2394,7 +2451,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3154488181077767813}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandIndex2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2426,7 +2483,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7869061735355582267}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightToe_End
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2458,7 +2515,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2803688346805622853}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandPinky2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2490,7 +2547,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3104306350833263288}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.006_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2521,7 +2578,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5082693220183995642}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandRing2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2553,7 +2610,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5362154931783788131}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.015
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2587,7 +2644,7 @@ GameObject:
   - component: {fileID: 6862594753874249214}
   - component: {fileID: 8427539217875124141}
   - component: {fileID: 4447131879871008031}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: vArrow (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2637,6 +2694,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2658,9 +2717,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2208338955591123230
 GameObject:
@@ -2676,7 +2737,7 @@ GameObject:
   - component: {fileID: 5967438030575665100}
   - component: {fileID: 6147835544493725900}
   - component: {fileID: 3557051897755026978}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightForeArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2730,10 +2791,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2208338955591123230}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 10
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -2897,7 +2958,7 @@ GameObject:
   - component: {fileID: 8892336524062143420}
   - component: {fileID: 7742011030525353181}
   - component: {fileID: 3304196642150670850}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2950,10 +3011,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2364841994761264253}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 10
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -3061,7 +3122,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3326116498246547480}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftToeBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3095,7 +3156,7 @@ GameObject:
   - component: {fileID: 2401935212431828356}
   - component: {fileID: 8618386466827017985}
   - component: {fileID: 6811678473542566762}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: vHandgun
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -3145,6 +3206,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3167,9 +3230,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2415924635016922554
 GameObject:
@@ -3180,7 +3245,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5099483878696777531}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3213,7 +3278,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9184699976113822266}
   - component: {fileID: 2643454881360609489}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: HandgunHolder
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -3264,7 +3329,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1480227860018075836}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandRing4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3295,7 +3360,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1549518391931687990}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandThumb4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3326,7 +3391,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2417197780108834451}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandThumb4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3358,7 +3423,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6738106032467662963}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: defaultHandler
   m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
@@ -3390,7 +3455,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8216931546232011484}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: AimReference
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -3405,13 +3470,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2620138778619245789}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.006, y: 0.038, z: -0.187}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9099350468824293752}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2627382341748901453
 GameObject:
   m_ObjectHideFlags: 0
@@ -3421,7 +3486,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8258573691098638784}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandIndex4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3452,7 +3517,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 427602955478620548}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Offset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3468,7 +3533,7 @@ Transform:
   m_GameObject: {fileID: 2716677718367101076}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.019, y: -0.072, z: -0.001}
+  m_LocalPosition: {x: -0.014, y: -0.081, z: 0.232}
   m_LocalScale: {x: 0.99999964, y: 1.0000002, z: 0.9999996}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3485,7 +3550,7 @@ GameObject:
   - component: {fileID: 710808536767278023}
   - component: {fileID: 7107599945097399687}
   - component: {fileID: 2971230249434001804}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Quad (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3535,6 +3600,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3556,9 +3623,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2788714637217096714
 GameObject:
@@ -3569,7 +3638,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8611724493092859537}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandPinky4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3601,7 +3670,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1857686798254787584}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandPinky4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3665,7 +3734,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3637705230558532471}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3697,7 +3766,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1111654919535215152}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3731,7 +3800,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3108769590577033446}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandRing1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3765,7 +3834,7 @@ GameObject:
   - component: {fileID: 3388173060811509170}
   - component: {fileID: 1144227589991973158}
   - component: {fileID: 177995086016678242}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Capsule_pist
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -6584,7 +6653,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &177995086016678242
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6603,6 +6672,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -6624,9 +6695,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -6658,7 +6731,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &3297773718548731588
 GameObject:
   m_ObjectHideFlags: 0
@@ -6668,7 +6740,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3978264275717575565}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandIndex2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6700,7 +6772,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6276216126739471423}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: meleeHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6733,7 +6805,7 @@ GameObject:
   - component: {fileID: 2458453649690951551}
   - component: {fileID: 3544045600648331313}
   - component: {fileID: 384994868749282713}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: hitBox
   m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
@@ -6803,7 +6875,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1727746003117672817}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandIndex3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6837,7 +6909,7 @@ GameObject:
   - component: {fileID: 3509676076127767893}
   - component: {fileID: 1750419491209953709}
   - component: {fileID: 6602722694348888458}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: rifle_renderer
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -6887,6 +6959,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -6909,9 +6983,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &3582458246191576062
 GameObject:
@@ -6924,7 +7000,7 @@ GameObject:
   - component: {fileID: 6179677331703680605}
   - component: {fileID: 8893567447744210621}
   - component: {fileID: 4198636000990766805}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Fire_1
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -11741,7 +11817,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &4198636000990766805
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -11760,6 +11836,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -11781,9 +11859,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -11815,7 +11895,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &3592206833832619701
 GameObject:
   m_ObjectHideFlags: 0
@@ -11825,7 +11904,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2397234889362523763}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandPinky3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11857,7 +11936,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 479170631075424440}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: muzzle
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -11889,7 +11968,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3860906165712945200}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandThumb3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11921,7 +12000,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3716224474572579795}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:Spine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11953,7 +12032,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 821882911957721196}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandIndex1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11985,7 +12064,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5136326902236528638}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandThumb2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12017,7 +12096,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3379070562646311166}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightToe_End_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12052,7 +12131,7 @@ GameObject:
   - component: {fileID: 7970232738440632132}
   - component: {fileID: 2981192797967683974}
   - component: {fileID: 3519648502228875138}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftUpLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12105,10 +12184,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4074505733301272448}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 10
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -12216,7 +12295,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7589376554408543258}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: bowHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12252,7 +12331,7 @@ GameObject:
   - component: {fileID: 5324623396661343767}
   - component: {fileID: 5564790835593814980}
   - component: {fileID: 7171661766189438216}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12306,10 +12385,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4360900980142922072}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 10
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -12469,7 +12548,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4265710459692350315}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandRing4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12503,7 +12582,7 @@ GameObject:
   - component: {fileID: 2600766158719059261}
   - component: {fileID: 2459303519082970762}
   - component: {fileID: 1479239223809084328}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Point light
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -12533,14 +12612,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4367499952406349066}
   m_Enabled: 0
-  serializedVersion: 11
+  serializedVersion: 13
   m_Type: 2
   m_Color: {r: 1, g: 0.7486692, b: 0.35820895, a: 1}
   m_Intensity: 2.6
   m_Range: 3
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 0
     m_Resolution: -1
@@ -12585,7 +12664,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -12602,17 +12681,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
-  m_Version: 4
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
   m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
 --- !u!1 &4420982313355662777
 GameObject:
   m_ObjectHideFlags: 0
@@ -12627,7 +12712,7 @@ GameObject:
   - component: {fileID: 2912891106230122146}
   - component: {fileID: 8717507957157217143}
   - component: {fileID: 3637480159053780977}
-  m_Layer: 1
+  m_Layer: 8
   m_Name: vHandgun_NO_Inventory Variant
   m_TagString: Weapon
   m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
@@ -12972,10 +13057,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4420982313355662777}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -13022,7 +13107,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3146073983228493082}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.014
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13054,7 +13139,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2011870242649952894}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftToe_End_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13085,7 +13170,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8086950990363669754}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandMiddle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13119,7 +13204,7 @@ GameObject:
   - component: {fileID: 563573177029553223}
   - component: {fileID: 7735404910746549296}
   - component: {fileID: 6678538100426054146}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: RifleHolder
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -13230,16 +13315,18 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d8bab0df5d3f0a045a31549c871c8e49, type: 2}
-  - {fileID: 2100000, guid: 08f92fb4bee6e6740aeed128f64eec90, type: 2}
-  - {fileID: 2100000, guid: fd5e79ef2b60ebc46848a30476c996d5, type: 2}
-  - {fileID: 2100000, guid: 4a2bfe4818aecfe48bc7585647db7c94, type: 2}
-  - {fileID: 2100000, guid: e6839823f9c76e74eaaa0012a1964f4e, type: 2}
-  - {fileID: 2100000, guid: 8ca50cac971f92b4fa234e0b48ccc432, type: 2}
-  - {fileID: 2100000, guid: 30a527013d66d7149a216f0ef785a164, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
+  - {fileID: 2100000, guid: 235aa6e814b41cf47bd082163334fafb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13257,9 +13344,11 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -13346,7 +13435,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2946992151475302976}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: leftHandIK
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -13361,14 +13450,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4619382971436423179}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3855644, y: 0.5764498, z: 0.61335254, w: -0.37794775}
-  m_LocalPosition: {x: -0.07, y: -0.26, z: -0.05}
+  m_LocalRotation: {x: 0.6726181, y: 0.50763273, z: 0.43241704, w: 0.32079512}
+  m_LocalPosition: {x: -0.0782, y: -0.0329, z: -0.1387}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 427602955478620548}
   m_Father: {fileID: 9099350468824293752}
-  m_LocalEulerAnglesHint: {x: -93.05399, y: 224.351, z: -338.97302}
+  m_LocalEulerAnglesHint: {x: -179.572, y: 294.849, z: -433.811}
 --- !u!1 &4741582547508650314
 GameObject:
   m_ObjectHideFlags: 0
@@ -13421,6 +13510,8 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -13448,9 +13539,11 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -13537,7 +13630,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5999954354543131348}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightShoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13569,7 +13662,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4592210026664881055}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandPinky1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13601,7 +13694,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6015614936951582426}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spring_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13632,7 +13725,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6939836537514040372}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftFoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13665,7 +13758,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2731675422002400189}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: ScopeTarget
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -13696,7 +13789,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6902679065699283706}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandMiddle4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13729,7 +13822,7 @@ GameObject:
   - component: {fileID: 4418009391258247372}
   - component: {fileID: 8173552217120880659}
   - component: {fileID: 2560403094750865701}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13779,6 +13872,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -13800,9 +13895,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5093070498026281563
 GameObject:
@@ -13813,7 +13910,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3892737007845086355}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: vBow_Rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13845,7 +13942,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5839910281260966800}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandThumb1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13877,7 +13974,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1494240180438211752}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandPinky3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13909,7 +14006,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5304847814053825577}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:Spine2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13945,7 +14042,7 @@ GameObject:
   - component: {fileID: 5089956260630328091}
   - component: {fileID: 5284404448003358626}
   - component: {fileID: 7816339444216327972}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Fire_2
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -14273,7 +14370,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -14326,7 +14423,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -14379,7 +14476,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationX:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -14432,7 +14529,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -18762,7 +18859,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &7816339444216327972
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -18781,6 +18878,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -18802,9 +18901,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -18836,7 +18937,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &5456081178192512239
 GameObject:
   m_ObjectHideFlags: 0
@@ -18846,7 +18946,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6846803248034405181}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:HeadTop_End_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18877,7 +18977,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1297885095130883107}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandThumb4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18942,7 +19042,7 @@ LODGroup:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5473432263313038592}
-  serializedVersion: 2
+  serializedVersion: 3
   m_LocalReferencePoint: {x: 0.000082969666, y: 0.8432497, z: 0.039733708}
   m_Size: 1.9796741
   m_FadeMode: 0
@@ -18961,11 +19061,12 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 3147961309913783222}
-  - screenRelativeHeight: 0.050290737
+  - screenRelativeHeight: 0
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 6261393149322149826}
   m_Enabled: 1
+  m_GlobalIlluminationLOD: 0
 --- !u!1 &5516241246375873796
 GameObject:
   m_ObjectHideFlags: 0
@@ -18975,7 +19076,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2672400922937246913}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandRing4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19009,7 +19110,7 @@ GameObject:
   - component: {fileID: 712254659536614915}
   - component: {fileID: 358343738537604630}
   - component: {fileID: 5873464121415279522}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: vShotgun-detach
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -19059,6 +19160,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -19080,9 +19183,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5550965511377703333
 GameObject:
@@ -19093,7 +19198,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5707772494591196400}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandThumb1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19125,7 +19230,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4235292928537497429}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19157,7 +19262,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9153030485657993171}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Particles
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -19192,7 +19297,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2586808064479339466}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandPinky2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19274,7 +19379,7 @@ GameObject:
   - component: {fileID: 8954719527317339617}
   - component: {fileID: 5817679313124542302}
   - component: {fileID: 6599842602193143943}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: HandgunHolder
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -19342,7 +19447,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3566666770436712755}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: shieldHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19376,7 +19481,7 @@ GameObject:
   - component: {fileID: 5932113873904727193}
   - component: {fileID: 284432488107469642}
   - component: {fileID: 5011799942428360510}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Quad (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19426,6 +19531,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -19447,9 +19554,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6107949886563436184
 GameObject:
@@ -19509,7 +19618,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8754155551556617789}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: vBow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19542,7 +19651,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6958087249730840539}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandMiddle4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19607,7 +19716,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7842190698089877451}
   - component: {fileID: 2286981934366420345}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: AudioSource
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -19735,7 +19844,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7732988284065126203}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandRing1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19767,7 +19876,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5113804370517794007}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19799,7 +19908,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 504916249353583365}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: ShieldPreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19831,7 +19940,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7230220387382692294}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: Handlers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19863,7 +19972,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 819982794694273033}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightToeBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19928,7 +20037,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 483124748721099965}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandRing4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19959,7 +20068,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1865928085469561107}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandMiddle4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19993,7 +20102,7 @@ GameObject:
   - component: {fileID: 9099350468824293752}
   - component: {fileID: 286569218127972496}
   - component: {fileID: 68165294088051818}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: renderer
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -20008,8 +20117,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6682411373974255346}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0061, y: 0.0009, z: 0.086}
+  m_LocalRotation: {x: 0.20127217, y: 0.15993693, z: 0.022489052, w: 0.96612835}
+  m_LocalPosition: {x: 0.05, y: -0.06, z: 0.086}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20055,6 +20164,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -20077,9 +20188,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6781223971176203071
 GameObject:
@@ -20094,7 +20207,7 @@ GameObject:
   - component: {fileID: 413683421152745047}
   - component: {fileID: 1554737145605655421}
   - component: {fileID: 4191885313692851655}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightUpLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20148,10 +20261,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6781223971176203071}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 10
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -20259,7 +20372,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2183703129534929456}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.008
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20291,7 +20404,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 829926664799871421}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20325,7 +20438,7 @@ GameObject:
   - component: {fileID: 3851763703171916653}
   - component: {fileID: 7464734292316392438}
   - component: {fileID: 7559172783561085090}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FakeRifleClip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20375,6 +20488,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -20397,9 +20512,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6885438203580663995
 GameObject:
@@ -20410,7 +20527,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4444551121044181251}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandMiddle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20444,7 +20561,7 @@ GameObject:
   - component: {fileID: 5305603398344146470}
   - component: {fileID: 3435902245300470743}
   - component: {fileID: 984529101857887965}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: hitBox
   m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
@@ -20516,7 +20633,7 @@ GameObject:
   - component: {fileID: 4140097811249604198}
   - component: {fileID: 3540505641845391439}
   - component: {fileID: 7941947872380987572}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: rightFoot_trigger
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -20583,7 +20700,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6019322296783666591}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandMiddle3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20615,7 +20732,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3069791583929931920}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftShoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20647,7 +20764,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2352367329112980783}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandPinky1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20679,7 +20796,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6457439098595523173}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20713,7 +20830,7 @@ GameObject:
   - component: {fileID: 4666739379143572345}
   - component: {fileID: 282563360771548777}
   - component: {fileID: 8466252180197662821}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: leftFoot_trigger
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -20780,7 +20897,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 79931208437817720}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandThumb3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20817,7 +20934,7 @@ GameObject:
   - component: {fileID: 1625777402888219269}
   - component: {fileID: 4238832757381726573}
   - component: {fileID: 6322567692500622305}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20871,10 +20988,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7386630292495594858}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 10
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -21034,7 +21151,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6947620421122797443}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandIndex1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21066,7 +21183,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4664682965368769019}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.012
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21098,7 +21215,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2571884780430092587}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.013_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21213,7 +21330,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3832955748014372504}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: RightHandlers
   m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
@@ -21247,7 +21364,7 @@ GameObject:
   - component: {fileID: 393678914069389715}
   - component: {fileID: 6156088426584282693}
   - component: {fileID: 8084751988760710901}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: hitBox
   m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
@@ -21321,7 +21438,7 @@ GameObject:
   - component: {fileID: 658734226621333865}
   - component: {fileID: 4029441820822965646}
   - component: {fileID: 2203639471990935454}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:Spine1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21372,10 +21489,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7784061026772406615}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 10
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -21483,7 +21600,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4143858631966010051}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.010
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21517,7 +21634,7 @@ GameObject:
   - component: {fileID: 2436136348858441973}
   - component: {fileID: 5382046975558750536}
   - component: {fileID: 2888440908834969612}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: SwordPreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21586,7 +21703,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8059015940158325208}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandRing3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21618,7 +21735,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2244095457217880637}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21701,7 +21818,7 @@ GameObject:
   - component: {fileID: 4244615599510073448}
   - component: {fileID: 6588099340534792266}
   - component: {fileID: 7842691966292052296}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: hitBox
   m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
@@ -21771,7 +21888,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5639065880863838993}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:Neck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21805,7 +21922,7 @@ GameObject:
   - component: {fileID: 8812608678781035920}
   - component: {fileID: 6015560199635117240}
   - component: {fileID: 6949630197126994232}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Smoke_1
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -22133,7 +22250,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -22186,7 +22303,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -22239,7 +22356,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationX:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -22292,7 +22409,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -26622,7 +26739,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &6949630197126994232
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -26641,6 +26758,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -26662,9 +26781,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -26696,7 +26817,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &8200107423651950024
 GameObject:
   m_ObjectHideFlags: 0
@@ -26706,7 +26826,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 444731938993353522}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandIndex4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26739,7 +26859,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5149138360123146513}
   - component: {fileID: 6530293477707731191}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: laserSight
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -26763,6 +26883,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6530293477707731191
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -26781,6 +26902,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -26802,9 +26925,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 73c9a86b90e92a148a822ebc17402d36, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 0.78431374}
   m_FlipX: 0
@@ -26814,7 +26939,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &8248145617578818103
 GameObject:
@@ -26825,7 +26949,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3269378519379825288}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:HeadTop_End
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26857,7 +26981,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6493412219727462731}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandMiddle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26891,7 +27015,7 @@ GameObject:
   - component: {fileID: 6995427566803189466}
   - component: {fileID: 6716702041619720800}
   - component: {fileID: 1463609514977626032}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: hitbox
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -26961,7 +27085,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5182935577295141137}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandMiddle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26993,7 +27117,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 69160403309617623}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandPinky4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27024,7 +27148,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2307123468527231973}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.011
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27060,7 +27184,7 @@ GameObject:
   - component: {fileID: 842742829477954275}
   - component: {fileID: 6987036804938227844}
   - component: {fileID: 2122582340924438963}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27111,10 +27235,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8638882604246876908}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 10
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -27302,7 +27426,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2513637307300318076}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandIndex4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27334,7 +27458,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7842428715485515559}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftToe_End
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27366,7 +27490,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6833186210086892363}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandIndex3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27398,7 +27522,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4095660554663062198}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: WeaponHolders
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -27432,7 +27556,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 839962188380009671}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
