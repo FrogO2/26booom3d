@@ -6,6 +6,8 @@ public class ArenaKillCoordinator : MonoBehaviour
 {
 	private const string HitboxVisualizerObjectName = "Attack Hitbox";
 	private const float HitStopRecoveryMaxStep = 1f / 30f;
+	private const float NormalTimeScale = 1f;
+	private const float DefaultFixedDeltaTime = 0.02f;
 
 	[Header("References")]
 	[SerializeField] private FirstPersonViewAnimationController attackController;
@@ -13,6 +15,7 @@ public class ArenaKillCoordinator : MonoBehaviour
 	[SerializeField] private SprayPaint sprayPaint;
 	[SerializeField] private AttackTargetingService targetingService;
 	[SerializeField] private EffectManager effectManager;
+	[SerializeField] private LevelStartAttackGate levelStartAttackGate;
 
 	[Header("Attack Hitbox")]
 	[SerializeField] private Vector3 hitboxLocalOffset = new Vector3(0f, -0.2f, 1.8f);
@@ -33,8 +36,7 @@ public class ArenaKillCoordinator : MonoBehaviour
 	private Coroutine hitStopRecoveryCoroutine;
 	private bool isSubscribed;
 	private bool timeScaleOverridden;
-	private float previousTimeScale = 1f;
-	private float previousFixedDeltaTime = 0.02f;
+	private float baseFixedDeltaTime = DefaultFixedDeltaTime;
 	private int lastResolvedAttackSequence = -1;
 
 	public float MinimumHitStopDuration
@@ -51,6 +53,7 @@ public class ArenaKillCoordinator : MonoBehaviour
 
 	private void Awake()
 	{
+		CacheBaseFixedDeltaTime();
 		AutoAssignReferences();
 	}
 
@@ -110,6 +113,15 @@ public class ArenaKillCoordinator : MonoBehaviour
 			}
 		}
 
+		if (levelStartAttackGate == null)
+		{
+			levelStartAttackGate = GetComponent<LevelStartAttackGate>();
+			if (levelStartAttackGate == null)
+			{
+				levelStartAttackGate = GetComponentInChildren<LevelStartAttackGate>(true);
+			}
+		}
+
 		targetingService?.Initialize(ResolveTargetCamera());
 		EnsureHitboxVisualizer();
 	}
@@ -145,10 +157,38 @@ public class ArenaKillCoordinator : MonoBehaviour
 
 		lastResolvedAttackSequence = attackSequenceId;
 
+		if (levelStartAttackGate != null && levelStartAttackGate.IsGateActive)
+		{
+			killSequenceCoroutine = StartCoroutine(ExecuteAttackAfterGateRelease(attackNumber));
+			return;
+		}
+
+		TryResolveAttackKill(attackNumber);
+	}
+
+	private IEnumerator ExecuteAttackAfterGateRelease(int attackNumber)
+	{
+		while (levelStartAttackGate != null && levelStartAttackGate.IsGateActive)
+		{
+			yield return null;
+		}
+
+		TryResolveAttackKill(attackNumber);
+	}
+
+	private void TryResolveAttackKill(int attackNumber)
+	{
+		if (!isActiveAndEnabled)
+		{
+			killSequenceCoroutine = null;
+			return;
+		}
+
 
 		ArenaBakedEnemyTarget candidate = GetBestKillCandidate();
 		if (candidate == null)
 		{
+			killSequenceCoroutine = null;
 			return;
 		}
 
@@ -228,7 +268,7 @@ public class ArenaKillCoordinator : MonoBehaviour
 	{
 		StopHitStopRecovery();
 
-		float targetTimeScale = previousTimeScale;
+		float targetTimeScale = NormalTimeScale;
 		float startTimeScale = Mathf.Clamp(postHitStopStartTimeScale, 0f, targetTimeScale);
 		OverrideTimeScale(startTimeScale);
 		hitStopRecoveryCoroutine = StartCoroutine(RampOutOfHitStop(startTimeScale, targetTimeScale, postHitStopRecoveryDuration));
@@ -264,15 +304,10 @@ public class ArenaKillCoordinator : MonoBehaviour
 
 	private void OverrideTimeScale(float timeScale)
 	{
-		if (!timeScaleOverridden)
-		{
-			previousTimeScale = Time.timeScale;
-			previousFixedDeltaTime = Time.fixedDeltaTime;
-			timeScaleOverridden = true;
-		}
+		timeScaleOverridden = true;
 
 		Time.timeScale = timeScale;
-		Time.fixedDeltaTime = previousFixedDeltaTime * Mathf.Max(0f, timeScale);
+		Time.fixedDeltaTime = baseFixedDeltaTime * Mathf.Max(0f, timeScale);
 	}
 
 	private void RestoreTimeScale()
@@ -282,9 +317,17 @@ public class ArenaKillCoordinator : MonoBehaviour
 			return;
 		}
 
-		Time.timeScale = previousTimeScale;
-		Time.fixedDeltaTime = previousFixedDeltaTime;
+		Time.timeScale = NormalTimeScale;
+		Time.fixedDeltaTime = baseFixedDeltaTime;
 		timeScaleOverridden = false;
+	}
+
+	private void CacheBaseFixedDeltaTime()
+	{
+		if (Time.fixedDeltaTime > 0f)
+		{
+			baseFixedDeltaTime = Time.fixedDeltaTime;
+		}
 	}
 
 	private void OnValidate()
