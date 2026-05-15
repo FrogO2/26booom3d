@@ -4567,7 +4567,6 @@ MonoBehaviour:
   inPlaceTurnSpeedThreshold: 1
   attackDuration: 0.75
   attackCooldown: 1.25
-  ragdollDelay: 0.8
   enemyEffect: {fileID: 0}
 --- !u!114 &8173817423108462883
 MonoBehaviour:

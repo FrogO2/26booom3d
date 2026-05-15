@@ -1,14 +1,11 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Serialization;
 
 public class SprayPaint : MonoBehaviour
 {
 	[Header("References")]
 	[SerializeField] private Camera targetCamera;
-	[SerializeField] private InputActionAsset inputActions;
-	[SerializeField] private string actionMapName = "Player";
-	[SerializeField] private string attackActionName = "Attack";
 
 	[Header("Reveal")]
 	[SerializeField, Min(0.5f)] private float projectionDistance = 30f;
@@ -27,14 +24,10 @@ public class SprayPaint : MonoBehaviour
 	[SerializeField] private Vector2 bloodTextureScale = Vector2.one;
 	[SerializeField] private Vector2 bloodTextureOffset = Vector2.zero;
 
-	[Header("Async HD Depth")]
-	[SerializeField] private bool enableAsyncHighRes;
-	[SerializeField, Min(16)] private int asyncHighResResolution = 256;
+	[Header("HD Depth")]
+	[SerializeField, FormerlySerializedAs("asyncHighResResolution"), Min(16)] private int highResCaptureResolution = 256;
 	[SerializeField] private Shader depthCaptureShader;
-	[SerializeField, Min(1), Tooltip("每帧渲染的扫描行数。越小则每帧 GPU 开销越低，但 HD 数据就绪所需帧数越多。")]
-	private int hdCaptureRowsPerFrame = 64;
 
-	private InputAction attackAction;
 	private int latestProjectorId = -1;
 
 	private void Awake()
@@ -46,24 +39,12 @@ public class SprayPaint : MonoBehaviour
 			targetCamera = Camera.main;
 		}
 
-		BindInputAction();
 		FrozenProjectorManager.SetMaxRetainedProjectors(maxRetainedSprays);
 		BloodRevealManager.SetHiddenColor(hiddenColor);
 	}
 
-	private void OnEnable()
-	{
-		attackAction?.Enable();
-	}
-
-	private void OnDisable()
-	{
-		attackAction?.Disable();
-	}
-
 	private void Update()
 	{
-		FrozenProjectorManager.Tick(hdCaptureRowsPerFrame);
 		Camera projectionCamera = GetProjectionCamera();
 
 		if (projectionCamera == null)
@@ -78,18 +59,6 @@ public class SprayPaint : MonoBehaviour
 				latestProjectorId = -1;
 			}
 		}
-	}
-
-	private void BindInputAction()
-	{
-		if (inputActions == null)
-		{
-			Debug.LogWarning($"{nameof(SprayPaint)} on {name} has no InputActionAsset assigned.", this);
-			return;
-		}
-
-		InputActionMap actionMap = inputActions.FindActionMap(actionMapName, true);
-		attackAction = actionMap.FindAction(attackActionName, true);
 	}
 
 	public int TriggerSprayFromCurrentCamera()
@@ -107,8 +76,7 @@ public class SprayPaint : MonoBehaviour
 		FrozenProjectorManager.SetMaxRetainedProjectors(maxRetainedSprays);
 		BloodRevealManager.SetHiddenColor(hiddenColor);
 
-		bool useFastInitialVisibility = enableAsyncHighRes && depthCaptureShader != null;
-		int projectorId = FrozenProjectorManager.AddProjector(projectionCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution, useFastInitialVisibility);
+		int projectorId = FrozenProjectorManager.AddProjector(projectionCamera, projectionDistance, edgeFeather, visibleDepthBias, projectionMask, captureResolution);
 		if (projectorId < 0)
 		{
 			return -1;
@@ -118,12 +86,17 @@ public class SprayPaint : MonoBehaviour
 		BloodRevealManager.AddReveal(projectorId);
 		BloodFxManager.AddBloodFx(projectorId, ResolveProjectionTexture(), ResolveProjectionColor(), bloodTextureScale, bloodTextureOffset);
 
-		if (enableAsyncHighRes && depthCaptureShader != null)
+		return projectorId;
+	}
+
+	public void CaptureHighResForProjector(int projectorId)
+	{
+		if (projectorId < 0 || depthCaptureShader == null)
 		{
-			FrozenProjectorManager.ScheduleAsyncHDCapture(projectorId, asyncHighResResolution, projectionMask, depthCaptureShader);
+			return;
 		}
 
-		return projectorId;
+		FrozenProjectorManager.CaptureHighResDepth(projectorId, highResCaptureResolution, projectionMask, depthCaptureShader);
 	}
 
 	private Camera GetProjectionCamera()
@@ -186,8 +159,7 @@ public class SprayPaint : MonoBehaviour
 		captureResolution = Mathf.Max(16, captureResolution);
 		visibleDepthBias = Mathf.Max(0.001f, visibleDepthBias);
 		maxRetainedSprays = Mathf.Max(1, maxRetainedSprays);
-		asyncHighResResolution = Mathf.Max(16, asyncHighResResolution);
-		hdCaptureRowsPerFrame = Mathf.Max(1, hdCaptureRowsPerFrame);
+		highResCaptureResolution = Mathf.Max(16, highResCaptureResolution);
 		ExcludeProtectedLayers();
 	}
 

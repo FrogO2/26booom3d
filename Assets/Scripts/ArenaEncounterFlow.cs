@@ -11,7 +11,8 @@ public class ArenaEncounterFlow : MonoBehaviour
 	public event Action ExitRequestedBeforeStart;
 	public event Action ExitRequestedWhileLocked;
 	public event Action EncounterCleared;
-	public event Action<float> RunCompleted;
+	public event Action RunStarted;
+	public event Action RunExitReached;
 
 	[SerializeField] private Transform player;
 	[SerializeField] private CharacterController playerController;
@@ -19,10 +20,7 @@ public class ArenaEncounterFlow : MonoBehaviour
 	[SerializeField] private GameObject entryBarrier;
 	[SerializeField] private GameObject exitBarrier;
 	[SerializeField] private ArenaGuidanceArrow exitArrow;
-	[SerializeField] private ArenaRunTimerDisplay runTimerDisplay;
-	[SerializeField] private ArenaWallLeaderboardDisplay wallLeaderboardDisplay;
 	[SerializeField] private ArenaPromptOverlay promptOverlay;
-	[SerializeField] private string playerLeaderboardName = "PLAYER";
 	[SerializeField] private List<ArenaBakedEnemyTarget> enemyTargets = new List<ArenaBakedEnemyTarget>();
 	[SerializeField] private bool showSceneIntroOnStart = true;
 	[SerializeField] private bool showInitialTutorialPrompt = true;
@@ -36,11 +34,10 @@ public class ArenaEncounterFlow : MonoBehaviour
 	private bool usesStandalonePresentation;
 	private bool arenaStarted;
 	private bool arenaCleared;
-	private bool scoreSubmitted;
+	private bool runStartNotified;
 
 	public bool HasStarted => arenaStarted;
 	public bool IsCleared => arenaCleared;
-	public float ElapsedSeconds => runTimerDisplay != null ? runTimerDisplay.ElapsedSeconds : 0f;
 
 	private void Awake()
 	{
@@ -85,9 +82,10 @@ public class ArenaEncounterFlow : MonoBehaviour
 		}
 
 		ResolvePlayerReferences();
+		EnsureArenaKillCoordinator();
 	}
 
-	public void ConfigureSceneObjects(GameObject entryBarrierObject, GameObject exitBarrierObject, ArenaGuidanceArrow exitArrowIndicator, ArenaRunTimerDisplay timerDisplay, ArenaWallLeaderboardDisplay leaderboardDisplay, string leaderboardName)
+	public void ConfigureSceneObjects(GameObject entryBarrierObject, GameObject exitBarrierObject, ArenaGuidanceArrow exitArrowIndicator)
 	{
 		if (entryBarrierObject != null)
 		{
@@ -104,26 +102,9 @@ public class ArenaEncounterFlow : MonoBehaviour
 			exitArrow = exitArrowIndicator;
 		}
 
-		if (timerDisplay != null)
-		{
-			runTimerDisplay = timerDisplay;
-		}
-
-		if (leaderboardDisplay != null)
-		{
-			wallLeaderboardDisplay = leaderboardDisplay;
-		}
-
-		if (!string.IsNullOrWhiteSpace(leaderboardName))
-		{
-			playerLeaderboardName = leaderboardName;
-		}
-
 		promptOverlay?.SetCamera(playerCamera);
 		promptOverlay?.EnsureSceneBuilt();
 		exitArrow?.EnsureSceneBuilt();
-		runTimerDisplay?.EnsureSceneBuilt();
-		wallLeaderboardDisplay?.EnsureSceneBuilt();
 	}
 
 	public void BindEnemies(IEnumerable<ArenaBakedEnemyTarget> enemies)
@@ -146,7 +127,8 @@ public class ArenaEncounterFlow : MonoBehaviour
 		for (int i = 0; i < resolvedEnemies.Count; i++)
 		{
 			ArenaBakedEnemyTarget enemy = resolvedEnemies[i];
-			enemy.Initialize(this);
+			enemy.Initialize();
+			EnsureEncounterTargetLink(enemy);
 			arenaEnemies.Add(enemy);
 			enemyTargets.Add(enemy);
 		}
@@ -155,9 +137,10 @@ public class ArenaEncounterFlow : MonoBehaviour
 	public void EnsureBindings()
 	{
 		ResolvePlayerReferences();
+		EnsureArenaKillCoordinator();
 		ResolveEnemyTargets();
 		ResolveStandalonePresentation();
-		ConfigureSceneObjects(entryBarrier, exitBarrier, exitArrow, runTimerDisplay, wallLeaderboardDisplay, playerLeaderboardName);
+		ConfigureSceneObjects(entryBarrier, exitBarrier, exitArrow);
 		BindEnemies(enemyTargets);
 	}
 
@@ -165,7 +148,7 @@ public class ArenaEncounterFlow : MonoBehaviour
 	{
 		arenaStarted = false;
 		arenaCleared = false;
-		scoreSubmitted = false;
+		runStartNotified = false;
 
 		if (entryBarrier != null)
 		{
@@ -184,11 +167,10 @@ public class ArenaEncounterFlow : MonoBehaviour
 		{
 			if (arenaEnemies[i] != null)
 			{
-				arenaEnemies[i].Initialize(this);
+				arenaEnemies[i].Initialize();
+				EnsureEncounterTargetLink(arenaEnemies[i]);
 			}
 		}
-
-		runTimerDisplay?.ResetRun();
 	}
 
 	public bool IsPlayerCollider(Collider other)
@@ -272,71 +254,24 @@ public class ArenaEncounterFlow : MonoBehaviour
 				else
 				{
 					exitArrow?.Hide();
-					CompleteRun();
 
 					if (usesStandalonePresentation)
 					{
-						float elapsedSeconds = runTimerDisplay != null && runTimerDisplay.HasStarted ? runTimerDisplay.ElapsedSeconds : 0f;
-						string timeText = elapsedSeconds > 0f ? $"\nTime: {ArenaRunTimerDisplay.FormatTime(elapsedSeconds)}" : string.Empty;
-						promptOverlay?.ShowPrompt($"Arena complete.{timeText}\nFollow the path ahead.", promptDuration, ArenaPromptColorMode.AdaptiveHueShift, Color.white);
+						promptOverlay?.ShowPrompt("Arena complete. Follow the path ahead.", promptDuration, ArenaPromptColorMode.AdaptiveHueShift, Color.white);
 					}
 
-					RunCompleted?.Invoke(runTimerDisplay != null && runTimerDisplay.HasStarted ? runTimerDisplay.ElapsedSeconds : 0f);
+					RunExitReached?.Invoke();
 				}
 				break;
 		}
 	}
 
-	public ArenaBakedEnemyTarget SelectKillCandidate(float killRange, float killAngle)
-	{
-		if (playerCamera == null)
-		{
-			return null;
-		}
-
-		Vector3 origin = playerCamera.transform.position;
-		Vector3 forward = playerCamera.transform.forward;
-		ArenaBakedEnemyTarget bestCandidate = null;
-		float bestScore = float.MaxValue;
-
-		for (int i = 0; i < arenaEnemies.Count; i++)
-		{
-			ArenaBakedEnemyTarget enemy = arenaEnemies[i];
-			if (enemy == null || !enemy.IsAlive)
-			{
-				continue;
-			}
-
-			Vector3 targetPoint = enemy.GetAimPoint();
-			Vector3 toTarget = targetPoint - origin;
-			float distance = toTarget.magnitude;
-			if (distance > killRange || distance <= 0.01f)
-			{
-				continue;
-			}
-
-			float angle = Vector3.Angle(forward, toTarget.normalized);
-			if (angle > killAngle)
-			{
-				continue;
-			}
-
-			float score = angle * 4f + distance;
-			if (score < bestScore)
-			{
-				bestScore = score;
-				bestCandidate = enemy;
-			}
-		}
-
-		return bestCandidate;
-	}
-
 	public void NotifyEnemyKilled(ArenaBakedEnemyTarget enemy)
 	{
-		if (runTimerDisplay != null && !runTimerDisplay.HasStarted)
+		if (!runStartNotified)
 		{
-			runTimerDisplay.BeginRun();
+			runStartNotified = true;
+			RunStarted?.Invoke();
 		}
 
 		int remaining = GetRemainingEnemyCount();
@@ -369,21 +304,6 @@ public class ArenaEncounterFlow : MonoBehaviour
 		}
 	}
 
-	private void CompleteRun()
-	{
-		if (runTimerDisplay != null && !runTimerDisplay.HasFinished)
-		{
-			runTimerDisplay.FinishRun();
-		}
-
-		if (scoreSubmitted || wallLeaderboardDisplay == null || runTimerDisplay == null || !runTimerDisplay.HasStarted)
-		{
-			return;
-		}
-
-		wallLeaderboardDisplay.SubmitScore(playerLeaderboardName, runTimerDisplay.ElapsedSeconds);
-		scoreSubmitted = true;
-	}
 
 	private int GetRemainingEnemyCount()
 	{
@@ -449,6 +369,38 @@ public class ArenaEncounterFlow : MonoBehaviour
 				enemyTargets.Add(target);
 			}
 		}
+	}
+
+	private void EnsureArenaKillCoordinator()
+	{
+		if (player == null)
+		{
+			return;
+		}
+
+		ArenaKillCoordinator killCoordinator = player.GetComponent<ArenaKillCoordinator>();
+		if (killCoordinator == null)
+		{
+			killCoordinator = player.gameObject.AddComponent<ArenaKillCoordinator>();
+		}
+
+		killCoordinator.Initialize();
+	}
+
+	private void EnsureEncounterTargetLink(ArenaBakedEnemyTarget enemy)
+	{
+		if (enemy == null)
+		{
+			return;
+		}
+
+		ArenaEncounterTargetLink link = enemy.GetComponent<ArenaEncounterTargetLink>();
+		if (link == null)
+		{
+			link = enemy.gameObject.AddComponent<ArenaEncounterTargetLink>();
+		}
+
+		link.Initialize(this);
 	}
 
 	private void ResolveStandalonePresentation()

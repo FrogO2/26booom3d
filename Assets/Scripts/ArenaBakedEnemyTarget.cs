@@ -1,26 +1,23 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+public struct ArenaEnemyKillContext
+{
+	public int AttackNumber;
+	public Vector3 HitPoint;
+	public Vector3 HitDirection;
+	public float DestroyDelay;
+}
+
 [AddComponentMenu("Arena/Enemy Target")]
 public class ArenaBakedEnemyTarget : MonoBehaviour
 {
-	[SerializeField] private ArenaEncounterFlow encounterFlow;
+	private const float DefaultDestroyDelay = 0.05f;
 
 	public bool IsAlive { get; private set; } = true;
 
-	private void Awake()
+	public void Initialize()
 	{
-		ResolveEncounterFlow();
-	}
-
-	public void Initialize(ArenaEncounterFlow owner)
-	{
-		if (owner != null)
-		{
-			encounterFlow = owner;
-		}
-
-		ResolveEncounterFlow();
 		IsAlive = true;
 	}
 
@@ -31,13 +28,100 @@ public class ArenaBakedEnemyTarget : MonoBehaviour
 
 	public void Kill()
 	{
+		TryKill(new ArenaEnemyKillContext
+		{
+			DestroyDelay = DefaultDestroyDelay,
+		});
+	}
+
+	public void Kill(ArenaEnemyKillContext context)
+	{
+		TryKill(context);
+	}
+
+	public bool CanBeTargeted()
+	{
 		if (!IsAlive)
 		{
-			return;
+			return false;
+		}
+
+		MonoBehaviour[] behaviours = GetComponents<MonoBehaviour>();
+		for (int i = 0; i < behaviours.Length; i++)
+		{
+			if (behaviours[i] is IAttackTargetGate gate && !gate.CanTarget(this))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public bool TryKill(ArenaEnemyKillContext context)
+	{
+		if (!CanBeTargeted())
+		{
+			return false;
 		}
 
 		IsAlive = false;
+		NotifyDeathListeners();
 
+		if (TryExecuteLegacyKill(context))
+		{
+			ScheduleDestroy(context.DestroyDelay);
+			return true;
+		}
+
+		ExecuteFallbackKill(context);
+		return true;
+	}
+
+	private void NotifyDeathListeners()
+	{
+		MonoBehaviour[] behaviours = GetComponents<MonoBehaviour>();
+		for (int i = 0; i < behaviours.Length; i++)
+		{
+			if (behaviours[i] is IAttackTargetDeathListener listener)
+			{
+				listener.OnTargetKilled(this);
+			}
+		}
+	}
+
+	private bool TryExecuteLegacyKill(ArenaEnemyKillContext context)
+	{
+		Vector3 hitPoint = ResolveHitPoint(context);
+		Vector3 hitDirection = ResolveHitDirection(context);
+
+		KnifePawnController knifePawnController = GetComponent<KnifePawnController>();
+		if (knifePawnController != null)
+		{
+			knifePawnController.TakeFatalDamage(hitPoint, hitDirection);
+			return true;
+		}
+
+		GunPawnController gunPawnController = GetComponent<GunPawnController>();
+		if (gunPawnController != null)
+		{
+			gunPawnController.TakeFatalDamage(hitPoint, hitDirection);
+			return true;
+		}
+
+		EnemyEffect enemyEffect = GetComponent<EnemyEffect>();
+		if (enemyEffect != null)
+		{
+			enemyEffect.PlayHitEffects(hitPoint, hitDirection);
+			enemyEffect.ActivateRagdoll(hitDirection);
+			return true;
+		}
+
+		return false;
+	}
+
+	private void ExecuteFallbackKill(ArenaEnemyKillContext context)
+	{
 		LocomotionSimpleAgent locomotionAgent = GetComponent<LocomotionSimpleAgent>();
 		if (locomotionAgent != null)
 		{
@@ -92,15 +176,28 @@ public class ArenaBakedEnemyTarget : MonoBehaviour
 			colliders[i].enabled = false;
 		}
 
-		encounterFlow?.NotifyEnemyKilled(this);
-		Destroy(gameObject, 0.05f);
+		ScheduleDestroy(context.DestroyDelay);
 	}
 
-	private void ResolveEncounterFlow()
+	private Vector3 ResolveHitPoint(ArenaEnemyKillContext context)
 	{
-		if (encounterFlow == null)
+		return context.HitPoint.sqrMagnitude > 0.001f ? context.HitPoint : GetAimPoint();
+	}
+
+	private Vector3 ResolveHitDirection(ArenaEnemyKillContext context)
+	{
+		if (context.HitDirection.sqrMagnitude > 0.001f)
 		{
-			encounterFlow = GetComponentInParent<ArenaEncounterFlow>();
+			return context.HitDirection;
 		}
+
+		Vector3 fallbackDirection = transform.forward;
+		fallbackDirection.y = 0f;
+		return fallbackDirection.sqrMagnitude > 0.001f ? fallbackDirection.normalized : Vector3.forward;
+	}
+
+	private void ScheduleDestroy(float destroyDelay)
+	{
+		Destroy(gameObject, Mathf.Max(DefaultDestroyDelay, destroyDelay));
 	}
 }

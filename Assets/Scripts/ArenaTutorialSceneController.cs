@@ -5,8 +5,6 @@ using TMPro;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ArenaTutorialSceneController : MonoBehaviour
@@ -35,10 +33,6 @@ public class ArenaTutorialSceneController : MonoBehaviour
 	[Header("Layout")]
 	[SerializeField] private Vector3 courseOrigin = new Vector3(120f, 0f, 0f);
 
-	[Header("Fake Kill")]
-	[SerializeField] private float fakeKillRange = 10f;
-	[SerializeField, Range(5f, 60f)] private float fakeKillAngle = 22f;
-
 	[Header("Run Tracking")]
 	[SerializeField] private string playerLeaderboardName = "PLAYER";
 	[SerializeField] private Vector3 leaderboardOffset = new Vector3(0f, 2.18f, 80.6f);
@@ -51,6 +45,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 	private Camera playerCamera;
 	private NavMeshSurface navMeshSurface;
 	private ArenaEncounterFlow arenaEncounterFlow;
+	private LevelManager levelManager;
 
 	private GameObject runtimeRoot;
 	private GameObject entryBarrier;
@@ -70,8 +65,8 @@ public class ArenaTutorialSceneController : MonoBehaviour
 	private ActivePromptState activePrompt;
 	private float counterHideAt = -1f;
 	private float initialPromptAt = -1f;
-	private bool isRetryReloadPending;
 	private bool encounterEventsBound;
+	private bool levelEventsBound;
 
 	private sealed class ActivePromptState
 	{
@@ -93,6 +88,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		EnsureArenaEncounterFlow();
 		sceneIntroOverlay = null;
 		EnsureSceneBuilt();
+		EnsureLevelManager();
 		ResetArenaState();
 		RepositionPlayer();
 		QueueInitialPrompt();
@@ -111,11 +107,9 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void Update()
 	{
-		HandleRetryInput();
 		TryShowInitialPrompt();
 		UpdatePromptVisuals();
 		UpdateCounterVisuals();
-		HandleFakeAttackKill();
 	}
 
 	private void OnDestroy()
@@ -130,42 +124,12 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		arenaEncounterFlow.ExitRequestedBeforeStart -= HandleArenaExitRequestedBeforeStart;
 		arenaEncounterFlow.ExitRequestedWhileLocked -= HandleArenaExitRequestedWhileLocked;
 		arenaEncounterFlow.EncounterCleared -= HandleArenaEncounterCleared;
-		arenaEncounterFlow.RunCompleted -= HandleArenaRunCompleted;
-	}
 
-	private void HandleRetryInput()
-	{
-		bool retryPressed = Input.GetKeyDown(KeyCode.R);
-		if (!retryPressed && Keyboard.current != null)
+		if (levelEventsBound && levelManager != null)
 		{
-			retryPressed = Keyboard.current.rKey.wasPressedThisFrame;
+			levelManager.RunCompleted -= HandleLevelRunCompleted;
+			levelEventsBound = false;
 		}
-
-		if (!retryPressed || isRetryReloadPending)
-		{
-			return;
-		}
-
-		RetryLevel();
-	}
-
-	private void RetryLevel()
-	{
-		isRetryReloadPending = true;
-
-		if (wallLeaderboardDisplay != null)
-		{
-			wallLeaderboardDisplay.PersistCurrentEntries();
-		}
-
-		Scene currentScene = gameObject.scene;
-		if (currentScene.buildIndex >= 0)
-		{
-			SceneManager.LoadScene(currentScene.buildIndex);
-			return;
-		}
-
-		SceneManager.LoadScene(currentScene.name);
 	}
 
 	private void EnsureArenaEncounterFlow()
@@ -191,8 +155,30 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		arenaEncounterFlow.ExitRequestedBeforeStart += HandleArenaExitRequestedBeforeStart;
 		arenaEncounterFlow.ExitRequestedWhileLocked += HandleArenaExitRequestedWhileLocked;
 		arenaEncounterFlow.EncounterCleared += HandleArenaEncounterCleared;
-		arenaEncounterFlow.RunCompleted += HandleArenaRunCompleted;
 		encounterEventsBound = true;
+	}
+
+	private void EnsureLevelManager()
+	{
+		if (levelManager == null)
+		{
+			levelManager = GetComponent<LevelManager>();
+			if (levelManager == null)
+			{
+				levelManager = gameObject.AddComponent<LevelManager>();
+			}
+		}
+
+		levelManager.Configure(arenaEncounterFlow, runTimerDisplay, wallLeaderboardDisplay, playerLeaderboardName);
+
+		if (levelEventsBound)
+		{
+			levelManager.RunCompleted -= HandleLevelRunCompleted;
+			levelEventsBound = false;
+		}
+
+		levelManager.RunCompleted += HandleLevelRunCompleted;
+		levelEventsBound = true;
 	}
 
 	private void HandleArenaEncounterStarted()
@@ -220,15 +206,26 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		ShowPrompt("Arena cleared. Follow the ground arrow to leave.", promptDuration, ArenaPromptColorMode.AdaptiveHueShift, Color.white);
 	}
 
-	private void HandleArenaRunCompleted(float elapsedSeconds)
+	private void HandleLevelRunCompleted(float elapsedSeconds)
 	{
 		string timeText = elapsedSeconds > 0f ? $"\nTime: {ArenaRunTimerDisplay.FormatTime(elapsedSeconds)}" : string.Empty;
 		ShowPrompt($"Arena complete.{timeText}\nFollow the path ahead.", promptDuration, ArenaPromptColorMode.AdaptiveHueShift, Color.white);
 	}
 
+	public void SoftResetLevelRuntime()
+	{
+		ClearGeneratedContentFromScene();
+		EnsureSceneBuilt();
+		EnsureLevelManager();
+		ResetArenaState();
+		RepositionPlayer();
+		initialPromptAt = -1f;
+		QueueInitialPrompt();
+	}
+
 	private bool TryResolvePlayer()
 	{
-		playerController = FindFirstObjectByType<CharacterController>();
+		playerController = FindAnyObjectByType<CharacterController>();
 		if (playerController == null)
 		{
 			return false;
@@ -276,8 +273,9 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		}
 
 		arenaEncounterFlow.BindPlayer(player, playerController, playerCamera);
-		arenaEncounterFlow.ConfigureSceneObjects(entryBarrier, exitBarrier, exitArrow, runTimerDisplay, wallLeaderboardDisplay, playerLeaderboardName);
+		arenaEncounterFlow.ConfigureSceneObjects(entryBarrier, exitBarrier, exitArrow);
 		arenaEncounterFlow.BindEnemies(arenaEnemies);
+		levelManager?.Configure(arenaEncounterFlow, runTimerDisplay, wallLeaderboardDisplay, playerLeaderboardName);
 	}
 
 	private void EnsurePromptUi()
@@ -727,7 +725,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		{
 			enemyTarget = enemyInstance.AddComponent<ArenaBakedEnemyTarget>();
 		}
-		enemyTarget.Initialize(arenaEncounterFlow);
+		enemyTarget.Initialize();
 		arenaEnemies.Add(enemyTarget);
 		return enemyInstance;
 	}
@@ -833,7 +831,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 				enemyTarget = enemyRoot.AddComponent<ArenaBakedEnemyTarget>();
 			}
 
-			enemyTarget.Initialize(arenaEncounterFlow);
+			enemyTarget.Initialize();
 			arenaEnemies.Add(enemyTarget);
 		}
 	}
@@ -950,20 +948,6 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		}
 
 		ShowPrompt(zone.Message, promptDuration, zone.ColorMode, zone.SolidColor);
-	}
-
-	private void HandleFakeAttackKill()
-	{
-		if (arenaEncounterFlow == null || !arenaEncounterFlow.HasStarted || arenaEncounterFlow.IsCleared || Mouse.current == null || !Mouse.current.leftButton.wasPressedThisFrame)
-		{
-			return;
-		}
-
-		ArenaBakedEnemyTarget candidate = arenaEncounterFlow.SelectKillCandidate(fakeKillRange, fakeKillAngle);
-		if (candidate != null)
-		{
-			candidate.Kill();
-		}
 	}
 
 	private void ShowPrompt(string message, float duration, ArenaPromptColorMode colorMode, Color solidColor)

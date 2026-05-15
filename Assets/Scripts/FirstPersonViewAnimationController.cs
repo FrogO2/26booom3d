@@ -641,7 +641,7 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 		}
 	}
 
-	private void ResetViewState()
+	public void ResetViewState()
 	{
 		currentTilt = 0f;
 		currentCameraOffset = Vector3.zero;

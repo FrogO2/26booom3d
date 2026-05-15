@@ -4,15 +4,21 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class ArenaKillCoordinator : MonoBehaviour
 {
+	private const string HitboxVisualizerObjectName = "Attack Hitbox";
+
 	[Header("References")]
 	[SerializeField] private FirstPersonViewAnimationController attackController;
 	[SerializeField] private SprayPaint sprayPaint;
-	[SerializeField] private ArenaTutorialSceneController arenaController;
+	[SerializeField] private AttackTargetingService targetingService;
 	[SerializeField] private EffectManager effectManager;
 
+	[Header("Attack Hitbox")]
+	[SerializeField] private Vector3 hitboxLocalOffset = new Vector3(0f, -0.2f, 1.8f);
+	[SerializeField] private Vector3 hitboxSize = new Vector3(2.4f, 2.0f, 3.6f);
+	[SerializeField] private BoxCollider hitboxVisualizer;
+
 	[Header("Hit Stop")]
-	[SerializeField, Min(0f)] private float minimumHitStopDuration = 0.05f;
-	[SerializeField, Min(0f)] private float maximumHitStopDuration = 0.18f;
+	[SerializeField, Min(0f), Tooltip("Minimum pause applied after a confirmed arena kill.")] private float minimumHitStopDuration = 0.05f;
 	[SerializeField, Min(0.05f)] private float enemyDestroyDelay = 6f;
 
 	[Header("Kill Direction")]
@@ -25,9 +31,14 @@ public class ArenaKillCoordinator : MonoBehaviour
 	private float previousFixedDeltaTime = 0.02f;
 	private int lastResolvedAttackSequence = -1;
 
-	public void Initialize(ArenaTutorialSceneController controller)
+	public float MinimumHitStopDuration
 	{
-		arenaController = controller;
+		get => minimumHitStopDuration;
+		set => minimumHitStopDuration = Mathf.Max(0f, value);
+	}
+
+	public void Initialize()
+	{
 		AutoAssignReferences();
 		SubscribeIfNeeded();
 	}
@@ -54,22 +65,37 @@ public class ArenaKillCoordinator : MonoBehaviour
 		if (attackController == null)
 		{
 			attackController = GetComponent<FirstPersonViewAnimationController>();
+			if (attackController == null)
+			{
+				attackController = GetComponentInChildren<FirstPersonViewAnimationController>(true);
+			}
 		}
 
 		if (sprayPaint == null)
 		{
 			sprayPaint = GetComponent<SprayPaint>();
+			if (sprayPaint == null)
+			{
+				sprayPaint = GetComponentInChildren<SprayPaint>(true);
+			}
 		}
 
-		if (arenaController == null)
+		if (targetingService == null)
 		{
-			arenaController = FindAnyObjectByType<ArenaTutorialSceneController>();
+			targetingService = GetComponent<AttackTargetingService>();
+			if (targetingService == null)
+			{
+				targetingService = gameObject.AddComponent<AttackTargetingService>();
+			}
 		}
 
 		if (effectManager == null)
 		{
 			effectManager = EffectManager.Instance != null ? EffectManager.Instance : FindAnyObjectByType<EffectManager>();
 		}
+
+		targetingService?.Initialize(ResolveTargetCamera());
+		EnsureHitboxVisualizer();
 	}
 
 	private void SubscribeIfNeeded()
@@ -103,12 +129,8 @@ public class ArenaKillCoordinator : MonoBehaviour
 
 		lastResolvedAttackSequence = attackSequenceId;
 
-		if (arenaController == null || !arenaController.CanAttemptArenaKill)
-		{
-			return;
-		}
 
-		ArenaBakedEnemyTarget candidate = arenaController.GetBestKillCandidate();
+		ArenaBakedEnemyTarget candidate = GetBestKillCandidate();
 		if (candidate == null)
 		{
 			return;
@@ -135,12 +157,31 @@ public class ArenaKillCoordinator : MonoBehaviour
 	{
 		yield return ApplyHitStop(projectorId);
 
-		if (arenaController != null)
-		{
-			arenaController.TryExecuteArenaKill(target, attackNumber, hitPoint, hitDirection, enemyDestroyDelay);
-		}
+		ExecuteArenaKill(target, attackNumber, hitPoint, hitDirection);
 
 		killSequenceCoroutine = null;
+	}
+
+
+	private ArenaBakedEnemyTarget GetBestKillCandidate()
+	{
+		return targetingService == null ? null : targetingService.SelectBestTarget(hitboxLocalOffset, hitboxSize);
+	}
+
+	private void ExecuteArenaKill(ArenaBakedEnemyTarget target, int attackNumber, Vector3 hitPoint, Vector3 hitDirection)
+	{
+		if (targetingService == null)
+		{
+			return;
+		}
+
+		targetingService.TryExecuteKill(target, new ArenaEnemyKillContext
+		{
+			AttackNumber = attackNumber,
+			HitPoint = hitPoint,
+			HitDirection = hitDirection,
+			DestroyDelay = enemyDestroyDelay,
+		});
 	}
 
 	private IEnumerator ApplyHitStop(int projectorId)
@@ -148,23 +189,15 @@ public class ArenaKillCoordinator : MonoBehaviour
 		OverrideTimeScale(0f);
 
 		float elapsed = 0f;
-		while (elapsed < minimumHitStopDuration || ShouldExtendHitStop(projectorId, elapsed))
+		while (elapsed < minimumHitStopDuration)
 		{
 			elapsed += Time.unscaledDeltaTime;
 			yield return null;
 		}
 
+		sprayPaint?.CaptureHighResForProjector(projectorId);
+
 		RestoreTimeScale();
-	}
-
-	private bool ShouldExtendHitStop(int projectorId, float elapsed)
-	{
-		if (projectorId < 0 || elapsed >= maximumHitStopDuration)
-		{
-			return false;
-		}
-
-		return FrozenProjectorManager.HasPendingHighResCapture(projectorId);
 	}
 
 	private void OverrideTimeScale(float timeScale)
@@ -192,13 +225,27 @@ public class ArenaKillCoordinator : MonoBehaviour
 		timeScaleOverridden = false;
 	}
 
+	private void OnValidate()
+	{
+		MinimumHitStopDuration = minimumHitStopDuration;
+		hitboxSize = new Vector3(
+			Mathf.Max(0.05f, hitboxSize.x),
+			Mathf.Max(0.05f, hitboxSize.y),
+			Mathf.Max(0.05f, hitboxSize.z));
+
+		if (!Application.isPlaying)
+		{
+			EnsureHitboxVisualizer();
+		}
+	}
+
 	private Vector3 ResolveHitDirection(Transform enemyTransform, int attackNumber)
 	{
 		Transform referenceTransform = attackController != null && attackController.transform != null
 			? attackController.transform
 			: transform;
 
-		Vector3 sideDirection = referenceTransform.right * (attackNumber == 2 ? -1f : 1f);
+		Vector3 sideDirection = referenceTransform.right * (attackNumber == 2 ? 1f : -1f);
 		Vector3 towardEnemy = enemyTransform != null ? enemyTransform.position - referenceTransform.position : referenceTransform.forward;
 		towardEnemy.y = 0f;
 
@@ -209,5 +256,101 @@ public class ArenaKillCoordinator : MonoBehaviour
 
 		Vector3 blendedDirection = sideDirection.normalized + towardEnemy.normalized * Mathf.Clamp01(forwardWeight);
 		return blendedDirection.sqrMagnitude > 0.001f ? blendedDirection.normalized : sideDirection.normalized;
+	}
+
+	private void OnDrawGizmosSelected()
+	{
+		if (!TryGetHitboxVisualizationPose(out Vector3 center, out Quaternion rotation, out Vector3 size))
+		{
+			return;
+		}
+
+		Matrix4x4 previousMatrix = Gizmos.matrix;
+		Color previousColor = Gizmos.color;
+
+		Gizmos.color = Color.cyan;
+		Gizmos.matrix = Matrix4x4.TRS(center, rotation, Vector3.one);
+		Gizmos.DrawWireCube(Vector3.zero, size);
+
+		Gizmos.matrix = previousMatrix;
+		Gizmos.color = previousColor;
+	}
+
+	private Camera ResolveTargetCamera()
+	{
+		if (attackController != null)
+		{
+			Camera controllerCamera = attackController.GetComponentInChildren<Camera>(true);
+			if (controllerCamera != null)
+			{
+				return controllerCamera;
+			}
+		}
+
+		return GetComponentInChildren<Camera>(true);
+	}
+
+	private void EnsureHitboxVisualizer()
+	{
+		Camera targetCamera = ResolveTargetCamera();
+		if (targetCamera == null)
+		{
+			return;
+		}
+
+		if (hitboxVisualizer == null)
+		{
+			Transform existingVisualizerTransform = targetCamera.transform.Find(HitboxVisualizerObjectName);
+			GameObject visualizerObject = existingVisualizerTransform != null
+				? existingVisualizerTransform.gameObject
+				: new GameObject(HitboxVisualizerObjectName);
+
+			if (visualizerObject.transform.parent != targetCamera.transform)
+			{
+				visualizerObject.transform.SetParent(targetCamera.transform, false);
+			}
+
+			hitboxVisualizer = visualizerObject.GetComponent<BoxCollider>();
+			if (hitboxVisualizer == null)
+			{
+				hitboxVisualizer = visualizerObject.AddComponent<BoxCollider>();
+			}
+		}
+
+		Transform visualizerTransform = hitboxVisualizer.transform;
+		if (visualizerTransform.parent != targetCamera.transform)
+		{
+			visualizerTransform.SetParent(targetCamera.transform, false);
+		}
+
+		visualizerTransform.localRotation = Quaternion.identity;
+		visualizerTransform.localScale = Vector3.one;
+		visualizerTransform.localPosition = hitboxLocalOffset;
+		hitboxVisualizer.center = Vector3.zero;
+		hitboxVisualizer.size = hitboxSize;
+		hitboxVisualizer.isTrigger = true;
+	}
+
+	private bool TryGetHitboxVisualizationPose(out Vector3 center, out Quaternion rotation, out Vector3 size)
+	{
+		if (hitboxVisualizer != null)
+		{
+			center = hitboxVisualizer.transform.TransformPoint(hitboxVisualizer.center);
+			rotation = hitboxVisualizer.transform.rotation;
+			size = Vector3.Scale(hitboxVisualizer.size, hitboxVisualizer.transform.lossyScale);
+			return true;
+		}
+
+		AttackTargetingService service = targetingService != null ? targetingService : GetComponent<AttackTargetingService>();
+		if (service != null && service.TryGetHitboxPose(hitboxLocalOffset, out center, out rotation))
+		{
+			size = hitboxSize;
+			return true;
+		}
+
+		center = Vector3.zero;
+		rotation = Quaternion.identity;
+		size = hitboxSize;
+		return false;
 	}
 }

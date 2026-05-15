@@ -260,6 +260,16 @@ public class KnifePawnController : MonoBehaviour
 		KillEnemy(hitDirection);
 	}
 
+	public void TakeFatalDamage(Vector3 hitPoint, Vector3 hitDirection)
+	{
+		if (isDead)
+		{
+			return;
+		}
+
+		ExecuteImmediateDeath(hitPoint, hitDirection, playHitEffects: true);
+	}
+
 	public void KillEnemy()
 	{
 		KillEnemy(Vector3.zero);
@@ -272,6 +282,11 @@ public class KnifePawnController : MonoBehaviour
 			return;
 		}
 
+		ExecuteImmediateDeath(transform.position + Vector3.up, hitDirection, playHitEffects: false);
+	}
+
+	void ExecuteImmediateDeath(Vector3 hitPoint, Vector3 hitDirection, bool playHitEffects)
+	{
 		isDead = true;
 		StopMoving();
 
@@ -279,10 +294,18 @@ public class KnifePawnController : MonoBehaviour
 		{
 			locomotion.TriggerDeath();
 		}
-		else if (enemyEffect != null)
+
+		if (enemyEffect == null)
 		{
-			enemyEffect.ActivateRagdoll(hitDirection);
+			return;
 		}
+
+		if (playHitEffects)
+		{
+			enemyEffect.PlayHitEffects(hitPoint, hitDirection);
+		}
+
+		enemyEffect.ActivateRagdoll(hitDirection);
 	}
 
 	Vector3 GetTargetPoint(Transform target)

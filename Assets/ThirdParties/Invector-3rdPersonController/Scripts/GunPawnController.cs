@@ -104,6 +104,10 @@ public class GunPawnController : MonoBehaviour
         animator = GetComponent<Animator>();
         headTrack = GetComponent<vHeadTrack>();
         thirdPersonInput = GetComponent<vThirdPersonInput>();
+        if (enemyEffect == null)
+        {
+            enemyEffect = GetComponent<EnemyEffect>();
+        }
         onlyArmsLayer = animator.GetLayerIndex("OnlyArms");
         shotLayer = animator.GetLayerIndex("Shot");
         upperBodyLayer = animator.GetLayerIndex("UpperBody");
@@ -780,18 +784,44 @@ public class GunPawnController : MonoBehaviour
     /// <summary>
     /// Call this from a bullet/projectile hit to kill the enemy instantly.
     /// </summary>
+    public void TakeFatalDamage(Vector3 hitPoint, Vector3 hitDirection)
+    {
+        ExecuteImmediateDeath(hitPoint, hitDirection, playHitEffects: true);
+    }
+
     public void TakeDamage(Vector3 hitPoint, Vector3 hitDirection)
+    {
+        ExecuteImmediateDeath(hitPoint, hitDirection, playHitEffects: true);
+    }
+
+    void ExecuteImmediateDeath(Vector3 hitPoint, Vector3 hitDirection, bool playHitEffects)
     {
         if (isDead) return;
         isDead = true;
 
         animator.SetBool(HashIsAiming, false);
-        animator.SetBool(HashIsDead, true);
+        if (hasCanAimParameter)
+        {
+            animator.SetBool(HashCanAim, false);
+        }
 
-        if (enemyEffect != null)
+        if (weapon != null)
+        {
+            weapon.SetActiveAim(false);
+            weapon.SetActiveScope(false);
+        }
+
+        if (enemyEffect == null)
+        {
+            animator.SetBool(HashIsDead, true);
+            return;
+        }
+
+        if (playHitEffects)
         {
             enemyEffect.PlayHitEffects(hitPoint, hitDirection);
-            enemyEffect.ActivateRagdoll(hitDirection);
         }
+
+        enemyEffect.ActivateRagdoll(hitDirection);
     }
 }

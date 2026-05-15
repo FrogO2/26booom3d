@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -15,25 +14,13 @@ public static class FrozenProjectorManager
 	private static Texture2DArray projectorVisibilityAtlas;
 	private static int visibilityAtlasResolution;
 
-	// --- Async HD Atlas ---
+	// --- HD Atlas ---
 	private static readonly int ProjectorHDAtlasId = Shader.PropertyToID("_ProjectorHDAtlas");
 	private static Texture2DArray projectorHDAtlas;
 	private static Texture2DArray hdAtlasStub;
 	private static int hdAtlasResolution;
 	private static Camera captureCamera;
 	private static Material captureDepthMaterial;
-	private static readonly List<AsyncHDRequest> PendingHDRequests = new List<AsyncHDRequest>();
-	private static readonly List<PendingCapture> PendingCaptures = new List<PendingCapture>();
-	private static readonly Dictionary<int, AsyncProjectorState> ProjectorAsyncStates = new Dictionary<int, AsyncProjectorState>();
-
-	public enum AsyncProjectorState
-	{
-		None,
-		Rendering,
-		ReadbackPending,
-		Complete,
-		Failed,
-	}
 
 	public static void SetMaxRetainedProjectors(int maxProjectors)
 	{
@@ -41,7 +28,7 @@ public static class FrozenProjectorManager
 		TrimToLimit();
 	}
 
-	public static int AddProjector(Camera sourceCamera, float projectionDistance, float edgeFeather, float visibleDepthBias, LayerMask projectionMask, int captureResolution, bool skipInitialDepthCapture = false)
+	public static int AddProjector(Camera sourceCamera, float projectionDistance, float edgeFeather, float visibleDepthBias, LayerMask projectionMask, int captureResolution)
 	{
 		if (sourceCamera == null)
 		{
@@ -50,10 +37,10 @@ public static class FrozenProjectorManager
 
 		int depthSliceIndex = AcquireDepthSliceIndex();
 		FrozenProjector projector = CreateProjectorFromCamera(sourceCamera, projectionDistance, edgeFeather, visibleDepthBias, depthSliceIndex, nextProjectorId++);
-		CaptureProjectorVisibility(sourceCamera, projectionMask, captureResolution, projector, skipInitialDepthCapture);
+		CaptureProjectorVisibility(sourceCamera, projectionMask, captureResolution, projector);
+		ClearHDAtlasSlice(depthSliceIndex);
 
 		Projectors.Add(projector);
-		ProjectorAsyncStates[projector.id] = AsyncProjectorState.None;
 		TrimToLimit();
 		return projector.id;
 	}
@@ -75,142 +62,17 @@ public static class FrozenProjectorManager
 			currentProjector.id);
 
 		CaptureProjectorVisibility(sourceCamera, projectionMask, captureResolution, refreshedProjector);
+		ClearHDAtlasSlice(refreshedProjector.depthSliceIndex);
 		Projectors[projectorIndex] = refreshedProjector;
 		return true;
 	}
 
-	public static void ClearAll()
-	{
-		Projectors.Clear();
-		ProjectorAsyncStates.Clear();
-	}
-
-	public static bool HasPendingHighResCapture(int projectorId)
-	{
-		return ProjectorAsyncStates.TryGetValue(projectorId, out AsyncProjectorState state)
-			&& (state == AsyncProjectorState.Rendering || state == AsyncProjectorState.ReadbackPending);
-	}
-
-	public static bool IsHighResReady(int projectorId)
-	{
-		return ProjectorAsyncStates.TryGetValue(projectorId, out AsyncProjectorState state)
-			&& state == AsyncProjectorState.Complete;
-	}
-
-	public static AsyncProjectorState GetAsyncProjectorState(int projectorId)
-	{
-		return ProjectorAsyncStates.TryGetValue(projectorId, out AsyncProjectorState state) ? state : AsyncProjectorState.None;
-	}
-
-	// Poll pending captures and readbacks each frame.
-	// rowsPerFrame: how many horizontal scanlines to render per pending capture per call.
-	// Lower values reduce peak GPU cost per frame at the cost of more frames until HD data arrives.
-	// Defaults to int.MaxValue (complete each capture in a single call).
-	public static void Tick(int rowsPerFrame = int.MaxValue)
-	{
-		// Phase 1: incremental row-by-row rendering of queued captures.
-		for (int i = PendingCaptures.Count - 1; i >= 0; i--)
-		{
-			PendingCapture cap = PendingCaptures[i];
-			Material depthMat = GetOrCreateCaptureDepthMaterial(cap.captureShader);
-
-			int startRow = cap.nextRow;
-			int rows = Mathf.Min(rowsPerFrame, cap.hdResolution - startRow);
-			int endRow = startRow + rows;
-
-			CommandBuffer cmd = new CommandBuffer { name = "HDDepthCapture_Incremental" };
-			cmd.SetRenderTarget(cap.renderTexture);
-
-			if (startRow == 0)
-			{
-				// Full clear only on the first batch; later batches preserve prior rows.
-				cmd.ClearRenderTarget(true, true, Color.clear);
-			}
-
-			// SetGlobalVector is recorded into the command stream so each capture's
-			// near/far is applied correctly even when multiple captures run per frame.
-			cmd.SetGlobalVector("_CaptureNearFar", new Vector4(cap.nearDistance, cap.farDistance, 0f, 0f));
-			cmd.SetViewProjectionMatrices(cap.viewMatrix, cap.projMatrix);
-			// Use scissor (not viewport) to restrict writes to the current row strip.
-			// SetViewport remaps NDC->pixel, compressing the projected image into the strip
-			// and producing incorrect (horizontally-banded) depth values.
-			// EnableScissorRect keeps the full projection intact and only discards fragments
-			// outside the scissor rectangle.
-			cmd.EnableScissorRect(new Rect(0, startRow, cap.hdResolution, rows));
-
-			foreach (Renderer r in cap.visibleRenderers)
-			{
-				if (r == null)
-				{
-					continue;
-				}
-
-				cmd.DrawRenderer(r, depthMat, 0, 0);
-			}
-
-			cmd.DisableScissorRect();
-
-			Graphics.ExecuteCommandBuffer(cmd);
-			cmd.Release();
-
-			cap.nextRow = endRow;
-			PendingCaptures[i] = cap;
-
-			if (cap.nextRow >= cap.hdResolution)
-			{
-				// All rows rendered — request async readback and move to next phase.
-				AsyncGPUReadbackRequest readbackReq = AsyncGPUReadback.Request(cap.renderTexture, 0, TextureFormat.RGBAFloat);
-				ProjectorAsyncStates[cap.projectorId] = AsyncProjectorState.ReadbackPending;
-				PendingHDRequests.Add(new AsyncHDRequest
-				{
-					projectorId = cap.projectorId,
-					slotIndex = cap.slotIndex,
-					hdResolution = cap.hdResolution,
-					renderTexture = cap.renderTexture,
-					request = readbackReq,
-				});
-				PendingCaptures.RemoveAt(i);
-			}
-		}
-
-		// Phase 2: poll completed GPU readbacks and upload results to the HD atlas.
-		for (int i = PendingHDRequests.Count - 1; i >= 0; i--)
-		{
-			AsyncHDRequest req = PendingHDRequests[i];
-			if (!req.request.done)
-			{
-				continue;
-			}
-
-			if (!req.request.hasError && projectorHDAtlas != null && projectorHDAtlas.width == req.hdResolution)
-			{
-				NativeArray<Color> raw = req.request.GetData<Color>();
-				projectorHDAtlas.SetPixels(raw.ToArray(), req.slotIndex, 0);
-				projectorHDAtlas.Apply(false, false);
-				ProjectorAsyncStates[req.projectorId] = AsyncProjectorState.Complete;
-			}
-			else
-			{
-				ProjectorAsyncStates[req.projectorId] = AsyncProjectorState.Failed;
-			}
-
-			req.renderTexture.Release();
-			Object.Destroy(req.renderTexture);
-			PendingHDRequests.RemoveAt(i);
-		}
-	}
-
-	// Render a high-resolution depth snapshot from the projector's frozen camera state
-	// using the GPU (Camera.RenderWithShader) and asynchronously read it back.
-	// The HD result becomes available in _ProjectorHDAtlas a few frames later.
-	public static void ScheduleAsyncHDCapture(int projectorId, int hdResolution, LayerMask captureMask, Shader captureShader)
+	public static void CaptureHighResDepth(int projectorId, int hdResolution, LayerMask captureMask, Shader captureShader)
 	{
 		if (captureShader == null || !TryGetProjector(projectorId, out FrozenProjector projector))
 		{
 			return;
 		}
-
-		ProjectorAsyncStates[projectorId] = AsyncProjectorState.Rendering;
 
 		EnsureHDAtlas(hdResolution);
 
@@ -224,45 +86,50 @@ public static class FrozenProjectorManager
 		cam.farClipPlane = projector.farDistance;
 		cam.cullingMask = captureMask;
 
-		// Pre-filter visible renderers once at schedule time so Tick doesn't pay this
-		// cost every frame.
-		Plane[] frustumPlanes = GeometryUtility.CalculateFrustumPlanes(cam);
-		Renderer[] allRenderers = Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-		var visibleList = new List<Renderer>(allRenderers.Length);
-		foreach (Renderer r in allRenderers)
+		Renderer[] visibleRenderers = CollectVisibleRenderers(cam, captureMask);
+		if (visibleRenderers.Length == 0)
 		{
-			if ((captureMask.value & (1 << r.gameObject.layer)) == 0)
-			{
-				continue;
-			}
-			if (!GeometryUtility.TestPlanesAABB(frustumPlanes, r.bounds))
-			{
-				continue;
-			}
-			visibleList.Add(r);
+			ClearHDAtlasSlice(projector.depthSliceIndex, hdResolution);
+			return;
 		}
 
-		RenderTexture rt = new RenderTexture(hdResolution, hdResolution, 24, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Linear)
+		RenderTexture renderTexture = new RenderTexture(hdResolution, hdResolution, 24, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Linear)
 		{
 			filterMode = FilterMode.Bilinear,
 			wrapMode = TextureWrapMode.Clamp,
 		};
-		rt.Create();
+		renderTexture.Create();
 
-		PendingCaptures.Add(new PendingCapture
+		Material depthMaterial = GetOrCreateCaptureDepthMaterial(captureShader);
+		CommandBuffer cmd = new CommandBuffer { name = "HDDepthCapture_Synchronous" };
+
+		cmd.SetRenderTarget(renderTexture);
+		cmd.ClearRenderTarget(true, true, Color.clear);
+		cmd.SetGlobalVector("_CaptureNearFar", new Vector4(projector.nearDistance, projector.farDistance, 0f, 0f));
+		cmd.SetViewProjectionMatrices(cam.worldToCameraMatrix, cam.projectionMatrix);
+
+		foreach (Renderer visibleRenderer in visibleRenderers)
 		{
-			projectorId = projectorId,
-			slotIndex = projector.depthSliceIndex,
-			hdResolution = hdResolution,
-			nearDistance = projector.nearDistance,
-			farDistance = projector.farDistance,
-			renderTexture = rt,
-			visibleRenderers = visibleList.ToArray(),
-			viewMatrix = cam.worldToCameraMatrix,
-			projMatrix = cam.projectionMatrix,
-			captureShader = captureShader,
-			nextRow = 0,
-		});
+			if (visibleRenderer == null)
+			{
+				continue;
+			}
+
+			cmd.DrawRenderer(visibleRenderer, depthMaterial, 0, 0);
+		}
+
+		Graphics.ExecuteCommandBuffer(cmd);
+		cmd.Release();
+
+		UploadRenderTextureToHDAtlas(renderTexture, projector.depthSliceIndex, hdResolution);
+
+		renderTexture.Release();
+		Object.Destroy(renderTexture);
+	}
+
+	public static void ClearAll()
+	{
+		Projectors.Clear();
 	}
 
 	public static void ApplySharedVisibilityData(Material material)
@@ -286,6 +153,73 @@ public static class FrozenProjectorManager
 
 		projector = default;
 		return false;
+	}
+
+	private static Renderer[] CollectVisibleRenderers(Camera captureSource, LayerMask captureMask)
+	{
+		Plane[] frustumPlanes = GeometryUtility.CalculateFrustumPlanes(captureSource);
+		Renderer[] allRenderers = Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+		var visibleRenderers = new List<Renderer>(allRenderers.Length);
+
+		foreach (Renderer renderer in allRenderers)
+		{
+			if ((captureMask.value & (1 << renderer.gameObject.layer)) == 0)
+			{
+				continue;
+			}
+
+			if (!GeometryUtility.TestPlanesAABB(frustumPlanes, renderer.bounds))
+			{
+				continue;
+			}
+
+			visibleRenderers.Add(renderer);
+		}
+
+		return visibleRenderers.ToArray();
+	}
+
+	private static void UploadRenderTextureToHDAtlas(RenderTexture renderTexture, int sliceIndex, int hdResolution)
+	{
+		if (projectorHDAtlas == null || projectorHDAtlas.width != hdResolution || projectorHDAtlas.height != hdResolution)
+		{
+			return;
+		}
+
+		RenderTexture previousActive = RenderTexture.active;
+		Texture2D readbackTexture = new Texture2D(hdResolution, hdResolution, TextureFormat.RGBAFloat, false, true);
+
+		RenderTexture.active = renderTexture;
+		readbackTexture.ReadPixels(new Rect(0f, 0f, hdResolution, hdResolution), 0, 0, false);
+		readbackTexture.Apply(false, false);
+		RenderTexture.active = previousActive;
+
+		projectorHDAtlas.SetPixels(readbackTexture.GetPixels(), sliceIndex, 0);
+		projectorHDAtlas.Apply(false, false);
+
+		Object.Destroy(readbackTexture);
+	}
+
+	private static void ClearHDAtlasSlice(int sliceIndex, int hdResolution)
+	{
+		if (projectorHDAtlas == null || projectorHDAtlas.width != hdResolution || projectorHDAtlas.height != hdResolution)
+		{
+			return;
+		}
+
+		Color[] clearPixels = new Color[hdResolution * hdResolution];
+		projectorHDAtlas.SetPixels(clearPixels, sliceIndex, 0);
+		projectorHDAtlas.Apply(false, false);
+	}
+
+	private static void ClearHDAtlasSlice(int sliceIndex)
+	{
+		if (projectorHDAtlas == null || hdAtlasResolution <= 0)
+		{
+			return;
+		}
+
+		ClearHDAtlasSlice(sliceIndex, hdAtlasResolution);
 	}
 
 	public static int PopulateProjectorData(
@@ -354,14 +288,8 @@ public static class FrozenProjectorManager
 		};
 	}
 
-	private static void CaptureProjectorVisibility(Camera sourceCamera, LayerMask projectionMask, int captureResolution, FrozenProjector projector, bool skipDepthCapture = false)
+	private static void CaptureProjectorVisibility(Camera sourceCamera, LayerMask projectionMask, int captureResolution, FrozenProjector projector)
 	{
-		if (skipDepthCapture)
-		{
-			CaptureVisibleDepthPlaceholder(captureResolution, projector.farDistance, projector.depthSliceIndex);
-			return;
-		}
-
 		CaptureVisibleDepth(sourceCamera, projectionMask, captureResolution, projector.nearDistance, projector.farDistance, projector.depthSliceIndex);
 	}
 
@@ -378,11 +306,6 @@ public static class FrozenProjectorManager
 
 		projectorIndex = -1;
 		return false;
-	}
-
-	private static void RemoveProjectorState(int projectorId)
-	{
-		ProjectorAsyncStates.Remove(projectorId);
 	}
 
 	private static void CaptureVisibleDepth(Camera sourceCamera, LayerMask projectionMask, int captureResolution, float nearDistance, float farDistance, int depthSliceIndex)
@@ -420,44 +343,12 @@ public static class FrozenProjectorManager
 		projectorVisibilityAtlas.Apply(false, false);
 	}
 
-	private static void CaptureVisibleDepthPlaceholder(int captureResolution, float farDistance, int depthSliceIndex)
-	{
-		EnsureDepthAtlas(captureResolution);
-
-		Color[] depthPixels = new Color[captureResolution * captureResolution];
-		Color visiblePixel = new Color(farDistance, 0f, 0f, 1f);
-		for (int i = 0; i < depthPixels.Length; i++)
-		{
-			depthPixels[i] = visiblePixel;
-		}
-
-		projectorVisibilityAtlas.SetPixels(depthPixels, depthSliceIndex, 0);
-		projectorVisibilityAtlas.Apply(false, false);
-	}
-
 	private static void EnsureHDAtlas(int resolution)
 	{
 		if (projectorHDAtlas != null && hdAtlasResolution == resolution)
 		{
 			return;
 		}
-
-		// Resolution changed — cancel all in-flight work so nothing writes to the new atlas.
-		for (int i = PendingCaptures.Count - 1; i >= 0; i--)
-		{
-			PendingCapture cap = PendingCaptures[i];
-			cap.renderTexture.Release();
-			Object.Destroy(cap.renderTexture);
-		}
-		PendingCaptures.Clear();
-
-		for (int i = PendingHDRequests.Count - 1; i >= 0; i--)
-		{
-			AsyncHDRequest req = PendingHDRequests[i];
-			req.renderTexture.Release();
-			Object.Destroy(req.renderTexture);
-		}
-		PendingHDRequests.Clear();
 
 		if (projectorHDAtlas != null)
 		{
@@ -577,34 +468,8 @@ public static class FrozenProjectorManager
 	{
 		while (Projectors.Count > maxRetainedProjectors)
 		{
-			int projectorId = Projectors[0].id;
 			Projectors.RemoveAt(0);
-			RemoveProjectorState(projectorId);
 		}
-	}
-
-	private struct AsyncHDRequest
-	{
-		public int projectorId;
-		public int slotIndex;
-		public int hdResolution;
-		public RenderTexture renderTexture;
-		public AsyncGPUReadbackRequest request;
-	}
-
-	private struct PendingCapture
-	{
-		public int projectorId;
-		public int slotIndex;
-		public int hdResolution;
-		public float nearDistance;
-		public float farDistance;
-		public RenderTexture renderTexture;
-		public Renderer[] visibleRenderers;
-		public Matrix4x4 viewMatrix;
-		public Matrix4x4 projMatrix;
-		public Shader captureShader;
-		public int nextRow;
 	}
 
 	public struct FrozenProjector

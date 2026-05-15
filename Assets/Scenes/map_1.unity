@@ -54116,10 +54116,6 @@ PrefabInstance:
       propertyPath: hiddenColor.r
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5870186238456741650, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
-      propertyPath: enableAsyncHighRes
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6301509035296075085, guid: e196c6c31ba235a4caa91faadc77298e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 478.62

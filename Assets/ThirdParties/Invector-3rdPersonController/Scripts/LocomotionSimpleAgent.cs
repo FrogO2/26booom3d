@@ -20,7 +20,6 @@ public class LocomotionSimpleAgent : MonoBehaviour
 	[Header("Attack")]
 	[SerializeField] float attackDuration = 0.75f;
 	[SerializeField] float attackCooldown = 1.25f;
-	[SerializeField] float ragdollDelay = 0.8f;
 	[SerializeField] EnemyEffect enemyEffect;
 
 	float baseMoveSpeed;
@@ -35,7 +34,6 @@ public class LocomotionSimpleAgent : MonoBehaviour
 	int animIDIsGrounded;
 	int animIDIsDead;
 	int animIDWeakAttack;
-    int fullBodyLayer = -1;
 
 	public bool IsAttacking => isAttacking;
 	public bool IsDead { get; private set; }
@@ -54,7 +52,6 @@ public class LocomotionSimpleAgent : MonoBehaviour
 		animIDIsGrounded = Animator.StringToHash("IsGrounded");
 		animIDIsDead = Animator.StringToHash("isDead");
 		animIDWeakAttack = Animator.StringToHash("WeakAttack");
-		fullBodyLayer = anim.GetLayerIndex("FullBody");
 
 		if (enemyEffect == null)
 		{
@@ -153,8 +150,13 @@ public class LocomotionSimpleAgent : MonoBehaviour
 			agent.enabled = false;
 		}
 
+		if (enemyEffect != null)
+		{
+			enemyEffect.ActivateRagdoll();
+			return;
+		}
+
 		anim.SetBool(animIDIsDead, true);
-		StartCoroutine(DeathRoutine());
 	}
 
 	System.Collections.IEnumerator AttackRoutine()
@@ -163,31 +165,6 @@ public class LocomotionSimpleAgent : MonoBehaviour
 		anim.SetTrigger(animIDWeakAttack);
 		yield return new WaitForSeconds(attackDuration);
 		isAttacking = false;
-	}
-
-	System.Collections.IEnumerator DeathRoutine()
-	{
-		float timer = 0f;
-		while (timer < ragdollDelay)
-		{
-			timer += Time.deltaTime;
-
-			if (fullBodyLayer >= 0)
-			{
-				AnimatorStateInfo fullBodyState = anim.GetCurrentAnimatorStateInfo(fullBodyLayer);
-				if (fullBodyState.IsName("Dead") && fullBodyState.normalizedTime >= 0.8f)
-				{
-					break;
-				}
-			}
-
-			yield return null;
-		}
-
-		if (enemyEffect != null)
-		{
-			enemyEffect.ActivateRagdoll();
-		}
 	}
 
 	// OnAnimatorMove is intentionally omitted: the NavMeshAgent drives position directly.
