@@ -940,7 +940,7 @@ Transform:
   m_GameObject: {fileID: 1188481559}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000037252897}
-  m_LocalPosition: {x: 0, y: 3.56, z: -2.316718}
+  m_LocalPosition: {x: 0, y: 3.56, z: -1.6}
   m_LocalScale: {x: 2.3576, y: 2.3576, z: 2.3576}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -992,7 +992,7 @@ MonoBehaviour:
   visibleDepthBias: 0.05
   projectionMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 247
   maxRetainedSprays: 16
   refreshLatestProjectorEveryFrame: 0
   bloodColor: {r: 1, g: 0, b: 0, a: 0.9137255}
