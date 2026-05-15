@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6932634286373759482}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandRing1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7998206915812088887}
   - component: {fileID: 2802658996550569645}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: VBOT_:VBOT_LOD3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,7 +204,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6046087282020713124}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandMiddle4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -235,7 +235,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7253825145671716150}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandPinky4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5430168629762982404}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandThumb3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,81 +290,6 @@ Transform:
   - {fileID: 5678749303731371416}
   m_Father: {fileID: 3007746917706112993}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &504547862356669794
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3206047546656295868}
-  - component: {fileID: 6694978606892294600}
-  - component: {fileID: 1683976820302183746}
-  m_Layer: 11
-  m_Name: Background
-  m_TagString: Weapon
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &3206047546656295868
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 504547862356669794}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
-  m_LocalScale: {x: 1, y: 0.4, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5555615464567200192}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.25}
-  m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -0.002494812, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &6694978606892294600
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 504547862356669794}
-  m_CullTransparentMesh: 0
---- !u!114 &1683976820302183746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 504547862356669794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2543085bfa25fdf4e83209d086ee24be, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &510891517994243645
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,7 +299,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6092183409822879152}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftToeBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -408,7 +333,7 @@ GameObject:
   - component: {fileID: 4146186739816436113}
   - component: {fileID: 2386477417230437722}
   - component: {fileID: 8563590962032498377}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: SphereSensor
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -474,7 +399,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3992809358519411801}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandIndex3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -506,7 +431,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3558232202107375180}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandIndex4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -538,7 +463,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1589596131281196362}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandMiddle3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -570,7 +495,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7655961774281688178}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: Components
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -603,7 +528,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8095987567105296970}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightShoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -635,7 +560,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8172022008830189595}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandPinky4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -667,7 +592,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2474232004385949799}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ragdollAudioSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -699,7 +624,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1476551131482286590}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -735,7 +660,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5850785981404440412}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandPinky4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -766,7 +691,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1536827741373335506}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandIndex3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -798,7 +723,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 439490326015726260}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandMiddle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -830,7 +755,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1018771334925444654}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:HeadTop_End_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -861,7 +786,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4355002102466227848}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftToe_End_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -893,7 +818,7 @@ GameObject:
   m_Component:
   - component: {fileID: 243771425752031352}
   - component: {fileID: 7361463049723064599}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: SwordV_short
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -992,7 +917,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 52522343787366464}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandIndex2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1015,110 +940,6 @@ Transform:
   - {fileID: 1536827741373335506}
   m_Father: {fileID: 2084761353684871453}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2163425369054202109
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3333841014955445600}
-  - component: {fileID: 8402433257095889481}
-  - component: {fileID: 945726744814591672}
-  - component: {fileID: 1761716278563419538}
-  m_Layer: 11
-  m_Name: EnemyCanvas
-  m_TagString: Weapon
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &3333841014955445600
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2163425369054202109}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000020861623}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5555615464567200192}
-  - {fileID: 6494554861541031786}
-  m_Father: {fileID: 2757888281229319095}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1, y: 0.25}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &8402433257095889481
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2163425369054202109}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_UseReflectionProbes: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
---- !u!114 &945726744814591672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2163425369054202109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
---- !u!114 &1761716278563419538
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2163425369054202109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!1 &2168238517405920578
 GameObject:
   m_ObjectHideFlags: 0
@@ -1128,7 +949,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4912592132099587325}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftFoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1164,7 +985,7 @@ GameObject:
   - component: {fileID: 5944753713581197341}
   - component: {fileID: 4304035672555857033}
   - component: {fileID: 2418328457542444327}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:Spine1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1326,7 +1147,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3523206624099979834}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandRing3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1361,7 +1182,7 @@ GameObject:
   - component: {fileID: 3934144506257226393}
   - component: {fileID: 6706741612542019503}
   - component: {fileID: 472885164498727988}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:Hips
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1479,7 +1300,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 465728535081170296}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandThumb4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1501,81 +1322,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6530679549394240921}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2556200403372750054
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7315539787144122667}
-  - component: {fileID: 4103356737948682186}
-  - component: {fileID: 2726302920512943255}
-  m_Layer: 11
-  m_Name: Fill
-  m_TagString: Weapon
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &7315539787144122667
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2556200403372750054}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.4, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3836269938841242666}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &4103356737948682186
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2556200403372750054}
-  m_CullTransparentMesh: 0
---- !u!114 &2726302920512943255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2556200403372750054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.23921569, b: 0.23921569, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2543085bfa25fdf4e83209d086ee24be, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 0
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &2892649557464958428
 GameObject:
   m_ObjectHideFlags: 0
@@ -1585,7 +1331,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1294048099600963462}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandIndex1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1617,7 +1363,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5478091222467209522}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandRing2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1649,7 +1395,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2501794085395054503}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightToeBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1681,7 +1427,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7000409658485552354}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandRing4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1713,7 +1459,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4370234494286502351}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandIndex4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1745,7 +1491,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3007746917706112993}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandThumb2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1777,7 +1523,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1822051321442189676}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandMiddle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1809,7 +1555,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2914527563586067219}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftToe_End
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1841,7 +1587,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4917709082797549975}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:Neck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1873,7 +1619,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6579645635380648098}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandMiddle3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1907,7 +1653,7 @@ GameObject:
   - component: {fileID: 8131621614064592851}
   - component: {fileID: 2780188526636308501}
   - component: {fileID: 1743792359294490307}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: SwordV_short
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -1996,7 +1742,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5442701039973049431}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:HeadTop_End
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2028,7 +1774,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8175218178484493706}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightFoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2060,7 +1806,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8357527473134814641}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:Spine2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2099,7 +1845,7 @@ GameObject:
   - component: {fileID: 8505791227366689358}
   - component: {fileID: 7362750313653761287}
   - component: {fileID: 3797547389198804184}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightForeArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2316,7 +2062,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2715429791878610455}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightToe_End
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2348,7 +2094,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7783783894107388035}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandPinky2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2371,131 +2117,6 @@ Transform:
   - {fileID: 2652805855983089063}
   m_Father: {fileID: 3428890515106254634}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3909200489390073775
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3836269938841242666}
-  m_Layer: 11
-  m_Name: Fill Area
-  m_TagString: Weapon
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &3836269938841242666
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3909200489390073775}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 7315539787144122667}
-  m_Father: {fileID: 6494554861541031786}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.25}
-  m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &3924681878412736501
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6494554861541031786}
-  - component: {fileID: 2603514371601107560}
-  m_Layer: 11
-  m_Name: healthBar
-  m_TagString: Weapon
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &6494554861541031786
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3924681878412736501}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -2.0918378e-11}
-  m_LocalScale: {x: 0.0059810155, y: 0.0059810146, z: 0.0059810146}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3836269938841242666}
-  - {fileID: 927907375792158672}
-  m_Father: {fileID: 3333841014955445600}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000016868114, y: -0.06101665}
-  m_SizeDelta: {x: 85.785, y: 21.103}
-  m_Pivot: {x: 0.5000001, y: 0.50000024}
---- !u!114 &2603514371601107560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3924681878412736501}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 0
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Highlighted
-    m_DisabledTrigger: Disabled
-  m_Interactable: 0
-  m_TargetGraphic: {fileID: 0}
-  m_FillRect: {fileID: 7315539787144122667}
-  m_HandleRect: {fileID: 0}
-  m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 100
-  m_WholeNumbers: 0
-  m_Value: 100
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &4061100920898591110
 GameObject:
   m_ObjectHideFlags: 0
@@ -2505,7 +2126,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5678749303731371416}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandThumb4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2539,7 +2160,7 @@ GameObject:
   - component: {fileID: 4206606614221510173}
   - component: {fileID: 2505393540700047182}
   - component: {fileID: 1392517641948909731}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: hitBox
   m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
@@ -2609,7 +2230,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4778128826061090415}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftShoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2641,7 +2262,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3347692603002212046}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandRing1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2675,7 +2296,7 @@ GameObject:
   - component: {fileID: 7868461838522050330}
   - component: {fileID: 9013803544569945759}
   - component: {fileID: 8345517374966986881}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: hitBox
   m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
@@ -2749,7 +2370,7 @@ GameObject:
   - component: {fileID: 3699701311391031780}
   - component: {fileID: 3129807953529812158}
   - component: {fileID: 6438087787159648565}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2770,7 +2391,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5442701039973049431}
-  - {fileID: 2757888281229319095}
   m_Father: {fileID: 4917709082797549975}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &937274158810298810
@@ -2912,7 +2532,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1026863714306861820}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandThumb1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2944,7 +2564,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3798212461777793000}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: Armature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2978,7 +2598,7 @@ GameObject:
   - component: {fileID: 4121632123020735935}
   - component: {fileID: 2577352544944971986}
   - component: {fileID: 6389555433132786935}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: hitBox
   m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
@@ -3048,7 +2668,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2422797852641210014}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandIndex4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3084,7 +2704,7 @@ GameObject:
   - component: {fileID: 2702876414423706454}
   - component: {fileID: 1086016909085657137}
   - component: {fileID: 5148522046768869669}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3301,7 +2921,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5145685268763400923}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandRing3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3335,7 +2955,7 @@ GameObject:
   - component: {fileID: 3533976455314735771}
   - component: {fileID: 1997669024333201058}
   - component: {fileID: 6263117777358906867}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: hitBox
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -3405,7 +3025,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3222171366988606985}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandRing4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3436,7 +3056,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2363482193324548135}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandThumb2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3468,7 +3088,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1149838139583546888}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandPinky3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3500,7 +3120,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1600078876618058571}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandMiddle4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3532,7 +3152,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8851708226182549982}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandThumb3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3564,7 +3184,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5480260772289628168}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandMiddle4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3600,7 +3220,7 @@ GameObject:
   - component: {fileID: 9097257030932191049}
   - component: {fileID: 6055522679000495474}
   - component: {fileID: 145145964783419242}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightUpLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3764,7 +3384,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3810183973027206648}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandRing4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3796,7 +3416,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7340700227675907894}
   - component: {fileID: 6245232326969611165}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Mesh_LOD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3838,7 +3458,7 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 7888653561138152170}
-  - screenRelativeHeight: 0.050290737
+  - screenRelativeHeight: 0.00062533934
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 2802658996550569645}
@@ -3853,7 +3473,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8430907786754294544}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandMiddle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3876,62 +3496,6 @@ Transform:
   - {fileID: 6579645635380648098}
   m_Father: {fileID: 439490326015726260}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6269143746689540064
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2757888281229319095}
-  - component: {fileID: 8106011483163091471}
-  m_Layer: 11
-  m_Name: enemyHealthUI (1)
-  m_TagString: Weapon
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2757888281229319095
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6269143746689540064}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.00000008195639, y: -1.1300292e-11, z: 6.0657095e-13, w: 1}
-  m_LocalPosition: {x: 0, y: 39.8, z: -0}
-  m_LocalScale: {x: 140.57599, y: 140.57707, z: 140.57704}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3333841014955445600}
-  m_Father: {fileID: 8695551424472404960}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8106011483163091471
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6269143746689540064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8553221e1fc915c49b36f6e633dffaff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  openCloseEvents: 0
-  openCloseWindow: 0
-  selectedToolbar: 0
-  healthBar: {fileID: 0}
-  lookToCamera: 1
-  _healthSlider: {fileID: 2603514371601107560}
-  _damageDelay: {fileID: 866210621414096556}
-  _smoothDamageDelay: 0.5
-  _damageCounter: {fileID: 4961992552150550099}
-  _damageCounterTimer: 1.5
-  _showDamageType: 1
 --- !u!1 &6385953070343356185
 GameObject:
   m_ObjectHideFlags: 0
@@ -3941,7 +3505,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7379397347349582794}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandMiddle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3974,7 +3538,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7614683428319078297}
   - component: {fileID: 1026265073107936522}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: collisionAudio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4102,7 +3666,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2301316839042703726}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:Spine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4134,7 +3698,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5191964829970679769}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandRing4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4166,7 +3730,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4823744684200374766}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandPinky4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4188,95 +3752,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7253825145671716150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6957453294559638303
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5555615464567200192}
-  - component: {fileID: 866210621414096556}
-  m_Layer: 11
-  m_Name: subhealth
-  m_TagString: Weapon
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &5555615464567200192
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6957453294559638303}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
-  m_LocalScale: {x: 0.005981017, y: 0.005981014, z: 0.0059810155}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3206047546656295868}
-  - {fileID: 8918473510299322928}
-  m_Father: {fileID: 3333841014955445600}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030517578, y: -0.061016798}
-  m_SizeDelta: {x: 85.785, y: 21.103}
-  m_Pivot: {x: 0.5000001, y: 0.50000024}
---- !u!114 &866210621414096556
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6957453294559638303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 0
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Highlighted
-    m_DisabledTrigger: Disabled
-  m_Interactable: 0
-  m_TargetGraphic: {fileID: 0}
-  m_FillRect: {fileID: 626290080840258158}
-  m_HandleRect: {fileID: 0}
-  m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 100
-  m_WholeNumbers: 0
-  m_Value: 100
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &7277998619011279548
 GameObject:
   m_ObjectHideFlags: 0
@@ -4286,7 +3761,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5644429591303230825}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandThumb1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4318,7 +3793,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 664717788951651925}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4355,7 +3830,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 916013446858993752}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandIndex4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4393,7 +3868,8 @@ GameObject:
   - component: {fileID: 7897535227668698659}
   - component: {fileID: 8476210709844583899}
   - component: {fileID: 8173817423108462883}
-  m_Layer: 9
+  - component: {fileID: 5000905364626044408}
+  m_Layer: 8
   m_Name: KnifeNPC
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -4541,7 +4017,7 @@ MonoBehaviour:
   attackDistance: 2
   chaseStopDistance: 1.4
   slowDownBeforeStopping: 1
-  destinationRefreshInterval: 0.3
+  destinationRefreshInterval: 0.1
   locomotion: {fileID: 8476210709844583899}
   enemyEffect: {fileID: 0}
   attackCooldown: 1.25
@@ -4584,8 +4060,20 @@ MonoBehaviour:
   - {fileID: 120346, guid: b8f2fe1ee1a01724cb72f5b0e6bd2eef, type: 3}
   hitSounds: []
   audioSource: {fileID: 0}
-  ragdollImpulse: 4
+  ragdollImpulse: 80
   disableMainColliderOnRagdoll: 1
+--- !u!114 &5000905364626044408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7347373543787702830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e640ae819b87424d806ca21ed5f9d0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaBakedEnemyTarget
 --- !u!1 &7378635140092823545
 GameObject:
   m_ObjectHideFlags: 0
@@ -4597,7 +4085,7 @@ GameObject:
   - component: {fileID: 8489105973357048659}
   - component: {fileID: 381203139772501027}
   - component: {fileID: 7692161411503388524}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: hitBox
   m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
@@ -4671,7 +4159,7 @@ GameObject:
   - component: {fileID: 6908859392479812040}
   - component: {fileID: 4502693136564394555}
   - component: {fileID: 9200235164914676743}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4836,7 +4324,7 @@ GameObject:
   m_Component:
   - component: {fileID: 190957768071152486}
   - component: {fileID: 7888653561138152170}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: VBOT_:VBOT_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4883,13 +4371,13 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a5f9f2b882f176143b2fa5917f878bb5, type: 2}
-  - {fileID: 2100000, guid: b10831ad41c098f4f918dd361f87017d, type: 2}
-  - {fileID: 2100000, guid: b10831ad41c098f4f918dd361f87017d, type: 2}
-  - {fileID: 2100000, guid: b10831ad41c098f4f918dd361f87017d, type: 2}
-  - {fileID: 2100000, guid: a5f9f2b882f176143b2fa5917f878bb5, type: 2}
-  - {fileID: 2100000, guid: a5f9f2b882f176143b2fa5917f878bb5, type: 2}
-  - {fileID: 2100000, guid: b10831ad41c098f4f918dd361f87017d, type: 2}
+  - {fileID: 2100000, guid: 36a0e3efebfd910499c0d9f1fe463de9, type: 2}
+  - {fileID: 2100000, guid: 36a0e3efebfd910499c0d9f1fe463de9, type: 2}
+  - {fileID: 2100000, guid: 36a0e3efebfd910499c0d9f1fe463de9, type: 2}
+  - {fileID: 2100000, guid: 36a0e3efebfd910499c0d9f1fe463de9, type: 2}
+  - {fileID: 2100000, guid: 36a0e3efebfd910499c0d9f1fe463de9, type: 2}
+  - {fileID: 2100000, guid: 36a0e3efebfd910499c0d9f1fe463de9, type: 2}
+  - {fileID: 2100000, guid: 36a0e3efebfd910499c0d9f1fe463de9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5002,7 +4490,7 @@ GameObject:
   - component: {fileID: 437203409754549689}
   - component: {fileID: 8971156887317721582}
   - component: {fileID: 7517360314969673846}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5166,7 +4654,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7542466952758643294}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandRing2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5198,7 +4686,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7843687010813719737}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandThumb4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5234,7 +4722,7 @@ GameObject:
   - component: {fileID: 4637931742292065121}
   - component: {fileID: 2648703208073691517}
   - component: {fileID: 7038503680256998953}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftForeArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5442,42 +4930,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   meleeManager: {fileID: 0}
---- !u!1 &7951650588365137398
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8918473510299322928}
-  m_Layer: 11
-  m_Name: Fill Area
-  m_TagString: Weapon
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &8918473510299322928
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7951650588365137398}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 626290080840258158}
-  m_Father: {fileID: 5555615464567200192}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.25}
-  m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8027314490391234055
 GameObject:
   m_ObjectHideFlags: 0
@@ -5487,7 +4939,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6530679549394240921}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandThumb4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5510,85 +4962,6 @@ Transform:
   - {fileID: 465728535081170296}
   m_Father: {fileID: 8851708226182549982}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8069195944510283159
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 927907375792158672}
-  - component: {fileID: 4400554318021982342}
-  - component: {fileID: 4961992552150550099}
-  m_Layer: 11
-  m_Name: damageDisplay
-  m_TagString: Weapon
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &927907375792158672
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8069195944510283159}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -4.7326e-11}
-  m_LocalScale: {x: 0.39745998, y: 0.39746016, z: 0.39746016}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6494554861541031786}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00011444092, y: 9.1735}
-  m_SizeDelta: {x: 131.6, y: 39.7}
-  m_Pivot: {x: -0.00000049732625, y: 0.9999995}
---- !u!222 &4400554318021982342
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8069195944510283159}
-  m_CullTransparentMesh: 0
---- !u!114 &4961992552150550099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8069195944510283159}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 12800000, guid: a8f74dbf0f81e504bbbdf3f6063e1047, type: 3}
-    m_FontSize: 82
-    m_FontStyle: 0
-    m_BestFit: 1
-    m_MinSize: 1
-    m_MaxSize: 82
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 0000
 --- !u!1 &8134387266092334666
 GameObject:
   m_ObjectHideFlags: 0
@@ -5598,7 +4971,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2652805855983089063}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandPinky3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5630,7 +5003,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3028123274290991059}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandPinky2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5662,7 +5035,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2084761353684871453}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandIndex1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5685,81 +5058,6 @@ Transform:
   - {fileID: 52522343787366464}
   m_Father: {fileID: 1476551131482286590}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8207767952471849640
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 626290080840258158}
-  - component: {fileID: 7869700747427234326}
-  - component: {fileID: 7172920167293516830}
-  m_Layer: 11
-  m_Name: Fill
-  m_TagString: Weapon
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &626290080840258158
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8207767952471849640}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.4, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8918473510299322928}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &7869700747427234326
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8207767952471849640}
-  m_CullTransparentMesh: 0
---- !u!114 &7172920167293516830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8207767952471849640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.057758622, g: 0.49264705, b: 0, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2543085bfa25fdf4e83209d086ee24be, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 0
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &8237196226045818993
 GameObject:
   m_ObjectHideFlags: 0
@@ -5769,7 +5067,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2737968877283950857}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftHandPinky1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5801,7 +5099,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6349495980474330639}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandMiddle4_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5832,7 +5130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6245027584262215684}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightToe_End_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5863,7 +5161,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 908203034625504235}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandIndex2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5899,7 +5197,7 @@ GameObject:
   - component: {fileID: 3625368561481151815}
   - component: {fileID: 8550324236789946281}
   - component: {fileID: 5615565163316831220}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:LeftUpLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6068,7 +5366,7 @@ GameObject:
   - component: {fileID: 4896935679301297633}
   - component: {fileID: 3574003176594754427}
   - component: {fileID: 8059736400496939066}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6285,7 +5583,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3428890515106254634}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: VBOT_:RightHandPinky1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -117,6 +117,8 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 	private int attackIntentNumber;
 	private float currentAttackStartTime;
 	private int attackSequenceId;
+	private bool weaponAnimatorUpdateModeOverridden;
+	private AnimatorUpdateMode previousWeaponAnimatorUpdateMode = AnimatorUpdateMode.Normal;
 
 	public event Action<int, int> AttackStateEnteredEvent;
 	public bool IsAttackActive => attackActive;
@@ -145,6 +147,7 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 
 	private void OnDisable()
 	{
+		SetWeaponAnimatorUsesUnscaledTime(false);
 		attackAction?.Disable();
 
 		if (controller != null)
@@ -603,6 +606,56 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 		return true;
 	}
 
+	public void ClearAttackState(bool clearQueuedInput = true)
+	{
+		attackActive = false;
+		attackStateEntered = false;
+		numAttack = 0;
+		currentAttackNumber = 0;
+		attackIntentNumber = 0;
+		currentAttackStartTime = 0f;
+
+		if (weaponAnimator != null)
+		{
+			SetAttackNumber(0);
+			weaponAnimator.Update(0f);
+		}
+
+		if (clearQueuedInput && attackAction != null && attackAction.enabled)
+		{
+			attackAction.Disable();
+			attackAction.Enable();
+		}
+	}
+
+	public void SetWeaponAnimatorUsesUnscaledTime(bool useUnscaledTime)
+	{
+		if (weaponAnimator == null)
+		{
+			return;
+		}
+
+		if (useUnscaledTime)
+		{
+			if (!weaponAnimatorUpdateModeOverridden)
+			{
+				previousWeaponAnimatorUpdateMode = weaponAnimator.updateMode;
+				weaponAnimatorUpdateModeOverridden = true;
+			}
+
+			weaponAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
+			return;
+		}
+
+		if (!weaponAnimatorUpdateModeOverridden)
+		{
+			return;
+		}
+
+		weaponAnimator.updateMode = previousWeaponAnimatorUpdateMode;
+		weaponAnimatorUpdateModeOverridden = false;
+	}
+
 	private string GetAttackStateName(int attackNumber)
 	{
 		switch (attackNumber)
@@ -655,17 +708,13 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 
 	public void ResetViewState()
 	{
+		SetWeaponAnimatorUsesUnscaledTime(false);
 		currentTilt = 0f;
 		currentCameraOffset = Vector3.zero;
 		currentCameraRotationOffset = Vector3.zero;
 		currentWeaponOffset = Vector3.zero;
 		currentWeaponRotation = Vector3.zero;
-		attackActive = false;
-		attackStateEntered = false;
-		numAttack = 0;
-		currentAttackNumber = 0;
-		attackIntentNumber = 0;
-		currentAttackStartTime = 0f;
+		ClearAttackState(clearQueuedInput: false);
 
 		if (cameraRoot != null)
 		{
@@ -696,7 +745,6 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 
 		if (weaponAnimator != null)
 		{
-			SetAttackNumber(0);
 			weaponAnimator.SetBool(IsLeftWallingHash, false);
 			weaponAnimator.SetBool(IsRightWallingHash, false);
 			weaponAnimator.SetBool(IsSlidingHash, false);

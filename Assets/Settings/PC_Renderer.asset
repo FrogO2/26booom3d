@@ -178,7 +178,7 @@ MonoBehaviour:
     m_Bits: 320
   alwaysVisibleAndNoBloodLayerMask:
     serializedVersion: 2
-    m_Bits: 832
+    m_Bits: 576
 --- !u!114 &6144031677933946039
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class FirstPersonController : MonoBehaviour
 {
+	private const float LookSuppressionMaxStep = 1f / 30f;
+
 	[Header("References")]
 	[SerializeField] private Camera playerCamera;
 	[SerializeField] private Transform cameraRoot;
@@ -93,6 +95,17 @@ public class FirstPersonController : MonoBehaviour
 	private bool isWallRunning;
 	private bool wallOnLeft;
 	private bool wallOnRight;
+	private bool moveInputLocked;
+	private bool lookInputLocked;
+	private bool jumpInputLocked;
+	private bool sprintInputLocked;
+	private bool crouchInputLocked;
+	private bool moveActionSuppressedByController;
+	private bool lookActionSuppressedByController;
+	private bool jumpActionSuppressedByController;
+	private bool sprintActionSuppressedByController;
+	private bool crouchActionSuppressedByController;
+	private float lookInputSuppressionRemaining;
 	private RaycastHit leftWallHit;
 	private RaycastHit rightWallHit;
 
@@ -157,6 +170,7 @@ public class FirstPersonController : MonoBehaviour
 	private void OnEnable()
 	{
 		EnableActions();
+		UpdateActionLockStates();
 
 		if (lockCursor)
 		{
@@ -232,12 +246,163 @@ public class FirstPersonController : MonoBehaviour
 
 	private void SampleInput()
 	{
-		moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
-		lookInput = lookAction != null ? lookAction.ReadValue<Vector2>() : Vector2.zero;
+		UpdateActionLockStates();
+		moveInput = moveInputLocked || moveAction == null ? Vector2.zero : moveAction.ReadValue<Vector2>();
+		lookInput = IsLookInputSuppressed() || lookAction == null ? Vector2.zero : lookAction.ReadValue<Vector2>();
 
-		if (jumpAction != null && jumpAction.WasPressedThisFrame())
+		if (!jumpInputLocked && jumpAction != null && jumpAction.WasPressedThisFrame())
 		{
 			jumpBufferTimer = jumpBufferTime;
+		}
+	}
+
+	public void SuppressLookInput(float duration)
+	{
+		lookInputSuppressionRemaining = Mathf.Max(lookInputSuppressionRemaining, Mathf.Max(0f, duration));
+		lookInput = Vector2.zero;
+		UpdateActionLockStates();
+	}
+
+	public void SetMoveInputLocked(bool locked, bool clearInputState = true)
+	{
+		moveInputLocked = locked;
+		if (clearInputState)
+		{
+			moveInput = Vector2.zero;
+			RefreshActionState(moveAction, !moveInputLocked, ref moveActionSuppressedByController, pulseWhenEnabled: !moveInputLocked);
+		}
+		else
+		{
+			RefreshActionState(moveAction, !moveInputLocked, ref moveActionSuppressedByController);
+		}
+	}
+
+	public void SetLookInputLocked(bool locked, bool clearInputState = true)
+	{
+		lookInputLocked = locked;
+		lookInput = Vector2.zero;
+
+		if (clearInputState)
+		{
+			RefreshActionState(lookAction, !IsLookInputSuppressed(), ref lookActionSuppressedByController, pulseWhenEnabled: !IsLookInputSuppressed());
+		}
+		else
+		{
+			RefreshActionState(lookAction, !IsLookInputSuppressed(), ref lookActionSuppressedByController);
+		}
+	}
+
+	public void SetJumpInputLocked(bool locked, bool clearInputState = true)
+	{
+		jumpInputLocked = locked;
+		jumpBufferTimer = 0f;
+
+		if (clearInputState)
+		{
+			RefreshActionState(jumpAction, !jumpInputLocked, ref jumpActionSuppressedByController, pulseWhenEnabled: !jumpInputLocked);
+		}
+		else
+		{
+			RefreshActionState(jumpAction, !jumpInputLocked, ref jumpActionSuppressedByController);
+		}
+	}
+
+	public void SetSprintInputLocked(bool locked, bool clearInputState = true)
+	{
+		sprintInputLocked = locked;
+		RefreshActionState(sprintAction, !sprintInputLocked, ref sprintActionSuppressedByController, clearInputState && !sprintInputLocked);
+	}
+
+	public void SetCrouchInputLocked(bool locked, bool clearInputState = true)
+	{
+		crouchInputLocked = locked;
+		RefreshActionState(crouchAction, !crouchInputLocked, ref crouchActionSuppressedByController, clearInputState && !crouchInputLocked);
+	}
+
+	public void SetTraversalInputLocked(bool locked, bool clearInputState = true)
+	{
+		SetMoveInputLocked(locked, clearInputState);
+		SetJumpInputLocked(locked, clearInputState);
+		SetSprintInputLocked(locked, clearInputState);
+		SetCrouchInputLocked(locked, clearInputState);
+	}
+
+	public void ClearInputState(bool clearMovement = true, bool clearLook = true)
+	{
+		if (clearMovement)
+		{
+			moveInput = Vector2.zero;
+			jumpBufferTimer = 0f;
+			RefreshActionState(moveAction, !moveInputLocked, ref moveActionSuppressedByController, pulseWhenEnabled: !moveInputLocked);
+			RefreshActionState(jumpAction, !jumpInputLocked, ref jumpActionSuppressedByController, pulseWhenEnabled: !jumpInputLocked);
+			RefreshActionState(sprintAction, !sprintInputLocked, ref sprintActionSuppressedByController, pulseWhenEnabled: !sprintInputLocked);
+			RefreshActionState(crouchAction, !crouchInputLocked, ref crouchActionSuppressedByController, pulseWhenEnabled: !crouchInputLocked);
+		}
+
+		if (clearLook)
+		{
+			lookInput = Vector2.zero;
+			RefreshActionState(lookAction, !IsLookInputSuppressed(), ref lookActionSuppressedByController, pulseWhenEnabled: !IsLookInputSuppressed());
+		}
+	}
+
+	private void UpdateActionLockStates()
+	{
+		if (lookInputSuppressionRemaining > 0f)
+		{
+			lookInputSuppressionRemaining = Mathf.Max(0f, lookInputSuppressionRemaining - Mathf.Min(Time.unscaledDeltaTime, LookSuppressionMaxStep));
+		}
+
+		RefreshActionState(moveAction, !moveInputLocked, ref moveActionSuppressedByController);
+		RefreshActionState(lookAction, !IsLookInputSuppressed(), ref lookActionSuppressedByController);
+		RefreshActionState(jumpAction, !jumpInputLocked, ref jumpActionSuppressedByController);
+		RefreshActionState(sprintAction, !sprintInputLocked, ref sprintActionSuppressedByController);
+		RefreshActionState(crouchAction, !crouchInputLocked, ref crouchActionSuppressedByController);
+
+		if (IsLookInputSuppressed())
+		{
+			lookInput = Vector2.zero;
+		}
+	}
+
+	private bool IsLookInputSuppressed()
+	{
+		return lookInputLocked || lookInputSuppressionRemaining > 0f;
+	}
+
+	private void RefreshActionState(InputAction action, bool shouldEnable, ref bool suppressedByController, bool pulseWhenEnabled = false)
+	{
+		if (action == null)
+		{
+			return;
+		}
+
+		if (!shouldEnable)
+		{
+			if (action.enabled)
+			{
+				action.Disable();
+				suppressedByController = true;
+			}
+
+			return;
+		}
+
+		if (suppressedByController && isActiveAndEnabled)
+		{
+			action.Enable();
+			suppressedByController = false;
+
+			if (pulseWhenEnabled)
+			{
+				action.Disable();
+				action.Enable();
+			}
+		}
+		else if (pulseWhenEnabled && action.enabled)
+		{
+			action.Disable();
+			action.Enable();
 		}
 	}
 

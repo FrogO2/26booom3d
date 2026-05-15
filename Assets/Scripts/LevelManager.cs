@@ -22,6 +22,7 @@ public class LevelManager : MonoBehaviour
 	[SerializeField] private ArenaWallLeaderboardDisplay wallLeaderboardDisplay;
 	[SerializeField] private ArenaTutorialSceneController tutorialSceneController;
 	[SerializeField] private FirstPersonViewAnimationController attackController;
+	[SerializeField] private LevelStartAttackGate levelStartAttackGate;
 	[SerializeField] private SprayPaint sprayPaint;
 
 	[Header("Run Tracking")]
@@ -32,6 +33,7 @@ public class LevelManager : MonoBehaviour
 	[SerializeField] private KeyCode retryKey = KeyCode.R;
 
 	private bool encounterEventsBound;
+	private bool sceneLoadRequested;
 	private bool scoreSubmitted;
 
 	private void Awake()
@@ -44,6 +46,7 @@ public class LevelManager : MonoBehaviour
 		AutoAssignReferences();
 		EnsureSceneBuilt();
 		SubscribeEncounterEvents();
+		sceneLoadRequested = false;
 	}
 
 	private void Update()
@@ -97,6 +100,7 @@ public class LevelManager : MonoBehaviour
 			EnsureSceneBuilt();
 			SubscribeEncounterEvents();
 			runTimerDisplay?.ResetRun();
+			levelStartAttackGate?.BeginGate();
 			return;
 		}
 
@@ -104,11 +108,15 @@ public class LevelManager : MonoBehaviour
 		sprayPaint?.ClearAllSpray();
 		runTimerDisplay?.ResetRun();
 		arenaEncounterFlow?.ResetEncounter();
+		levelStartAttackGate?.BeginGate();
 	}
 
 	public void ReloadCurrentLevel()
 	{
-		PersistLeaderboardEntries();
+		if (!TryBeginSceneLoad())
+		{
+			return;
+		}
 
 		Scene currentScene = gameObject.scene;
 		if (currentScene.buildIndex >= 0)
@@ -127,7 +135,10 @@ public class LevelManager : MonoBehaviour
 
 	public void LoadNextLevel()
 	{
-		PersistLeaderboardEntries();
+		if (!TryBeginSceneLoad())
+		{
+			return;
+		}
 
 		Scene currentScene = gameObject.scene;
 		if (currentScene.buildIndex < 0)
@@ -148,7 +159,11 @@ public class LevelManager : MonoBehaviour
 
 	public void LoadLevel(int buildIndex)
 	{
-		PersistLeaderboardEntries();
+		if (!TryBeginSceneLoad())
+		{
+			return;
+		}
+
 		SceneManager.LoadScene(buildIndex);
 	}
 
@@ -159,7 +174,11 @@ public class LevelManager : MonoBehaviour
 			return;
 		}
 
-		PersistLeaderboardEntries();
+		if (!TryBeginSceneLoad())
+		{
+			return;
+		}
+
 		SceneManager.LoadScene(sceneName);
 	}
 
@@ -266,6 +285,11 @@ public class LevelManager : MonoBehaviour
 			attackController = FindAnyObjectByType<FirstPersonViewAnimationController>();
 		}
 
+		if (levelStartAttackGate == null)
+		{
+			levelStartAttackGate = FindAnyObjectByType<LevelStartAttackGate>();
+		}
+
 		if (sprayPaint == null)
 		{
 			sprayPaint = FindAnyObjectByType<SprayPaint>();
@@ -305,6 +329,18 @@ public class LevelManager : MonoBehaviour
 	private void PersistLeaderboardEntries()
 	{
 		wallLeaderboardDisplay?.PersistCurrentEntries();
+	}
+
+	private bool TryBeginSceneLoad()
+	{
+		if (sceneLoadRequested)
+		{
+			return false;
+		}
+
+		sceneLoadRequested = true;
+		PersistLeaderboardEntries();
+		return true;
 	}
 
 	private void OnValidate()

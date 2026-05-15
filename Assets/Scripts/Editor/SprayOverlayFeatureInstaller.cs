@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -137,6 +138,110 @@ public static class BloodProjectorFeatureInstaller
 		}
 
 		return -1;
+	}
+}
+
+[InitializeOnLoad]
+public static class EditorSelectionSanitizer
+{
+	private static bool sanitizeQueued;
+	private static bool isSanitizing;
+
+	static EditorSelectionSanitizer()
+	{
+		QueueSanitize();
+		EditorApplication.hierarchyChanged += QueueSanitize;
+		Undo.undoRedoPerformed += QueueSanitize;
+		EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+	}
+
+	private static void OnPlayModeStateChanged(PlayModeStateChange state)
+	{
+		switch (state)
+		{
+			case PlayModeStateChange.ExitingEditMode:
+			case PlayModeStateChange.EnteredPlayMode:
+			case PlayModeStateChange.ExitingPlayMode:
+			case PlayModeStateChange.EnteredEditMode:
+				QueueSanitize();
+				break;
+		}
+	}
+
+	private static void QueueSanitize()
+	{
+		if (sanitizeQueued)
+		{
+			return;
+		}
+
+		sanitizeQueued = true;
+		EditorApplication.delayCall += SanitizeSelection;
+	}
+
+	private static void SanitizeSelection()
+	{
+		sanitizeQueued = false;
+
+		if (isSanitizing || EditorApplication.isCompiling || EditorApplication.isUpdating)
+		{
+			return;
+		}
+
+		Object[] currentSelection = Selection.objects;
+		if (currentSelection == null || currentSelection.Length == 0)
+		{
+			return;
+		}
+
+		List<Object> validSelection = null;
+		for (int i = 0; i < currentSelection.Length; i++)
+		{
+			Object selectedObject = currentSelection[i];
+			if (selectedObject != null)
+			{
+				if (validSelection != null)
+				{
+					validSelection.Add(selectedObject);
+				}
+
+				continue;
+			}
+
+			if (validSelection != null)
+			{
+				continue;
+			}
+
+			validSelection = new List<Object>(currentSelection.Length - 1);
+			for (int j = 0; j < i; j++)
+			{
+				Object previousObject = currentSelection[j];
+				if (previousObject != null)
+				{
+					validSelection.Add(previousObject);
+				}
+			}
+		}
+
+		if (validSelection == null)
+		{
+			return;
+		}
+
+		isSanitizing = true;
+		try
+		{
+			Selection.objects = validSelection.ToArray();
+			if (ActiveEditorTracker.sharedTracker != null)
+			{
+				ActiveEditorTracker.sharedTracker.ForceRebuild();
+			}
+		}
+		finally
+		{
+			isSanitizing = false;
+		}
 	}
 }
 #endif
