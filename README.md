@@ -4,7 +4,7 @@ a 2026 booom project on painting the world red
 以下内容供项目组成员确认进度，不是特别细致，爱来自FrogO2。
 
 距离提交还有
-![:FrogO2](https://count.getloli.com/@FrogO2?name=FrogO2&theme=original-new&padding=1&offset=0&align=top&scale=1&pixelated=1&darkmode=auto&num=2)
+![:FrogO2](https://count.getloli.com/@FrogO2?name=FrogO2&theme=original-new&padding=1&offset=0&align=top&scale=1&pixelated=1&darkmode=auto&num=0)
 天
 
 ## 基础能力
@@ -37,28 +37,32 @@ a 2026 booom project on painting the world red
 
 
 ## TODO
-- 懒得写，请看策划书
+### 系统
+主要的：
+ - [x] 斜坡滑铲加速或保持速度
+ - [x] 现在一直按住w+shift+c可以无限滑铲，要修复
+ - [x] 把现在的挥刀特效（屏幕边缘变红）改成主角死亡特效。挥刀特效和速度线都不需要了。
+
+次要的：
+ - [ ] 计时板（总之能放到地图上就行）
+ - [ ] 枪手敌人手感调整（我调过了，但是只测试过一点）
 
 
-## 规则怪谈
-- 设计地图请考虑使用third parties文件夹下的blockout框架，但是不用也行。
+### 音乐和音效
+重要的：
+ - [ ]  Adaptive music （Kevin的音乐项目融合进我们的，注意杀敌/进入trigger触发乐器，一关一首音乐，总之好听就行）
+ - [ ]  命中敌人卡肉/主角死亡时的音效慢放（建议用一个音乐磁带倒带一般的声音和音乐混合，做不到就直接暂停音乐试一下）
 
-- 如果新加代码或者模块出现红色警告，考虑点击左上角File->Build Profiles->Build and Run构建项目确认可以通过编译（记得把你的场景加入Scene List!）![alt text](image.png)
+次要的：
+ - [ ] 主角的脚步声
+ - [ ]  挥刀空挥的声音/挥中的声音
+ - [ ]  高速破风声（代替速度线）
 
-- Git没办法合并场景文件修改。不要和别人使用同一场景文件，创建一个自己的Scene。
 
-- 在 ![alt text](image-7.png)
+### 关卡
+重要的：
+ - [ ]  雪碧关卡比例调整+prefab/代码绑定（参考samplescene绑定，但是最好从编辑器里拖prefab进场景，不要直接把samplescene的角色直接放里）
+ - [ ]  教程关卡（具体教学利用放在地图上的图片或ui文字都行（如果能整明白怎么调用的话）），记得囊括所有能力和敌人
 
-## Blockout入门
-
-- 打开Window->Blockout->Editor启用Blockout界面 ![alt text](image-2.png)
-
-- 如果没有如下界面就点最大的按钮 ![alt text](image-3.png)
-
-- 建议使用0.5 Grid Snapping ![alt text](image-6.png)
-
-- 想创建大地板首选Scalable objects->Create Scalable Floor Block 然后拖动红色和绿色手柄 ![alt text](image-5.png)
-
-- 其余使用最上面一排按钮然后直接将预制体拖进场景即可 ![alt text](image-4.png)
-
-- 使用QWERT快速循环移动，缩放，旋转等工具，并查看Assets/ThirdParties/Blockout/Documentation.pdf阅读教程！
+次要的：
+- [ ]  雪碧关卡前半重做
