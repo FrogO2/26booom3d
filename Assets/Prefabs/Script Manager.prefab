@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 178063012924383657}
   - component: {fileID: 7141589309926464537}
   - component: {fileID: 8863113254741270379}
+  - component: {fileID: 7109973735602738618}
   m_Layer: 0
   m_Name: Script Manager
   m_TagString: Untagged
@@ -47,31 +48,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectManager
   postProcessMaterial: {fileID: 2100000, guid: f4e26b5cfcba1fc4f8fcce2c1405d53e, type: 2}
-  killDuration: 0.35
-  killCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   playerController: {fileID: 0}
   cameraTransform: {fileID: 0}
   firstPersonController: {fileID: 0}
@@ -87,7 +63,7 @@ MonoBehaviour:
   centerExclusionFeather: 0.08
   forwardScreenBias: 0.85
   particleLifetime: 0.37
-  particleThickness: 1.1
+  particleThickness: 0.3
   particleStretchLength: 30.5
   particleVelocityStretch: 0
   maxParticlesCount: 400
@@ -127,8 +103,8 @@ MonoBehaviour:
   inputActions: {fileID: 0}
   actionMapName: Player
   reloadActionName: Reload
-  playerLeaderboardName: PLAYER
-  retryKeyAction: 1
+  playerLeaderboardName: You
+  retryKeyAction: 2
 --- !u!114 &8863113254741270379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,9 +129,59 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   showSceneIntroOnStart: 0
   showInitialTutorialPrompt: 0
   initialTutorialPrompt: 
   promptDuration: 4
   counterDuration: 1.8
   initialTutorialPromptColor: {r: 0.26, g: 0.9, b: 1, a: 1}
+--- !u!114 &7109973735602738618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1538759644578808846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 6e2a66f028c4a36489eb52becf2f9eb1, type: 2}
+  m_BuildHeightMesh: 0
