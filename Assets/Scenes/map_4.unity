@@ -25974,6 +25974,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5312887862791994376, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
+      propertyPath: minWindSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5312887862791994376, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
+      propertyPath: walkStepDistance
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5312887862791994376, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
+      propertyPath: 'swingClips.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 24165980a80387143ab04b88ab6245ef, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -603,7 +603,8 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 			return;
 		}
 
-		SetAttackNumber(attackNumber);
+
+        SetAttackNumber(attackNumber);
 		attackActive = true;
 		attackStateEntered = false;
 		currentAttackNumber = 0;
@@ -688,8 +689,11 @@ public class FirstPersonViewAnimationController : MonoBehaviour
 				{
 					attackIntentNumber = 0;
 				}
-
-				AttackStateEnteredEvent?.Invoke(currentAttackNumber, attackSequenceId);
+                if (PlayerAudioController.Instance != null)
+                {
+                    PlayerAudioController.Instance.PlaySwingSound();
+                }
+                AttackStateEnteredEvent?.Invoke(currentAttackNumber, attackSequenceId);
 			}
 
 			float elapsedTime = Time.time - currentAttackStartTime;

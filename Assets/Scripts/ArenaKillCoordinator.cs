@@ -188,7 +188,12 @@ public class ArenaKillCoordinator : MonoBehaviour
 			return;
 		}
 
-		if (attackController != null)
+        if (PlayerAudioController.Instance != null)
+        {
+            PlayerAudioController.Instance.StopWeaponSound();
+        }
+
+        if (attackController != null)
 		{
 			attackController.TrySnapCurrentAttackToImpactFrame(attackNumber);
 		}
@@ -224,7 +229,12 @@ public class ArenaKillCoordinator : MonoBehaviour
 			return;
 		}
 
-		targetingService.TryExecuteKill(target, new ArenaEnemyKillContext
+        if (PlayerAudioController.Instance != null)
+        {
+            PlayerAudioController.Instance.PlayHitSound();
+        }
+
+        targetingService.TryExecuteKill(target, new ArenaEnemyKillContext
 		{
 			AttackNumber = attackNumber,
 			HitPoint = hitPoint,
