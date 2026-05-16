@@ -12,7 +12,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 	private const string RuntimeRootObjectName = "Arena Tutorial Runtime";
 	private const string PromptUiObjectName = "Arena Tutorial UI";
 	private const string PromptChannelKey = "Prompt";
-	private const string CounterChannelKey = "Counter";
+	private const string CounterChannelKey = PromptChannelKey;
 	private const string RunTimerObjectName = "Run Timer System";
 	private const string LeaderboardObjectName = "Wall Leaderboard";
 	private const string SceneIntroObjectName = "Scene Intro Overlay";
@@ -58,7 +58,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 	private SceneIntroOverlay sceneIntroOverlay;
 	private RuntimeTextOverlayUI promptUi;
 	private PlayerOneHitDeath playerOneHitDeath;
-	private float initialPromptAt = -1f;
+	private Coroutine initialPromptRoutine;
 	private bool encounterEventsBound;
 	private bool levelEventsBound;
 
@@ -91,13 +91,14 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		}
 	}
 
-	private void Update()
-	{
-		TryShowInitialPrompt();
-	}
-
 	private void OnDestroy()
 	{
+		if (initialPromptRoutine != null)
+		{
+			StopCoroutine(initialPromptRoutine);
+			initialPromptRoutine = null;
+		}
+
 		if (!encounterEventsBound || arenaEncounterFlow == null)
 		{
 			return;
@@ -167,7 +168,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void HandleArenaEncounterStarted()
 	{
-		ShowPrompt("Arena active. Defeat every enemy to unlock the barriers.", promptDuration, ArenaPromptColorMode.Solid, new Color(1f, 0.55f, 0.55f));
+		ShowPrompt("Arena active. Defeat every enemy to unlock the barriers.", promptDuration, ArenaPromptColorMode.AdaptiveContrast, new Color(1f, 0.55f, 0.55f));
 	}
 
 	private void HandleArenaRemainingEnemiesChanged(int remainingEnemies)
@@ -177,7 +178,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void HandleArenaExitRequestedBeforeStart()
 	{
-		ShowPrompt("Enter the arena before heading for the exit.", promptDuration, ArenaPromptColorMode.Solid, Color.white);
+		ShowPrompt("Enter the arena before heading for the exit.", promptDuration, ArenaPromptColorMode.AdaptiveContrast, Color.white);
 	}
 
 	private void HandleArenaExitRequestedWhileLocked()
@@ -187,12 +188,12 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void HandleArenaEncounterCleared()
 	{
-		ShowPrompt("Arena cleared. Follow the ground arrow to leave.", promptDuration, ArenaPromptColorMode.AdaptiveHueShift, Color.white);
+		ShowPrompt("Arena cleared. Follow the ground arrow to leave.", promptDuration, ArenaPromptColorMode.AdaptiveContrast, Color.white);
 	}
 
 	private void HandleLevelRunCompleted(float elapsedSeconds)
 	{
-		ShowPrompt("Arena complete.\nFollow the path ahead.", promptDuration, ArenaPromptColorMode.AdaptiveHueShift, Color.white);
+		ShowPrompt("Arena complete.\nFollow the path ahead.", promptDuration, ArenaPromptColorMode.AdaptiveContrast, Color.white);
 	}
 
 	public void SoftResetLevelRuntime()
@@ -202,7 +203,6 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		EnsureLevelManager();
 		ResetArenaState();
 		RepositionPlayer();
-		initialPromptAt = -1f;
 		QueueInitialPrompt();
 	}
 
@@ -416,30 +416,31 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void QueueInitialPrompt()
 	{
-		float introDuration = sceneIntroOverlay != null ? sceneIntroOverlay.IntroDuration : 0f;
-		if (introDuration <= 0.05f)
+		if (initialPromptRoutine != null)
 		{
-			ShowInitialPrompt();
-			return;
+			StopCoroutine(initialPromptRoutine);
 		}
 
-		initialPromptAt = Time.unscaledTime + introDuration * 0.85f;
+		initialPromptRoutine = StartCoroutine(ShowInitialPromptWhenReady());
 	}
 
-	private void TryShowInitialPrompt()
+	private IEnumerator ShowInitialPromptWhenReady()
 	{
-		if (initialPromptAt <= 0f || Time.unscaledTime < initialPromptAt)
+		yield return null;
+
+		float introDelay = sceneIntroOverlay != null ? sceneIntroOverlay.IntroDuration * 0.85f : 0f;
+		if (introDelay > 0.05f)
 		{
-			return;
+			yield return new WaitForSecondsRealtime(introDelay);
 		}
 
-		initialPromptAt = -1f;
+		initialPromptRoutine = null;
 		ShowInitialPrompt();
 	}
 
 	private void ShowInitialPrompt()
 	{
-		ShowPrompt("Tutorial 1/3\nMove: WASD, Jump: Space, Sprint: Shift", promptDuration, ArenaPromptColorMode.Solid, new Color(0.26f, 0.90f, 1f));
+		ShowPrompt("Tutorial 1/3\nMove: WASD, Jump: Space, Sprint: Shift", promptDuration, ArenaPromptColorMode.AdaptiveContrast, new Color(0.26f, 0.90f, 1f));
 	}
 
 	private void BuildRuntimeCourse()
@@ -627,12 +628,12 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void BuildEncounterZones()
 	{
-		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 7f), new Vector3(14f, 3f, 5f), "Tutorial 1/3\nMove: WASD, Jump: Space, Sprint: Shift.", ArenaPromptColorMode.Solid, new Color(0.26f, 0.90f, 1f));
+		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 7f), new Vector3(14f, 3f, 5f), "Tutorial 1/3\nMove: WASD, Jump: Space, Sprint: Shift.", ArenaPromptColorMode.AdaptiveContrast, new Color(0.26f, 0.90f, 1f));
 		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 18f), new Vector3(14f, 3f, 6f), "Tutorial 2/3\nLeft Click triggers spray and a temporary kill check.", ArenaPromptColorMode.AdaptiveContrast, Color.white);
-		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 29f), new Vector3(14f, 3f, 6f), "Tutorial 3/3\nEnter the arena ahead. Defeat every enemy before leaving.", ArenaPromptColorMode.AdaptiveHueShift, Color.white);
+		CreateTutorialZone(courseOrigin + new Vector3(0f, 1.4f, 29f), new Vector3(14f, 3f, 6f), "Tutorial 3/3\nEnter the arena ahead. Defeat every enemy before leaving.", ArenaPromptColorMode.AdaptiveContrast, Color.white);
 
-		CreateEncounterZone(courseOrigin + new Vector3(0f, 1.5f, 37f), new Vector3(14f, 3.2f, 6f), ArenaTriggerKind.ArenaStart, null, ArenaPromptColorMode.Solid, new Color(1f, 0.4f, 0.4f));
-		CreateEncounterZone(courseOrigin + new Vector3(0f, 1.5f, 74f), new Vector3(14f, 3.2f, 6f), ArenaTriggerKind.ArenaExit, null, ArenaPromptColorMode.Solid, new Color(0.8f, 1f, 0.8f));
+		CreateEncounterZone(courseOrigin + new Vector3(0f, 1.5f, 37f), new Vector3(14f, 3.2f, 6f), ArenaTriggerKind.ArenaStart, null, ArenaPromptColorMode.AdaptiveContrast, new Color(1f, 0.4f, 0.4f));
+		CreateEncounterZone(courseOrigin + new Vector3(0f, 1.5f, 74f), new Vector3(14f, 3.2f, 6f), ArenaTriggerKind.ArenaExit, null, ArenaPromptColorMode.AdaptiveContrast, new Color(0.8f, 1f, 0.8f));
 	}
 
 	private void EnsureEncounterZones()
@@ -856,14 +857,25 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		promptUi.ShowText(new RuntimeTextOverlayUI.DisplayRequest
 		{
 			ChannelKey = PromptChannelKey,
+			ExclusiveGroupKey = ArenaTextStyleUtility.SequentialOverlayGroupKey,
 			Message = message,
-			AnchoredPosition = new Vector2(0f, 72f),
-			Size = new Vector2(1480f, 260f),
-			FontSize = 72f,
+			AnchoredPosition = new Vector2(0f, 92f),
+			Size = new Vector2(1700f, 340f),
+			FontSize = 118f,
 			Duration = duration,
 			FadeDuration = 0.35f,
-			CharacterSpacing = 0f,
-			Color = Color.white,
+			CharacterSpacing = 4f,
+			LineSpacing = 18f,
+			OutlineWidth = 0f,
+			OutlineSoftness = 0f,
+			FaceDilate = 0f,
+			UseAdaptiveForegroundColor = colorMode == ArenaPromptColorMode.AdaptiveContrast,
+			AdaptiveColorCamera = playerCamera,
+			Color = ResolvePromptColor(colorMode, solidColor),
+			SecondaryColor = ArenaTextStyleUtility.AlertForegroundColor,
+			OutlineColor = Color.clear,
+			ContrastBias = ArenaTextStyleUtility.DefaultContrastBias,
+			ContrastBlendWidth = ArenaTextStyleUtility.DefaultContrastBlendWidth,
 			Alignment = TMPro.TextAlignmentOptions.Center,
 			FontStyle = TMPro.FontStyles.Bold,
 			WordWrap = true,
@@ -882,14 +894,25 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		promptUi.ShowText(new RuntimeTextOverlayUI.DisplayRequest
 		{
 			ChannelKey = CounterChannelKey,
+			ExclusiveGroupKey = ArenaTextStyleUtility.SequentialOverlayGroupKey,
 			Message = message,
-			AnchoredPosition = new Vector2(0f, -92f),
-			Size = new Vector2(1320f, 160f),
-			FontSize = 56f,
+			AnchoredPosition = new Vector2(0f, -132f),
+			Size = new Vector2(1500f, 220f),
+			FontSize = 104f,
 			Duration = duration,
 			FadeDuration = 0.35f,
-			CharacterSpacing = 0f,
-			Color = Color.white,
+			CharacterSpacing = 3f,
+			LineSpacing = 12f,
+			OutlineWidth = 0f,
+			OutlineSoftness = 0f,
+			FaceDilate = 0f,
+			UseAdaptiveForegroundColor = true,
+			AdaptiveColorCamera = playerCamera,
+			Color = ResolvePromptColor(ArenaPromptColorMode.AdaptiveContrast, Color.white),
+			SecondaryColor = ArenaTextStyleUtility.AlertForegroundColor,
+			OutlineColor = Color.clear,
+			ContrastBias = ArenaTextStyleUtility.DefaultContrastBias,
+			ContrastBlendWidth = ArenaTextStyleUtility.DefaultContrastBlendWidth,
 			Alignment = TMPro.TextAlignmentOptions.Center,
 			FontStyle = TMPro.FontStyles.Bold,
 			WordWrap = true,
@@ -949,54 +972,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private Color ResolvePromptColor(ArenaPromptColorMode colorMode, Color solidColor)
 	{
-		if (colorMode == ArenaPromptColorMode.Solid)
-		{
-			return solidColor;
-		}
-
-		Color backgroundColor = SampleSceneColor();
-		Color.RGBToHSV(backgroundColor, out float hue, out float saturation, out float value);
-
-		float baseHue = Mathf.Repeat(hue + 0.5f, 1f);
-		if (colorMode == ArenaPromptColorMode.AdaptiveHueShift)
-		{
-			baseHue = Mathf.Repeat(baseHue + Time.unscaledTime * 0.18f, 1f);
-		}
-
-		float targetSaturation = Mathf.Clamp01(0.65f + (1f - saturation) * 0.35f);
-		float targetValue = value > 0.55f ? 0.12f : 1f;
-		return Color.HSVToRGB(baseHue, targetSaturation, targetValue);
-	}
-
-	private Color SampleSceneColor()
-	{
-		if (playerCamera == null)
-		{
-			return Color.black;
-		}
-
-		Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-		if (Physics.Raycast(ray, out RaycastHit hit, 250f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
-		{
-			Renderer renderer = hit.collider.GetComponentInParent<Renderer>();
-			if (renderer != null)
-			{
-				Material sharedMaterial = renderer.sharedMaterial;
-				if (sharedMaterial != null)
-				{
-					if (sharedMaterial.HasProperty("_BaseColor"))
-					{
-						return sharedMaterial.GetColor("_BaseColor");
-					}
-					if (sharedMaterial.HasProperty("_Color"))
-					{
-						return sharedMaterial.GetColor("_Color");
-					}
-				}
-			}
-		}
-
-		return RenderSettings.ambientSkyColor.maxColorComponent > 0f ? RenderSettings.ambientSkyColor : playerCamera.backgroundColor;
+		return ArenaTextStyleUtility.ResolvePromptColor(playerCamera, colorMode, solidColor);
 	}
 
 	internal bool IsPlayerCollider(Collider other)

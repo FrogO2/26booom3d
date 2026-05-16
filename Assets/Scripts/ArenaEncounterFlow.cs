@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,6 +36,7 @@ public class ArenaEncounterFlow : MonoBehaviour
 	private bool arenaStarted;
 	private bool arenaCleared;
 	private bool runStartNotified;
+	private Coroutine initialPresentationRoutine;
 
 	public bool HasStarted => arenaStarted;
 	public bool IsCleared => arenaCleared;
@@ -53,14 +55,37 @@ public class ArenaEncounterFlow : MonoBehaviour
 			return;
 		}
 
-		if (showInitialTutorialPrompt)
-		{
-			promptOverlay?.ShowPrompt(initialTutorialPrompt, promptDuration, ArenaPromptColorMode.Solid, initialTutorialPromptColor);
-		}
-
 		if (showSceneIntroOnStart)
 		{
 			sceneIntroOverlay?.PlayIntro();
+		}
+
+		if (showInitialTutorialPrompt)
+		{
+			initialPresentationRoutine = StartCoroutine(ShowInitialTutorialPromptWhenReady());
+		}
+	}
+
+	private IEnumerator ShowInitialTutorialPromptWhenReady()
+	{
+		yield return null;
+
+		float introDelay = showSceneIntroOnStart && sceneIntroOverlay != null ? sceneIntroOverlay.IntroDuration * 0.85f : 0f;
+		if (introDelay > 0.05f)
+		{
+			yield return new WaitForSecondsRealtime(introDelay);
+		}
+
+		initialPresentationRoutine = null;
+		promptOverlay?.ShowPrompt(initialTutorialPrompt, promptDuration, ArenaPromptColorMode.AdaptiveContrast, initialTutorialPromptColor);
+	}
+
+	private void OnDestroy()
+	{
+		if (initialPresentationRoutine != null)
+		{
+			StopCoroutine(initialPresentationRoutine);
+			initialPresentationRoutine = null;
 		}
 	}
 
@@ -222,10 +247,11 @@ public class ArenaEncounterFlow : MonoBehaviour
 
 					if (usesStandalonePresentation)
 					{
-						promptOverlay?.ShowPrompt("Arena active. Defeat every enemy to unlock the barriers.", promptDuration, ArenaPromptColorMode.Solid, new Color(1f, 0.55f, 0.55f));
+						promptOverlay?.ShowPrompt("Arena active. Defeat every enemy to unlock the barriers.", promptDuration, ArenaPromptColorMode.AdaptiveContrast, new Color(1f, 0.55f, 0.55f));
 						promptOverlay?.ShowCounter($"Enemies left: {GetRemainingEnemyCount()}", counterDuration);
 					}
 
+					NotifyRunStarted();
 					EncounterStarted?.Invoke();
 					RemainingEnemiesChanged?.Invoke(GetRemainingEnemyCount());
 				}
@@ -236,7 +262,7 @@ public class ArenaEncounterFlow : MonoBehaviour
 				{
 					if (usesStandalonePresentation)
 					{
-						promptOverlay?.ShowPrompt("Enter the arena before heading for the exit.", promptDuration, ArenaPromptColorMode.Solid, Color.white);
+						promptOverlay?.ShowPrompt("Enter the arena before heading for the exit.", promptDuration, ArenaPromptColorMode.AdaptiveContrast, Color.white);
 					}
 
 					ExitRequestedBeforeStart?.Invoke();
@@ -256,7 +282,7 @@ public class ArenaEncounterFlow : MonoBehaviour
 
 					if (usesStandalonePresentation)
 					{
-						promptOverlay?.ShowPrompt("Arena complete. Follow the path ahead.", promptDuration, ArenaPromptColorMode.AdaptiveHueShift, Color.white);
+						promptOverlay?.ShowPrompt("Arena complete. Follow the path ahead.", promptDuration, ArenaPromptColorMode.AdaptiveContrast, Color.white);
 					}
 
 					RunExitReached?.Invoke();
@@ -267,11 +293,7 @@ public class ArenaEncounterFlow : MonoBehaviour
 
 	public void NotifyEnemyKilled(ArenaBakedEnemyTarget enemy)
 	{
-		if (!runStartNotified)
-		{
-			runStartNotified = true;
-			RunStarted?.Invoke();
-		}
+		NotifyRunStarted();
 
 		int remaining = GetRemainingEnemyCount();
 		if (usesStandalonePresentation)
@@ -296,11 +318,22 @@ public class ArenaEncounterFlow : MonoBehaviour
 			exitArrow?.Show();
 			if (usesStandalonePresentation)
 			{
-				promptOverlay?.ShowPrompt("Arena cleared. Follow the ground arrow to leave.", promptDuration, ArenaPromptColorMode.AdaptiveHueShift, Color.white);
+				promptOverlay?.ShowPrompt("Arena cleared. Follow the ground arrow to leave.", promptDuration, ArenaPromptColorMode.AdaptiveContrast, Color.white);
 			}
 
 			EncounterCleared?.Invoke();
 		}
+	}
+
+	private void NotifyRunStarted()
+	{
+		if (runStartNotified)
+		{
+			return;
+		}
+
+		runStartNotified = true;
+		RunStarted?.Invoke();
 	}
 
 
