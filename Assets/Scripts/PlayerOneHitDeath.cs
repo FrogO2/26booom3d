@@ -39,7 +39,7 @@ public class PlayerOneHitDeath : MonoBehaviour, vIDamageReceiver
 	[SerializeField] private Vector2 restartPromptAnchoredPosition = new Vector2(0f, -300f);
 	[SerializeField] private Vector2 restartPromptSize = new Vector2(720f, 220f);
 	[SerializeField] private float restartPromptFontSize = 72f;
-	[SerializeField] private Color restartPromptColor = Color.white;
+	[SerializeField] private Color restartPromptColor = new Color(0.92f, 0.17f, 0.15f, 0.98f);
     [SerializeField, Range(0f, 1f)] private float targetDeathEffectIntensity = 1f;
 
     [Header("Damage Events")]
@@ -227,6 +227,8 @@ public class PlayerOneHitDeath : MonoBehaviour, vIDamageReceiver
 			return;
 		}
 
+		Color fixedRestartColor = Color.white;
+
 		deathOverlayUi.ShowText(new RuntimeTextOverlayUI.DisplayRequest
 		{
 			ChannelKey = restartPromptChannelKey,
@@ -242,15 +244,15 @@ public class PlayerOneHitDeath : MonoBehaviour, vIDamageReceiver
 			OutlineWidth = 0f,
 			OutlineSoftness = 0f,
 			FaceDilate = 0f,
-			UseAdaptiveForegroundColor = true,
+			UseAdaptiveForegroundColor = false,
 			AdaptiveColorCamera = Camera.main,
-			Color = ArenaTextStyleUtility.DefaultForegroundColor,
-			SecondaryColor = ArenaTextStyleUtility.AlertForegroundColor,
+			Color = fixedRestartColor,
+			SecondaryColor = fixedRestartColor,
 			OutlineColor = Color.clear,
 			ContrastBias = ArenaTextStyleUtility.DefaultContrastBias,
 			ContrastBlendWidth = ArenaTextStyleUtility.DefaultContrastBlendWidth,
 			Alignment = TextAlignmentOptions.Center,
-			FontStyle = FontStyles.Bold | FontStyles.UpperCase,
+			FontStyle = FontStyles.Normal,
 			WordWrap = true,
 			OverflowMode = TextOverflowModes.Overflow,
 		});

@@ -434,7 +434,7 @@ MonoBehaviour:
   restartPromptAnchoredPosition: {x: 0, y: 0}
   restartPromptSize: {x: 720, y: 220}
   restartPromptFontSize: 100
-  restartPromptColor: {r: 1, g: 1, b: 1, a: 1}
+  restartPromptColor: {r: 0.92, g: 0.17, b: 0.15, a: 0.98}
   targetDeathEffectIntensity: 1
   onStartReceiveDamageEvent:
     m_PersistentCalls:
