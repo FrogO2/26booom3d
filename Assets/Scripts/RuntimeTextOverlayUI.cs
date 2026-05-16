@@ -282,15 +282,15 @@ public class RuntimeTextOverlayUI : MonoBehaviour
 		channel.Label.lineSpacing = request.LineSpacing;
 		channel.Label.raycastTarget = false;
 
-		EnsureMaterialInstance(channel);
-		ApplyTextMaterial(channel, request);
-
 		if (request.UseAdaptiveForegroundColor)
 		{
+			EnsureMaterialInstance(channel);
+			ApplyTextMaterial(channel, request);
 			ApplyAdaptiveForeground(channel);
 		}
 		else
 		{
+			ApplySimpleTextMaterial(channel, request);
 			ApplyUniformForeground(channel.Label, request.Color);
 		}
 
@@ -512,9 +512,140 @@ public class RuntimeTextOverlayUI : MonoBehaviour
 			channel.MaterialInstance.SetFloat(ShaderUtilities.ID_OutlineSoftness, Mathf.Clamp01(request.OutlineSoftness));
 			channel.MaterialInstance.SetFloat(ShaderUtilities.ID_FaceDilate, Mathf.Clamp(request.FaceDilate, -1f, 1f));
 			channel.MaterialInstance.SetColor(ShaderUtilities.ID_OutlineColor, request.OutlineColor);
+			channel.MaterialInstance.DisableKeyword("OUTLINE_ON");
+			channel.MaterialInstance.DisableKeyword("UNDERLAY_ON");
+			channel.MaterialInstance.DisableKeyword("GLOW_ON");
+
+			if (channel.MaterialInstance.HasProperty(ShaderUtilities.ID_UnderlayColor))
+			{
+				channel.MaterialInstance.SetColor(ShaderUtilities.ID_UnderlayColor, Color.clear);
+			}
+
+			if (channel.MaterialInstance.HasProperty(ShaderUtilities.ID_UnderlayOffsetX))
+			{
+				channel.MaterialInstance.SetFloat(ShaderUtilities.ID_UnderlayOffsetX, 0f);
+			}
+
+			if (channel.MaterialInstance.HasProperty(ShaderUtilities.ID_UnderlayOffsetY))
+			{
+				channel.MaterialInstance.SetFloat(ShaderUtilities.ID_UnderlayOffsetY, 0f);
+			}
+
+			if (channel.MaterialInstance.HasProperty(ShaderUtilities.ID_UnderlayDilate))
+			{
+				channel.MaterialInstance.SetFloat(ShaderUtilities.ID_UnderlayDilate, 0f);
+			}
+
+			if (channel.MaterialInstance.HasProperty(ShaderUtilities.ID_UnderlaySoftness))
+			{
+				channel.MaterialInstance.SetFloat(ShaderUtilities.ID_UnderlaySoftness, 0f);
+			}
+
+			SetMaterialFloatIfPresent(channel.MaterialInstance, "_GlowPower", 0f);
+			SetMaterialFloatIfPresent(channel.MaterialInstance, "_GlowOuter", 0f);
+			SetMaterialFloatIfPresent(channel.MaterialInstance, "_GlowInner", 0f);
+			SetMaterialColorIfPresent(channel.MaterialInstance, "_GlowColor", Color.clear);
 		}
 
 		channel.Label.UpdateMeshPadding();
+	}
+
+	private static void ApplySimpleTextMaterial(ChannelState channel, DisplayRequest request)
+	{
+		if (channel?.Label == null)
+		{
+			return;
+		}
+
+		Material sourceMaterial = channel.Label.font != null ? channel.Label.font.material : channel.Label.fontSharedMaterial;
+		if (sourceMaterial == null)
+		{
+			return;
+		}
+
+		if (channel.MaterialInstance == null || channel.SourceMaterial != sourceMaterial)
+		{
+			DestroyMaterialInstance(channel);
+			channel.SourceMaterial = sourceMaterial;
+			channel.MaterialInstance = new Material(sourceMaterial)
+			{
+				name = sourceMaterial.name + " (Runtime Overlay Simple)"
+			};
+		}
+
+		channel.Label.fontSharedMaterial = channel.MaterialInstance;
+		channel.Label.enableVertexGradient = false;
+		channel.Label.outlineWidth = 0f;
+		channel.Label.outlineColor = Color.clear;
+
+		Material material = channel.MaterialInstance;
+		material.SetFloat(ShaderUtilities.ID_OutlineWidth, 0f);
+		material.SetFloat(ShaderUtilities.ID_OutlineSoftness, 0f);
+		material.SetFloat(ShaderUtilities.ID_FaceDilate, Mathf.Clamp(request.FaceDilate, -1f, 1f));
+		material.SetColor(ShaderUtilities.ID_OutlineColor, Color.clear);
+		material.DisableKeyword("OUTLINE_ON");
+		material.DisableKeyword("UNDERLAY_ON");
+		material.DisableKeyword("GLOW_ON");
+
+		if (material.HasProperty(ShaderUtilities.ID_UnderlayColor))
+		{
+			material.SetColor(ShaderUtilities.ID_UnderlayColor, Color.clear);
+		}
+
+		if (material.HasProperty(ShaderUtilities.ID_UnderlayOffsetX))
+		{
+			material.SetFloat(ShaderUtilities.ID_UnderlayOffsetX, 0f);
+		}
+
+		if (material.HasProperty(ShaderUtilities.ID_UnderlayOffsetY))
+		{
+			material.SetFloat(ShaderUtilities.ID_UnderlayOffsetY, 0f);
+		}
+
+		if (material.HasProperty(ShaderUtilities.ID_UnderlayDilate))
+		{
+			material.SetFloat(ShaderUtilities.ID_UnderlayDilate, 0f);
+		}
+
+		if (material.HasProperty(ShaderUtilities.ID_UnderlaySoftness))
+		{
+			material.SetFloat(ShaderUtilities.ID_UnderlaySoftness, 0f);
+		}
+
+		SetMaterialFloatIfPresent(material, "_GlowPower", 0f);
+		SetMaterialFloatIfPresent(material, "_GlowOuter", 0f);
+		SetMaterialFloatIfPresent(material, "_GlowInner", 0f);
+		SetMaterialColorIfPresent(material, "_GlowColor", Color.clear);
+
+		channel.Label.UpdateMeshPadding();
+	}
+
+	private static void SetMaterialFloatIfPresent(Material material, string propertyName, float value)
+	{
+		if (material == null || string.IsNullOrEmpty(propertyName))
+		{
+			return;
+		}
+
+		int propertyId = Shader.PropertyToID(propertyName);
+		if (material.HasProperty(propertyId))
+		{
+			material.SetFloat(propertyId, value);
+		}
+	}
+
+	private static void SetMaterialColorIfPresent(Material material, string propertyName, Color value)
+	{
+		if (material == null || string.IsNullOrEmpty(propertyName))
+		{
+			return;
+		}
+
+		int propertyId = Shader.PropertyToID(propertyName);
+		if (material.HasProperty(propertyId))
+		{
+			material.SetColor(propertyId, value);
+		}
 	}
 
 	private static void ApplyUniformForeground(TextMeshProUGUI label, Color color)
@@ -526,7 +657,6 @@ public class RuntimeTextOverlayUI : MonoBehaviour
 
 		label.color = color;
 		label.ForceMeshUpdate();
-		ApplyVertexColors(label, (_, _) => color, null);
 	}
 
 	private static void ApplyAdaptiveForeground(ChannelState channel)
