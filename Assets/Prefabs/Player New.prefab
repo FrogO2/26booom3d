@@ -426,14 +426,14 @@ MonoBehaviour:
   attackController: {fileID: 1111875359389461258}
   deathOverlayUi: {fileID: 0}
   monitorFallDeath: 1
-  fallDeathYThreshold: -100
+  fallDeathYThreshold: 40
   deathTimeScaleToZeroDuration: 0.5
   deathOverlaySortingOrder: 320
   restartPromptChannelKey: PlayerDeathRestart
   restartPromptMessage: R
   restartPromptAnchoredPosition: {x: 0, y: 0}
   restartPromptSize: {x: 720, y: 220}
-  restartPromptFontSize: 100
+  restartPromptFontSize: 510.8
   restartPromptColor: {r: 1, g: 1, b: 1, a: 1}
   targetDeathEffectIntensity: 1
   onStartReceiveDamageEvent:
@@ -496,9 +496,9 @@ MonoBehaviour:
   maxWindVolume: 0.8
   windResponseSpeed: 5
   swingClips:
-  - {fileID: 8300000, guid: e09279d0e9aafff4194f616e69a84d0a, type: 3}
+  - {fileID: 8300000, guid: b14ecbb2f41d1f8479dd23b666160ff8, type: 3}
   hitClips:
-  - {fileID: 8300000, guid: e09279d0e9aafff4194f616e69a84d0a, type: 3}
+  - {fileID: 8300000, guid: 76913f2d66633354884db48ca504033c, type: 3}
 --- !u!1 &4289796391585695779
 GameObject:
   m_ObjectHideFlags: 0
@@ -1047,7 +1047,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: e09279d0e9aafff4194f616e69a84d0a, type: 3}
+  m_Resource: {fileID: 8300000, guid: 24165980a80387143ab04b88ab6245ef, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

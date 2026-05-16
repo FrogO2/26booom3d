@@ -342,12 +342,12 @@ public class ArenaEncounterFlow : MonoBehaviour
 		int remaining = 0;
 		for (int i = 0; i < arenaEnemies.Count; i++)
 		{
-			if (arenaEnemies[i] != null && arenaEnemies[i].IsAlive)
+			var enemy = arenaEnemies[i];
+			if (enemy != null && enemy.IsAlive)
 			{
 				remaining++;
 			}
 		}
-
 		return remaining;
 	}
 
