@@ -40,8 +40,9 @@ public class PlayerOneHitDeath : MonoBehaviour, vIDamageReceiver
 	[SerializeField] private Vector2 restartPromptSize = new Vector2(720f, 220f);
 	[SerializeField] private float restartPromptFontSize = 72f;
 	[SerializeField] private Color restartPromptColor = Color.white;
+    [SerializeField, Range(0f, 1f)] private float targetDeathEffectIntensity = 1f;
 
-	[Header("Damage Events")]
+    [Header("Damage Events")]
 	[SerializeField] private OnReceiveDamage onStartReceiveDamageEvent = new OnReceiveDamage();
 	[SerializeField] private OnReceiveDamage onReceiveDamageEvent = new OnReceiveDamage();
 	[SerializeField] private PlayerDeathEvent died = new PlayerDeathEvent();
@@ -177,7 +178,11 @@ public class PlayerOneHitDeath : MonoBehaviour, vIDamageReceiver
 
 		HideRestartPrompt();
 		RestoreTimeScale();
-	}
+        if (EffectManager.Instance != null)
+        {
+            EffectManager.Instance.SetSustainedKillEffect(0f);
+        }
+    }
 
 	private void AutoAssignReferences()
 	{
@@ -259,33 +264,49 @@ public class PlayerOneHitDeath : MonoBehaviour, vIDamageReceiver
 		if (deathTimeScaleToZeroDuration <= 0f || previousTimeScale <= Mathf.Epsilon)
 		{
 			SetCurrentDeathTimeScale(0f);
-			return;
+            if (EffectManager.Instance != null)
+            {
+                EffectManager.Instance.SetSustainedKillEffect(targetDeathEffectIntensity);
+            }
+            return;
 		}
 
 		deathTimeScaleCoroutine = StartCoroutine(RampDeathTimeScaleToZero());
 	}
 
-	private IEnumerator RampDeathTimeScaleToZero()
-	{
-		float elapsed = 0f;
+    private IEnumerator RampDeathTimeScaleToZero()
+    {
+        float elapsed = 0f;
 
-		while (timeScaleOverridden && elapsed < deathTimeScaleToZeroDuration)
-		{
-			elapsed += Time.unscaledDeltaTime;
-			float progress = Mathf.Clamp01(elapsed / deathTimeScaleToZeroDuration);
-			SetCurrentDeathTimeScale(Mathf.Lerp(previousTimeScale, 0f, progress));
-			yield return null;
-		}
+        while (timeScaleOverridden && elapsed < deathTimeScaleToZeroDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float progress = Mathf.Clamp01(elapsed / deathTimeScaleToZeroDuration);
+            SetCurrentDeathTimeScale(Mathf.Lerp(previousTimeScale, 0f, progress));
 
-		if (timeScaleOverridden)
-		{
-			SetCurrentDeathTimeScale(0f);
-		}
+            if (EffectManager.Instance != null)
+            {
+                float currentIntensity = Mathf.Lerp(0f, targetDeathEffectIntensity, progress);
+                EffectManager.Instance.SetSustainedKillEffect(currentIntensity);
+            }
 
-		deathTimeScaleCoroutine = null;
-	}
+            yield return null;
+        }
 
-	private void SetCurrentDeathTimeScale(float timeScale)
+        if (timeScaleOverridden)
+        {
+            SetCurrentDeathTimeScale(0f);
+
+            if (EffectManager.Instance != null)
+            {
+                EffectManager.Instance.SetSustainedKillEffect(targetDeathEffectIntensity);
+            }
+        }
+
+        deathTimeScaleCoroutine = null;
+    }
+
+    private void SetCurrentDeathTimeScale(float timeScale)
 	{
 		float clampedTimeScale = Mathf.Max(0f, timeScale);
 		Time.timeScale = clampedTimeScale;

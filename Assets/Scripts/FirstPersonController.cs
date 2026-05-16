@@ -46,8 +46,10 @@ public class FirstPersonController : MonoBehaviour
 	[SerializeField] private float slideSpeed = 12f;
 	[SerializeField] private float slideDuration = 0.65f;
 	[SerializeField] private float slideCooldown = 0.25f;
+    [SerializeField] private float downhillSlideMultiplier = 1.8f; 
+    [SerializeField] private float maxDownhillSlideSpeed = 24f;    
 
-	[Header("Wall Run")]
+    [Header("Wall Run")]
 	[SerializeField] private float wallRunSpeed = 9.5f;
 	[SerializeField] private float wallRunGravity = 6f;
 	[SerializeField] private float wallCheckDistance = 0.9f;
@@ -80,7 +82,8 @@ public class FirstPersonController : MonoBehaviour
 	private Vector3 planarVelocity;
 	private Vector3 slideDirection;
 	private Vector3 wallNormal;
-	private Vector3 wallRunDirection;
+    private Vector3 groundNormal = Vector3.up;
+    private Vector3 wallRunDirection;
 	private float pitch;
 	private float verticalVelocity;
 	private float coyoteTimer;
@@ -460,17 +463,28 @@ public class FirstPersonController : MonoBehaviour
 		}
 	}
 
-	private void UpdateTimers()
-	{
-		float deltaTime = Time.deltaTime;
+    private void UpdateTimers()
+    {
+        float deltaTime = Time.deltaTime;
 
-		coyoteTimer -= deltaTime;
-		jumpBufferTimer -= deltaTime;
-		slideTimer -= deltaTime;
-		slideCooldownTimer -= deltaTime;
-	}
+        coyoteTimer -= deltaTime;
+        jumpBufferTimer -= deltaTime;
 
-	private void HandleLook()
+        float slopeDot = Vector3.Dot(slideDirection, groundNormal);
+
+        if (isSliding && slopeDot < -0.01f)
+        {
+            slideTimer = Mathf.Min(slideTimer + deltaTime, slideDuration);
+        }
+        else
+        {
+            slideTimer -= deltaTime;
+        }
+
+        slideCooldownTimer -= deltaTime;
+    }
+
+    private void HandleLook()
 	{
 		float lookScale = lookSensitivity * Time.deltaTime;
 		float yawDelta = lookInput.x * lookScale;
@@ -486,31 +500,31 @@ public class FirstPersonController : MonoBehaviour
 		}
 	}
 
-	private void HandleSlide()
-	{
-		bool wantsCrouch = crouchAction != null && crouchAction.IsPressed();
-		bool wantsSprint = sprintAction != null && sprintAction.IsPressed();
-        // Debug.Log($"WantsCrouch: {wantsCrouch}");
+    private void HandleSlide()
+    {
+        bool wantsCrouch = crouchAction != null && crouchAction.IsPressed();
+        bool crouchJustPressed = crouchAction != null && crouchAction.WasPressedThisFrame(); // 新增：单次按下检测
+        bool wantsSprint = sprintAction != null && sprintAction.IsPressed();
 
-		if (!isSliding && slideCooldownTimer <= 0f && isGrounded && wantsCrouch && wantsSprint && moveInput.y > 0.1f)
-		{
-			isSliding = true;
-			slideTimer = slideDuration;
-			slideCooldownTimer = slideDuration + slideCooldown;
+        if (!isSliding && slideCooldownTimer <= 0f && isGrounded && crouchJustPressed && wantsSprint && moveInput.y > 0.1f)
+        {
+            isSliding = true;
+            slideTimer = slideDuration;
+            slideCooldownTimer = slideDuration + slideCooldown;
 
-			Vector3 desiredDirection = GetMoveDirection();
-			slideDirection = desiredDirection.sqrMagnitude > 0.001f ? desiredDirection : transform.forward;
-			slideDirection.y = 0f;
-			slideDirection.Normalize();
-		}
+            Vector3 desiredDirection = GetMoveDirection();
+            slideDirection = desiredDirection.sqrMagnitude > 0.001f ? desiredDirection : transform.forward;
+            slideDirection.y = 0f;
+            slideDirection.Normalize();
+        }
 
-		if (isSliding && (!isGrounded || slideTimer <= 0f))
-		{
-			isSliding = false;
-		}
-	}
+        if (isSliding && (!isGrounded || slideTimer <= 0f || !wantsCrouch))
+        {
+            isSliding = false;
+        }
+    }
 
-	private void HandleWallRun()
+    private void HandleWallRun()
 	{
 		bool canWallRun = !isGrounded && !isSliding && moveInput.y > 0.1f && verticalVelocity <= 0.5f;
 		bool touchingWall = wallOnLeft || wallOnRight;
@@ -576,13 +590,26 @@ public class FirstPersonController : MonoBehaviour
 		Vector3 desiredVelocity = Vector3.zero;
 		float control = isGrounded ? 1f : airControl;
 
-		if (isSliding)
-		{
-			float slideProgress = 1f - Mathf.Clamp01(slideTimer / Mathf.Max(0.01f, slideDuration));
-			float currentSlideSpeed = Mathf.Lerp(slideSpeed, crouchSpeed, slideProgress);
-			desiredVelocity = slideDirection * currentSlideSpeed;
-		}
-		else if (isWallRunning)
+        if (isSliding)
+        {
+            float slideProgress = 1f - Mathf.Clamp01(slideTimer / Mathf.Max(0.01f, slideDuration));
+            float currentSlideSpeed = Mathf.Lerp(slideSpeed, crouchSpeed, slideProgress);
+
+            float slopeDot = Vector3.Dot(slideDirection, groundNormal);
+
+            if (slopeDot < -0.01f)
+            {
+                float baseSlopeSpeed = Mathf.Max(currentSlideSpeed, slideSpeed);
+
+                float extraSpeed = Mathf.Abs(slopeDot) * slideSpeed * downhillSlideMultiplier;
+
+                currentSlideSpeed = Mathf.Min(baseSlopeSpeed + extraSpeed, maxDownhillSlideSpeed);
+            }
+
+            Vector3 slopeDirection = Vector3.ProjectOnPlane(slideDirection, groundNormal).normalized;
+            desiredVelocity = slopeDirection * currentSlideSpeed;
+        }
+        else if (isWallRunning)
 		{
 			desiredVelocity = wallRunDirection * wallRunSpeed;
 		}
@@ -592,23 +619,30 @@ public class FirstPersonController : MonoBehaviour
 			desiredVelocity = GetMoveDirection() * targetSpeed;
 		}
 
-		float changeRate = desiredVelocity.sqrMagnitude > 0.01f ? acceleration : deceleration;
-		planarVelocity = Vector3.MoveTowards(planarVelocity, desiredVelocity, changeRate * control * deltaTime);
+        float changeRate = desiredVelocity.sqrMagnitude > 0.01f ? acceleration : deceleration;
 
-		if (isGrounded && verticalVelocity < 0f)
-		{
-			verticalVelocity = -groundedStickForce;
-		}
-		else if (isWallRunning)
-		{
-			verticalVelocity = Mathf.Max(verticalVelocity - wallRunGravity * deltaTime, -wallRunGravity);
-		}
-		else
-		{
-			verticalVelocity = Mathf.Max(verticalVelocity - gravity * deltaTime, -terminalFallSpeed);
-		}
 
-		Vector3 totalVelocity = planarVelocity + Vector3.up * verticalVelocity;
+        if (isSliding)
+        {
+            changeRate = acceleration * 5f;
+        }
+
+        planarVelocity = Vector3.MoveTowards(planarVelocity, desiredVelocity, changeRate * control * deltaTime);
+
+        if (isGrounded && verticalVelocity < 0f)
+        {
+            verticalVelocity = isSliding ? -30f : -groundedStickForce;
+        }
+        else if (isWallRunning)
+        {
+            verticalVelocity = Mathf.Max(verticalVelocity - wallRunGravity * deltaTime, -wallRunGravity);
+        }
+        else
+        {
+            verticalVelocity = Mathf.Max(verticalVelocity - gravity * deltaTime, -terminalFallSpeed);
+        }
+
+        Vector3 totalVelocity = planarVelocity + Vector3.up * verticalVelocity;
 		CollisionFlags collisionFlags = characterController.Move(totalVelocity * deltaTime);
 
 		if ((collisionFlags & CollisionFlags.Above) != 0 && verticalVelocity > 0f)
@@ -757,24 +791,28 @@ public class FirstPersonController : MonoBehaviour
 		return wantsSprint && moveInput.y > 0.1f ? sprintSpeed : walkSpeed;
 	}
 
-	private bool CheckGrounded()
-	{
-		Vector3 center = transform.position + characterController.center;
-		float sphereOffset = (characterController.height * 0.5f) - characterController.radius + 0.02f;
-		Vector3 sphereOrigin = center - Vector3.up * sphereOffset;
-		float radius = Mathf.Max(0.05f, characterController.radius * 0.92f);
+    private bool CheckGrounded()
+    {
+        Vector3 center = transform.position + characterController.center;
+        float sphereOffset = (characterController.height * 0.5f) - characterController.radius + 0.02f;
+        Vector3 sphereOrigin = center - Vector3.up * sphereOffset;
+        float radius = Mathf.Max(0.05f, characterController.radius * 0.92f);
 
-		return Physics.SphereCast(
-			sphereOrigin,
-			radius,
-			Vector3.down,
-			out _,
-			groundProbeDistance,
-			environmentMask,
-			QueryTriggerInteraction.Ignore);
-	}
+        bool isHit = Physics.SphereCast(
+            sphereOrigin,
+            radius,
+            Vector3.down,
+            out RaycastHit hitInfo,
+            groundProbeDistance,
+            environmentMask,
+            QueryTriggerInteraction.Ignore);
 
-	private bool CanStandUp()
+        groundNormal = isHit ? hitInfo.normal : Vector3.up;
+
+        return isHit;
+    }
+
+    private bool CanStandUp()
 	{
 		GetHeadroomCapsule(characterController, out Vector3 bottomPoint, out Vector3 topPoint, out float radius);
 

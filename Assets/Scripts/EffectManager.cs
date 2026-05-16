@@ -22,10 +22,7 @@ public class EffectManager : MonoBehaviour
     [Header("全屏特效材质")]
     public Material postProcessMaterial;
 
-    [Header("==== 击杀特效 ====")]
-    public float killDuration = 0.35f;
-    public AnimationCurve killCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0f));
-    private Coroutine killCoroutine;
+
 
     [Header("==== 速度线粒子 ====")]
     [Tooltip("拖入玩家身上的 CharacterController 以获取真实物理速度")]
@@ -77,6 +74,8 @@ public class EffectManager : MonoBehaviour
     [Tooltip("粒子完全显现时的颜色，默认深灰")]
     [SerializeField] private Color maximumSpeedColor = new Color(0.22f, 0.22f, 0.22f, 0.9f);
 
+
+
     private bool isSprinting;
     private float currentSpeedLineIntensity;
     private GameObject speedLineRoot;
@@ -126,36 +125,15 @@ public class EffectManager : MonoBehaviour
         UpdateSpeedLineParticles();
     }
 
-    public void TriggerKillEffect()
+
+    public void SetSustainedKillEffect(float intensity)
     {
-        if (killCoroutine != null)
-        {
-            StopCoroutine(killCoroutine);
-        }
-
-        killCoroutine = StartCoroutine(PlayKillEffect());
-    }
-
-    private IEnumerator PlayKillEffect()
-    {
-        float elapsed = 0f;
-        while (elapsed < killDuration)
-        {
-            elapsed += Time.deltaTime;
-            float intensity = killCurve.Evaluate(elapsed / Mathf.Max(0.0001f, killDuration));
-            if (postProcessMaterial != null)
-            {
-                postProcessMaterial.SetFloat("_Intensity", intensity);
-            }
-
-            yield return null;
-        }
-
         if (postProcessMaterial != null)
         {
-            postProcessMaterial.SetFloat("_Intensity", 0f);
+            postProcessMaterial.SetFloat("_Intensity", intensity);
         }
     }
+
 
     public void SetSprintState(bool sprinting)
     {

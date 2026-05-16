@@ -14,7 +14,6 @@ public class ArenaKillCoordinator : MonoBehaviour
 	[SerializeField] private FirstPersonController firstPersonController;
 	[SerializeField] private SprayPaint sprayPaint;
 	[SerializeField] private AttackTargetingService targetingService;
-	[SerializeField] private EffectManager effectManager;
 	[SerializeField] private LevelStartAttackGate levelStartAttackGate;
 
 	[Header("Attack Hitbox")]
@@ -99,10 +98,7 @@ public class ArenaKillCoordinator : MonoBehaviour
 			}
 		}
 
-		if (effectManager == null)
-		{
-			effectManager = EffectManager.Instance != null ? EffectManager.Instance : FindAnyObjectByType<EffectManager>();
-		}
+
 
 		if (firstPersonController == null)
 		{
@@ -201,10 +197,7 @@ public class ArenaKillCoordinator : MonoBehaviour
 		Vector3 hitDirection = ResolveHitDirection(candidate.transform, attackNumber);
 		int projectorId = sprayPaint != null ? sprayPaint.TriggerSprayFromCurrentCamera() : -1;
 
-		if (effectManager != null)
-		{
-			effectManager.TriggerKillEffect();
-		}
+
 
 		killSequenceCoroutine = StartCoroutine(ExecuteKillSequence(candidate, attackNumber, hitPoint, hitDirection, projectorId));
 	}

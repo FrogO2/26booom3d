@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3176633105676627645}
-  - component: {fileID: 7362743849392518074}
   - component: {fileID: 178063012924383657}
   - component: {fileID: 7141589309926464537}
   - component: {fileID: 8863113254741270379}
@@ -35,18 +34,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7362743849392518074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1538759644578808846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e727af2eca1ba6246afa57b842935450, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TestEffectsSpawner
 --- !u!114 &178063012924383657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,11 +72,37 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  sprintTransitionSpeed: 5
   playerController: {fileID: 0}
   cameraTransform: {fileID: 0}
-  directionShiftMultiplier: 0.05
-  maxShift: 0.3
+  firstPersonController: {fileID: 0}
+  weaponCamera: {fileID: 0}
+  speedLinePrefab: {fileID: 0}
+  minimumVisibleSpeed: 6.5
+  fullVisibleSpeed: 10
+  particleSpeedRatio: 0.2
+  reverseTrailDirection: 1
+  screenEdgePlacementRatio: 0.86
+  rearEmissionRatio: 0.35
+  centerExclusionScale: 0.35
+  centerExclusionFeather: 0.08
+  forwardScreenBias: 0.85
+  particleLifetime: 0.37
+  particleThickness: 1.1
+  particleStretchLength: 30.5
+  particleVelocityStretch: 0
+  maxParticlesCount: 400
+  effectStrength: 1.15
+  fallVisibilityBoost: 1.45
+  speedLineResponse: 8
+  minimumSpeedColor: {r: 1, g: 1, b: 1, a: 0.16}
+  maximumSpeedColor: {r: 0.22, g: 0.22, b: 0.22, a: 0.9}
+  particleVisualSettingsInitializedFromPrefab: 0
+  lastSyncedParticleVisualPrefab: {fileID: 0}
+  lastSyncedParticleLifetime: 0
+  lastSyncedParticleThickness: 0
+  lastSyncedParticleStretchLength: 0
+  lastSyncedParticleVelocityStretch: 0
+  lastSyncedMaxParticlesCount: 0
 --- !u!114 &7141589309926464537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,12 +119,16 @@ MonoBehaviour:
   runTimerDisplay: {fileID: 0}
   wallLeaderboardDisplay: {fileID: 0}
   tutorialSceneController: {fileID: 0}
+  firstPersonController: {fileID: 0}
   attackController: {fileID: 0}
   levelStartAttackGate: {fileID: 0}
   sprayPaint: {fileID: 0}
+  playerResetPoint: {fileID: 0}
+  inputActions: {fileID: 0}
+  actionMapName: Player
+  reloadActionName: Reload
   playerLeaderboardName: PLAYER
   retryKeyAction: 1
-  retryKey: 114
 --- !u!114 &8863113254741270379
 MonoBehaviour:
   m_ObjectHideFlags: 0
