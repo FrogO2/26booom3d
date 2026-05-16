@@ -59,7 +59,9 @@ public class PlayerAudioController : MonoBehaviour
     // ================= 处理脚步声 =================
     private void HandleFootsteps()
     {
-        if (footstepSource == null || !playerController.IsGrounded || playerController.IsSliding)
+        bool isMovingOnSurface = playerController.IsGrounded || playerController.IsWallRunning;
+
+        if (footstepSource == null || !isMovingOnSurface || playerController.IsSliding)
         {
             lastPosition = transform.position; // 在空中或滑铲时不累积脚步距离
             return;
@@ -69,7 +71,8 @@ public class PlayerAudioController : MonoBehaviour
         accumulatedDistance += distanceMoved;
         lastPosition = transform.position;
 
-        float currentStepThreshold = playerController.IsSprinting ? sprintStepDistance : walkStepDistance;
+        bool useSprintPace = playerController.IsSprinting || playerController.IsWallRunning;
+        float currentStepThreshold = useSprintPace ? sprintStepDistance : walkStepDistance;
 
         if (accumulatedDistance >= currentStepThreshold)
         {
@@ -80,15 +83,17 @@ public class PlayerAudioController : MonoBehaviour
 
     private void PlayRandomFootstep()
     {
-        AudioClip[] currentClips = playerController.IsSprinting ? sprintFootsteps : walkFootsteps;
+        bool useSprintPace = playerController.IsSprinting || playerController.IsWallRunning;
+        AudioClip[] currentClips = useSprintPace ? sprintFootsteps : walkFootsteps;
+
         if (currentClips.Length == 0) return;
 
         AudioClip clip = currentClips[Random.Range(0, currentClips.Length)];
+
         // 随机化音高和微调音量，增加真实感
         footstepSource.pitch = Random.Range(0.9f, 1.1f);
         footstepSource.PlayOneShot(clip, footstepVolume * Random.Range(0.9f, 1.0f));
     }
-
     // ================= 处理破风声 =================
     private void HandleWindSound()
     {
