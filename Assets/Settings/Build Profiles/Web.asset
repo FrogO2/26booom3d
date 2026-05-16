@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 15003, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Web
+  m_EditorClassIdentifier: UnityEditor.dll::UnityEditor.Build.Profile.BuildProfile
+  m_AssetVersion: 1
+  m_BuildTarget: 20
+  m_Subtarget: 0
+  m_PlatformId: 84a3bb9e7420477f885e98145999eb20
+  m_PlatformBuildProfile:
+    rid: 2918283459397419009
+  m_OverrideGlobalSceneList: 1
+  m_Scenes:
+  - m_enabled: 1
+    m_path: Assets/Scenes/map_0.unity
+    m_guid: 23f1a8197e9984341b5e1516eb1a0fec
+  - m_enabled: 1
+    m_path: Assets/Scenes/map_1.unity
+    m_guid: a2c9c05b64a95f541a56d905bdbe52db
+  - m_enabled: 1
+    m_path: Assets/Scenes/map_2.unity
+    m_guid: 4f16efccb31e0804d8e3b69e0d28ca41
+  - m_enabled: 1
+    m_path: Assets/Scenes/map_3.unity
+    m_guid: 3d6b52c581f7b5c4cbd34a01d7d4807a
+  m_HasScriptingDefines: 0
+  m_ScriptingDefines: []
+  m_PlayerSettingsYaml:
+    m_Settings: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2918283459397419009
+      type: {class: WebGLPlatformSettings, ns: UnityEditor.WebGL, asm: UnityEditor.WebGL.Extensions}
+      data:
+        m_Development: 1
+        m_ConnectProfiler: 1
+        m_BuildWithDeepProfilingSupport: 1
+        m_AllowDebugging: 0
+        m_WaitForManagedDebugger: 0
+        m_ManagedDebuggerFixedPort: 0
+        m_ExplicitNullChecks: 0
+        m_ExplicitDivideByZeroChecks: 0
+        m_ExplicitArrayBoundsChecks: 0
+        m_CompressionType: -1
+        m_InstallInBuildFolder: 0
+        m_InsightsSettingsContainer:
+          m_BuildProfileEngineDiagnosticsState: 2
+        m_AdaptivePerformanceEnabled: 0
+        m_CodeOptimization: 0
+        m_WebGLClientBrowserPath: C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe
+        m_WebGLClientBrowserType: 1
+        m_WebGLTextureSubtarget: 0
+--- !u!114 &5520670180209788514
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 15009, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Graphics Settings
+  m_EditorClassIdentifier: UnityEditor.dll::UnityEditor.Build.Profile.BuildProfileGraphicsSettings
+  m_LightmapStripping: 1
+  m_LightmapKeepPlain: 0
+  m_LightmapKeepDirCombined: 0
+  m_LightmapKeepDynamicPlain: 0
+  m_LightmapKeepDynamicDirCombined: 0
+  m_LightmapKeepShadowMask: 0
+  m_LightmapKeepSubtractive: 0
+  m_FogStripping: 1
+  m_FogKeepLinear: 0
+  m_FogKeepExp: 0
+  m_FogKeepExp2: 0
+  m_InstancingStripping: 0
+  m_BrgStripping: 0
+  m_LogWhenShaderIsCompiled: 1
+  m_CameraRelativeLightCulling: 1
+  m_CameraRelativeShadowCulling: 1
+  m_VideoShadersIncludeMode: 2
+  m_AlwaysIncludedShaders:
+  - {fileID: 7, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 15104, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 15105, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 15106, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10783, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 4800000, guid: 8113ea693c7e8474ba7f3f96e967deb7, type: 3}
+  - {fileID: 4800000, guid: fdd4a32fd35173a48b41355a1972c5c8, type: 3}
+  - {fileID: 4800000, guid: 143ccfbfc60de804683ecd18b04186df, type: 3}
+  - {fileID: 4800000, guid: fef7253030759be42bdcd67fb92acdd6, type: 3}
+  - {fileID: 4800000, guid: b9ac2d1604b69d34fa5c0793cd776658, type: 3}
+  m_LightProbeOutsideHullStrategy: 1
+  m_PreloadedShaders: []
+  m_PreloadShadersBatchTimeLimit: -1
+  m_ShaderBuildSettings:
+    keywordDeclarationOverrides: []

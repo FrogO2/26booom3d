@@ -52283,6 +52283,76 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 56.132}
+--- !u!1 &1259295752
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1259295755}
+  - component: {fileID: 1259295754}
+  - component: {fileID: 1259295753}
+  m_Layer: 9
+  m_Name: Exit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1259295753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259295752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d3cde4e6fa1cc149ba15e204c53b1a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelExitTrigger
+  levelManager: {fileID: 1816310004}
+  playerController: {fileID: 1802315684}
+  playerTag: Player
+  oneShot: 1
+--- !u!65 &1259295754
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259295752}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1259295755
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259295752}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.30827627, z: -0, w: 0.9512969}
+  m_LocalPosition: {x: 558.56, y: 29.57, z: -231.59}
+  m_LocalScale: {x: 21.35227, y: 3.70325, z: 22.212648}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1279701871
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62922,6 +62992,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1635130597}
   m_SourcePrefab: {fileID: 100100000, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
+--- !u!114 &1816310004 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7141589309926464537, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
+  m_PrefabInstance: {fileID: 1816310003}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635130595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2fe3f0fecf06b24f9bcd9c8f22df2f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelManager
 --- !u!20 &1817730908 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 6081312420319626514, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
@@ -64393,6 +64474,10 @@ PrefabInstance:
     - target: {fileID: 3209846624040536956, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
       propertyPath: projectionMask.m_Bits
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216380165791184165, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
+      propertyPath: fallDeathYThreshold
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3642760886919590806, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -69540,6 +69625,7 @@ SceneRoots:
   - {fileID: 1904975004}
   - {fileID: 907347204}
   - {fileID: 142053368}
+  - {fileID: 1259295755}
   - {fileID: 1694758828}
   - {fileID: 1333970716}
   - {fileID: 1823671201}
