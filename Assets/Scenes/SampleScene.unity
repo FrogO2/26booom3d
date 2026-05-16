@@ -5286,6 +5286,10 @@ PrefabInstance:
       propertyPath: effectManager
       value: 
       objectReference: {fileID: 2117203987}
+    - target: {fileID: 3216380165791184165, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
+      propertyPath: restartPromptMessage
+      value: 'R\nRESTART'
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5559,6 +5563,14 @@ PrefabInstance:
     - target: {fileID: 8863113254741270379, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
       propertyPath: 'enemyTargets.Array.data[3]'
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8863113254741270379, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
+      propertyPath: showInitialTutorialPrompt
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8863113254741270379, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
+      propertyPath: initialTutorialPrompt
+      value: 'Tutorial 1/1\nMove: WASD, Jump: Space, Sprint: Shift'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
