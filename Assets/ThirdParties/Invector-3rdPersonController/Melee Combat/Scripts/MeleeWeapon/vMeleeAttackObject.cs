@@ -11,7 +11,7 @@ namespace Invector.vMelee
         [vReadOnly(false)] public string attackObjectName;
         public vDamage damage;
         public Transform overrideDamageSender;
-        public List<vHitBox> hitBoxes;
+        public List<vHitBox> hitBoxes = new List<vHitBox>();
         public int damageModifier;
         [HideInInspector]
         public bool canApplyDamage;
@@ -42,6 +42,8 @@ namespace Invector.vMelee
             // init list of targetColliders
             targetColliders = new Dictionary<vHitBox, List<GameObject>>();
 
+            SanitizeHitBoxes();
+
             if (hitBoxes.Count > 0)
             {
                 // initialize hitBox properties
@@ -53,6 +55,7 @@ namespace Invector.vMelee
             }
             else
             {
+                Debug.LogWarning($"{nameof(vMeleeAttackObject)} on '{name}' has no valid hit boxes configured and will be disabled.", this);
                 this.enabled = false;
             }
         }
@@ -63,6 +66,7 @@ namespace Invector.vMelee
         /// <param name="value"> active value</param>  
         public virtual void SetActiveDamage(bool value)
         {
+            SanitizeHitBoxes();
             canApplyDamage = value;
             for (int i = 0; i < hitBoxes.Count; i++)
             {
@@ -81,6 +85,16 @@ namespace Invector.vMelee
             {
                 onDisableDamage.Invoke();
             }
+        }
+
+        protected virtual void SanitizeHitBoxes()
+        {
+            if (hitBoxes == null)
+            {
+                hitBoxes = new List<vHitBox>();
+            }
+
+            hitBoxes.RemoveAll(hitBox => hitBox == null);
         }
 
         /// <summary>

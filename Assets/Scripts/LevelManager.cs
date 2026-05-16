@@ -19,6 +19,9 @@ public class LevelManager : MonoBehaviour
 	}
 
 	public event Action<float> RunCompleted;
+	public ArenaRunTimerDisplay RunTimerDisplay => runTimerDisplay;
+	public ArenaWallLeaderboardDisplay WallLeaderboardDisplay => wallLeaderboardDisplay;
+	public string PlayerLeaderboardName => playerLeaderboardName;
 
 	[Header("References")]
 	[SerializeField] private ArenaEncounterFlow arenaEncounterFlow;
