@@ -1,0 +1,134 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7863749260683425560
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8707034396943562021}
+  - component: {fileID: 1449690824503746035}
+  - component: {fileID: 1224121934994816973}
+  - component: {fileID: 8028016361285400963}
+  m_Layer: 0
+  m_Name: Script Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8707034396943562021
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7863749260683425560}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1449690824503746035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7863749260683425560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea30ae1ec4d05d74c9be4c2b59286916, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectManager
+  postProcessMaterial: {fileID: 2100000, guid: f4e26b5cfcba1fc4f8fcce2c1405d53e, type: 2}
+  playerController: {fileID: 0}
+  cameraTransform: {fileID: 0}
+  firstPersonController: {fileID: 0}
+  weaponCamera: {fileID: 0}
+  speedLinePrefab: {fileID: 0}
+  minimumVisibleSpeed: 6.5
+  fullVisibleSpeed: 10
+  particleSpeedRatio: 0.2
+  reverseTrailDirection: 1
+  screenEdgePlacementRatio: 0.86
+  rearEmissionRatio: 0.35
+  centerExclusionScale: 0.35
+  centerExclusionFeather: 0.08
+  forwardScreenBias: 0.85
+  particleLifetime: 0.37
+  particleThickness: 1.1
+  particleStretchLength: 30.5
+  particleVelocityStretch: 0
+  maxParticlesCount: 400
+  effectStrength: 1.15
+  fallVisibilityBoost: 1.45
+  speedLineResponse: 8
+  minimumSpeedColor: {r: 1, g: 1, b: 1, a: 0.16}
+  maximumSpeedColor: {r: 0.22, g: 0.22, b: 0.22, a: 0.9}
+  particleVisualSettingsInitializedFromPrefab: 0
+  lastSyncedParticleVisualPrefab: {fileID: 0}
+  lastSyncedParticleLifetime: 0
+  lastSyncedParticleThickness: 0
+  lastSyncedParticleStretchLength: 0
+  lastSyncedParticleVelocityStretch: 0
+  lastSyncedMaxParticlesCount: 0
+--- !u!114 &1224121934994816973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7863749260683425560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2fe3f0fecf06b24f9bcd9c8f22df2f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelManager
+  arenaEncounterFlow: {fileID: 8028016361285400963}
+  runTimerDisplay: {fileID: 0}
+  wallLeaderboardDisplay: {fileID: 0}
+  tutorialSceneController: {fileID: 0}
+  firstPersonController: {fileID: 0}
+  attackController: {fileID: 0}
+  levelStartAttackGate: {fileID: 0}
+  sprayPaint: {fileID: 0}
+  playerResetPoint: {fileID: 0}
+  inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  actionMapName: Player
+  reloadActionName: Reload
+  playerLeaderboardName: PLAYER
+  retryKeyAction: 2
+--- !u!114 &8028016361285400963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7863749260683425560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0867faba1e8f8044983c6b98205fb084, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaEncounterFlow
+  player: {fileID: 0}
+  playerController: {fileID: 0}
+  playerCamera: {fileID: 0}
+  entryBarrier: {fileID: 0}
+  exitBarrier: {fileID: 0}
+  exitArrow: {fileID: 0}
+  promptOverlay: {fileID: 0}
+  enemyTargets:
+  - {fileID: 0}
+  - {fileID: 0}
+  showSceneIntroOnStart: 0
+  showInitialTutorialPrompt: 0
+  initialTutorialPrompt: 
+  promptDuration: 4
+  counterDuration: 1.8
+  initialTutorialPromptColor: {r: 0.26, g: 0.9, b: 1, a: 1}
