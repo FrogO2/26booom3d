@@ -109,15 +109,10 @@ public class ArenaBakedEnemyTarget : MonoBehaviour
 		}
 
 		NavMeshAgent agent = GetComponent<NavMeshAgent>();
-		if (agent != null && agent.enabled)
-		{
-			agent.isStopped = false;
-			if (agent.isOnNavMesh)
-			{
-				agent.ResetPath();
-				agent.Warp(transform.position);
-			}
-		}
+		RestoreNavMeshAgentToStartPosition(agent);
+		ResetEnemyControllerRuntimeState();
+
+		SetCollisionWithPlayer(ignore: false);
 	}
 
 	public Vector3 GetAimPoint()
@@ -165,6 +160,7 @@ public class ArenaBakedEnemyTarget : MonoBehaviour
 		}
 
 		IsAlive = false;
+		SetCollisionWithPlayer(ignore: true);
 		NotifyDeathListeners();
 
 		if (TryExecuteLegacyKill(context))
@@ -324,6 +320,106 @@ public class ArenaBakedEnemyTarget : MonoBehaviour
 		}
 
 		initialStateCaptured = true;
+	}
+
+	private void RestoreNavMeshAgentToStartPosition(NavMeshAgent agent)
+	{
+		if (agent == null || !agent.enabled)
+		{
+			return;
+		}
+
+		Vector3 targetPosition = transform.position;
+		if (NavMesh.SamplePosition(targetPosition, out NavMeshHit navHit, 4f, NavMesh.AllAreas))
+		{
+			targetPosition = navHit.position;
+			transform.position = targetPosition;
+			agent.Warp(targetPosition);
+		}
+
+		agent.isStopped = true;
+		if (agent.isOnNavMesh)
+		{
+			agent.ResetPath();
+		}
+	}
+
+	private void ResetEnemyControllerRuntimeState()
+	{
+		Transform player = ResolvePlayerTransform();
+
+		EnemyEffect enemyEffect = GetComponent<EnemyEffect>();
+		if (enemyEffect != null)
+		{
+			enemyEffect.ResetRuntimeState();
+		}
+
+		LocomotionSimpleAgent locomotionAgent = GetComponent<LocomotionSimpleAgent>();
+		if (locomotionAgent != null)
+		{
+			locomotionAgent.ResetRuntimeState();
+		}
+
+		KnifePawnController knifePawnController = GetComponent<KnifePawnController>();
+		if (knifePawnController != null)
+		{
+			knifePawnController.ResetRuntimeState(player);
+		}
+
+		GunPawnController gunPawnController = GetComponent<GunPawnController>();
+		if (gunPawnController != null)
+		{
+			gunPawnController.ResetRuntimeState(player);
+		}
+	}
+
+	private void SetCollisionWithPlayer(bool ignore)
+	{
+		CaptureInitialStateIfNeeded();
+
+		Collider[] playerColliders = ResolvePlayerColliders();
+		if (playerColliders.Length == 0 || cachedColliders.Length == 0)
+		{
+			return;
+		}
+
+		for (int enemyColliderIndex = 0; enemyColliderIndex < cachedColliders.Length; enemyColliderIndex++)
+		{
+			Collider enemyCollider = cachedColliders[enemyColliderIndex];
+			if (enemyCollider == null)
+			{
+				continue;
+			}
+
+			for (int playerColliderIndex = 0; playerColliderIndex < playerColliders.Length; playerColliderIndex++)
+			{
+				Collider playerCollider = playerColliders[playerColliderIndex];
+				if (playerCollider == null || playerCollider == enemyCollider)
+				{
+					continue;
+				}
+
+				Physics.IgnoreCollision(enemyCollider, playerCollider, ignore);
+			}
+		}
+	}
+
+	private Collider[] ResolvePlayerColliders()
+	{
+		Transform player = ResolvePlayerTransform();
+		return player != null ? player.GetComponentsInChildren<Collider>(true) : System.Array.Empty<Collider>();
+	}
+
+	private Transform ResolvePlayerTransform()
+	{
+		GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
+		if (taggedPlayer != null)
+		{
+			return taggedPlayer.transform;
+		}
+
+		CharacterController playerController = FindAnyObjectByType<CharacterController>();
+		return playerController != null ? playerController.transform : null;
 	}
 
 	private Vector3 ResolveHitPoint(ArenaEnemyKillContext context)

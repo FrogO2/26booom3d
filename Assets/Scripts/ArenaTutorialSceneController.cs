@@ -11,6 +11,8 @@ public class ArenaTutorialSceneController : MonoBehaviour
 {
 	private const string RuntimeRootObjectName = "Arena Tutorial Runtime";
 	private const string PromptUiObjectName = "Arena Tutorial UI";
+	private const string PromptChannelKey = "Prompt";
+	private const string CounterChannelKey = "Counter";
 	private const string RunTimerObjectName = "Run Timer System";
 	private const string LeaderboardObjectName = "Wall Leaderboard";
 	private const string SceneIntroObjectName = "Scene Intro Overlay";
@@ -54,27 +56,11 @@ public class ArenaTutorialSceneController : MonoBehaviour
 	private ArenaRunTimerDisplay runTimerDisplay;
 	private ArenaWallLeaderboardDisplay wallLeaderboardDisplay;
 	private SceneIntroOverlay sceneIntroOverlay;
-
-	private CanvasGroup promptCanvasGroup;
-	private CanvasGroup counterCanvasGroup;
-	private Image promptBackground;
-	private Image counterBackground;
-	private TextMeshProUGUI promptLabel;
-	private TextMeshProUGUI counterLabel;
-
-	private ActivePromptState activePrompt;
-	private float counterHideAt = -1f;
+	private RuntimeTextOverlayUI promptUi;
+	private PlayerOneHitDeath playerOneHitDeath;
 	private float initialPromptAt = -1f;
 	private bool encounterEventsBound;
 	private bool levelEventsBound;
-
-	private sealed class ActivePromptState
-	{
-		public string Message;
-		public ArenaPromptColorMode ColorMode;
-		public Color SolidColor;
-		public float HideAt;
-	}
 
 	private void Start()
 	{
@@ -108,8 +94,6 @@ public class ArenaTutorialSceneController : MonoBehaviour
 	private void Update()
 	{
 		TryShowInitialPrompt();
-		UpdatePromptVisuals();
-		UpdateCounterVisuals();
 	}
 
 	private void OnDestroy()
@@ -208,8 +192,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void HandleLevelRunCompleted(float elapsedSeconds)
 	{
-		string timeText = elapsedSeconds > 0f ? $"\nTime: {ArenaRunTimerDisplay.FormatTime(elapsedSeconds)}" : string.Empty;
-		ShowPrompt($"Arena complete.{timeText}\nFollow the path ahead.", promptDuration, ArenaPromptColorMode.AdaptiveHueShift, Color.white);
+		ShowPrompt("Arena complete.\nFollow the path ahead.", promptDuration, ArenaPromptColorMode.AdaptiveHueShift, Color.white);
 	}
 
 	public void SoftResetLevelRuntime()
@@ -234,6 +217,11 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		player = playerController.transform;
 		playerCamera = player.GetComponentInChildren<Camera>(true);
 		player.tag = "Player";
+		playerOneHitDeath = player.GetComponent<PlayerOneHitDeath>();
+		if (playerOneHitDeath == null)
+		{
+			playerOneHitDeath = player.gameObject.AddComponent<PlayerOneHitDeath>();
+		}
 		return true;
 	}
 
@@ -280,55 +268,22 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void EnsurePromptUi()
 	{
-		if (!TryBindPromptUi())
-		{
-			CreateRuntimeUi();
-		}
-
-		ApplyPromptUiVisuals();
-	}
-
-	private bool TryBindPromptUi()
-	{
-		Transform uiRoot = FindGeneratedTransform(PromptUiObjectName);
+		GameObject uiRoot = FindGeneratedObject(PromptUiObjectName);
 		if (uiRoot == null)
 		{
-			return false;
+			uiRoot = new GameObject(PromptUiObjectName);
+			uiRoot.transform.SetParent(transform, false);
 		}
 
-		Transform promptPanel = uiRoot.Find("Prompt Panel");
-		Transform counterPanel = uiRoot.Find("Counter Panel");
-		promptCanvasGroup = promptPanel != null ? promptPanel.GetComponent<CanvasGroup>() : null;
-		counterCanvasGroup = counterPanel != null ? counterPanel.GetComponent<CanvasGroup>() : null;
-		promptBackground = promptPanel?.Find("Background")?.GetComponent<Image>();
-		counterBackground = counterPanel?.Find("Background")?.GetComponent<Image>();
-		promptLabel = promptPanel?.Find("Label")?.GetComponent<TextMeshProUGUI>();
-		counterLabel = counterPanel?.Find("Label")?.GetComponent<TextMeshProUGUI>();
-		return promptCanvasGroup != null && counterCanvasGroup != null && promptBackground != null && counterBackground != null && promptLabel != null && counterLabel != null;
-	}
-
-	private void ApplyPromptUiVisuals()
-	{
-		Canvas canvas = FindGeneratedTransform(PromptUiObjectName)?.GetComponent<Canvas>();
-		if (canvas != null)
+		StripLegacyPromptUi(uiRoot.transform);
+		promptUi = uiRoot.GetComponent<RuntimeTextOverlayUI>();
+		if (promptUi == null)
 		{
-			canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-			canvas.sortingOrder = 200;
+			promptUi = uiRoot.AddComponent<RuntimeTextOverlayUI>();
 		}
 
-		if (promptLabel != null)
-		{
-			promptLabel.alignment = TextAlignmentOptions.Center;
-			promptLabel.fontSize = 44f;
-			promptLabel.enableWordWrapping = true;
-		}
-
-		if (counterLabel != null)
-		{
-			counterLabel.alignment = TextAlignmentOptions.Left;
-			counterLabel.fontSize = 34f;
-			counterLabel.enableWordWrapping = false;
-		}
+		promptUi.SetSortingOrder(200);
+		promptUi.EnsureOverlayBuilt();
 	}
 
 	private void EnsureGeneratedContent()
@@ -454,18 +409,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void ResetArenaState()
 	{
-		counterHideAt = -1f;
-		activePrompt = null;
-
-		if (promptCanvasGroup != null)
-		{
-			promptCanvasGroup.alpha = 0f;
-		}
-
-		if (counterCanvasGroup != null)
-		{
-			counterCanvasGroup.alpha = 0f;
-		}
+		promptUi?.HideAllText();
 
 		arenaEncounterFlow?.ResetEncounter();
 	}
@@ -496,83 +440,6 @@ public class ArenaTutorialSceneController : MonoBehaviour
 	private void ShowInitialPrompt()
 	{
 		ShowPrompt("Tutorial 1/3\nMove: WASD, Jump: Space, Sprint: Shift", promptDuration, ArenaPromptColorMode.Solid, new Color(0.26f, 0.90f, 1f));
-	}
-
-	private void CreateRuntimeUi()
-	{
-		GameObject canvasObject = new GameObject(PromptUiObjectName);
-		canvasObject.transform.SetParent(transform, false);
-
-		Canvas canvas = canvasObject.AddComponent<Canvas>();
-		canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-		canvas.sortingOrder = 200;
-
-		CanvasScaler scaler = canvasObject.AddComponent<CanvasScaler>();
-		scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-		scaler.referenceResolution = new Vector2(1920f, 1080f);
-		scaler.matchWidthOrHeight = 0.5f;
-
-		canvasObject.AddComponent<GraphicRaycaster>();
-
-		promptCanvasGroup = CreatePanel(canvasObject.transform, "Prompt Panel", new Vector2(0f, 360f), new Vector2(940f, 150f), out promptBackground, out promptLabel);
-		promptLabel.alignment = TextAlignmentOptions.Center;
-		promptLabel.fontSize = 44f;
-		promptLabel.enableWordWrapping = true;
-
-		counterCanvasGroup = CreatePanel(canvasObject.transform, "Counter Panel", new Vector2(210f, -60f), new Vector2(420f, 90f), out counterBackground, out counterLabel, topLeftAnchored: true);
-		counterLabel.alignment = TextAlignmentOptions.Left;
-		counterLabel.fontSize = 34f;
-		counterLabel.enableWordWrapping = false;
-	}
-
-	private static CanvasGroup CreatePanel(Transform parent, string name, Vector2 anchoredPosition, Vector2 size, out Image background, out TextMeshProUGUI label, bool topLeftAnchored = false)
-	{
-		GameObject root = new GameObject(name);
-		root.transform.SetParent(parent, false);
-
-		RectTransform rootRect = root.AddComponent<RectTransform>();
-		if (topLeftAnchored)
-		{
-			rootRect.anchorMin = new Vector2(0f, 1f);
-			rootRect.anchorMax = new Vector2(0f, 1f);
-			rootRect.pivot = new Vector2(0f, 1f);
-		}
-		else
-		{
-			rootRect.anchorMin = new Vector2(0.5f, 0.5f);
-			rootRect.anchorMax = new Vector2(0.5f, 0.5f);
-			rootRect.pivot = new Vector2(0.5f, 0.5f);
-		}
-		rootRect.anchoredPosition = anchoredPosition;
-		rootRect.sizeDelta = size;
-
-		CanvasGroup canvasGroup = root.AddComponent<CanvasGroup>();
-		canvasGroup.alpha = 0f;
-		canvasGroup.interactable = false;
-		canvasGroup.blocksRaycasts = false;
-
-		GameObject backgroundObject = new GameObject("Background");
-		backgroundObject.transform.SetParent(root.transform, false);
-		RectTransform backgroundRect = backgroundObject.AddComponent<RectTransform>();
-		backgroundRect.anchorMin = Vector2.zero;
-		backgroundRect.anchorMax = Vector2.one;
-		backgroundRect.offsetMin = Vector2.zero;
-		backgroundRect.offsetMax = Vector2.zero;
-		background = backgroundObject.AddComponent<Image>();
-		background.color = new Color(0f, 0f, 0f, 0.62f);
-
-		GameObject labelObject = new GameObject("Label");
-		labelObject.transform.SetParent(root.transform, false);
-		RectTransform labelRect = labelObject.AddComponent<RectTransform>();
-		labelRect.anchorMin = Vector2.zero;
-		labelRect.anchorMax = Vector2.one;
-		labelRect.offsetMin = new Vector2(28f, 18f);
-		labelRect.offsetMax = new Vector2(-28f, -18f);
-		label = labelObject.AddComponent<TextMeshProUGUI>();
-		label.font = TMP_Settings.defaultFontAsset;
-		label.color = Color.white;
-
-		return canvasGroup;
 	}
 
 	private void BuildRuntimeCourse()
@@ -699,6 +566,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		if (knifeController != null && player != null)
 		{
 			knifeController.SetPlayer(player);
+			ConfigureKnifeHitboxes(enemyInstance, knifeController);
 		}
 
 		if (gunController != null && player != null)
@@ -728,6 +596,33 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		enemyTarget.Initialize();
 		arenaEnemies.Add(enemyTarget);
 		return enemyInstance;
+	}
+
+	private void ConfigureKnifeHitboxes(GameObject enemyInstance, KnifePawnController knifeController)
+	{
+		if (enemyInstance == null || knifeController == null)
+		{
+			return;
+		}
+
+		LocomotionSimpleAgent locomotion = enemyInstance.GetComponent<LocomotionSimpleAgent>();
+		BoxCollider[] hitboxColliders = enemyInstance.GetComponentsInChildren<BoxCollider>(true);
+		for (int index = 0; index < hitboxColliders.Length; index++)
+		{
+			BoxCollider hitboxCollider = hitboxColliders[index];
+			if (hitboxCollider == null || !string.Equals(hitboxCollider.name, "hitBox", StringComparison.OrdinalIgnoreCase))
+			{
+				continue;
+			}
+
+			KnifePlayerHitboxKiller hitboxKiller = hitboxCollider.GetComponent<KnifePlayerHitboxKiller>();
+			if (hitboxKiller == null)
+			{
+				hitboxKiller = hitboxCollider.gameObject.AddComponent<KnifePlayerHitboxKiller>();
+			}
+
+			hitboxKiller.Initialize(playerOneHitDeath, knifeController, locomotion);
+		}
 	}
 
 	private void BuildEncounterZones()
@@ -952,85 +847,104 @@ public class ArenaTutorialSceneController : MonoBehaviour
 
 	private void ShowPrompt(string message, float duration, ArenaPromptColorMode colorMode, Color solidColor)
 	{
-		if (promptCanvasGroup == null || promptLabel == null)
+		EnsurePromptUi();
+		if (promptUi == null)
 		{
 			return;
 		}
 
-		activePrompt = new ActivePromptState
+		promptUi.ShowText(new RuntimeTextOverlayUI.DisplayRequest
 		{
+			ChannelKey = PromptChannelKey,
 			Message = message,
-			ColorMode = colorMode,
-			SolidColor = solidColor,
-			HideAt = Time.unscaledTime + duration,
-		};
-
-		promptLabel.text = message;
-		promptCanvasGroup.alpha = 1f;
+			AnchoredPosition = new Vector2(0f, 72f),
+			Size = new Vector2(1480f, 260f),
+			FontSize = 72f,
+			Duration = duration,
+			FadeDuration = 0.35f,
+			CharacterSpacing = 0f,
+			Color = Color.white,
+			Alignment = TMPro.TextAlignmentOptions.Center,
+			FontStyle = TMPro.FontStyles.Bold,
+			WordWrap = true,
+			OverflowMode = TMPro.TextOverflowModes.Overflow,
+		});
 	}
 
 	private void ShowCounter(string message, float duration)
 	{
-		if (counterCanvasGroup == null || counterLabel == null)
+		EnsurePromptUi();
+		if (promptUi == null)
 		{
 			return;
 		}
 
-		counterLabel.text = message;
-		counterHideAt = Time.unscaledTime + duration;
-		counterCanvasGroup.alpha = 1f;
+		promptUi.ShowText(new RuntimeTextOverlayUI.DisplayRequest
+		{
+			ChannelKey = CounterChannelKey,
+			Message = message,
+			AnchoredPosition = new Vector2(0f, -92f),
+			Size = new Vector2(1320f, 160f),
+			FontSize = 56f,
+			Duration = duration,
+			FadeDuration = 0.35f,
+			CharacterSpacing = 0f,
+			Color = Color.white,
+			Alignment = TMPro.TextAlignmentOptions.Center,
+			FontStyle = TMPro.FontStyles.Bold,
+			WordWrap = true,
+			OverflowMode = TMPro.TextOverflowModes.Overflow,
+		});
 	}
 
-	private void UpdatePromptVisuals()
+	private void StripLegacyPromptUi(Transform uiRoot)
 	{
-		if (promptCanvasGroup == null || promptLabel == null || promptBackground == null)
+		if (uiRoot == null)
 		{
 			return;
 		}
 
-		if (activePrompt == null)
+		for (int childIndex = uiRoot.childCount - 1; childIndex >= 0; childIndex--)
 		{
-			promptCanvasGroup.alpha = 0f;
-			return;
+			Transform child = uiRoot.GetChild(childIndex);
+			if (child.name != "Prompt Panel" && child.name != "Counter Panel")
+			{
+				continue;
+			}
+
+			if (Application.isPlaying)
+			{
+				Destroy(child.gameObject);
+			}
+			else
+			{
+				DestroyImmediate(child.gameObject);
+			}
 		}
 
-		float remaining = activePrompt.HideAt - Time.unscaledTime;
-		if (remaining <= 0f)
+		Component[] components = uiRoot.GetComponents<Component>();
+		for (int componentIndex = 0; componentIndex < components.Length; componentIndex++)
 		{
-			activePrompt = null;
-			promptCanvasGroup.alpha = 0f;
-			return;
+			Component component = components[componentIndex];
+			if (component == null || component is Transform || component is RuntimeTextOverlayUI)
+			{
+				continue;
+			}
+
+			if (component is not Canvas && component is not CanvasScaler && component is not GraphicRaycaster)
+			{
+				continue;
+			}
+
+			if (Application.isPlaying)
+			{
+				Destroy(component);
+			}
+			else
+			{
+				DestroyImmediate(component);
+			}
 		}
-
-		promptCanvasGroup.alpha = Mathf.Clamp01(remaining / 0.35f);
-		promptLabel.color = ResolvePromptColor(activePrompt.ColorMode, activePrompt.SolidColor);
-		promptBackground.color = new Color(0f, 0f, 0f, 0.62f);
-	}
-
-	private void UpdateCounterVisuals()
-	{
-		if (counterCanvasGroup == null || counterLabel == null || counterBackground == null)
-		{
-			return;
-		}
-
-		if (counterHideAt <= 0f)
-		{
-			counterCanvasGroup.alpha = 0f;
-			return;
-		}
-
-		float remaining = counterHideAt - Time.unscaledTime;
-		if (remaining <= 0f)
-		{
-			counterHideAt = -1f;
-			counterCanvasGroup.alpha = 0f;
-			return;
-		}
-
-		counterCanvasGroup.alpha = Mathf.Clamp01(remaining / 0.35f);
-		counterLabel.color = Color.white;
-		counterBackground.color = new Color(0f, 0f, 0f, 0.62f);
 	}
 
 	private Color ResolvePromptColor(ArenaPromptColorMode colorMode, Color solidColor)
@@ -1208,12 +1122,7 @@ public class ArenaTutorialSceneController : MonoBehaviour
 		runTimerDisplay = null;
 		wallLeaderboardDisplay = null;
 		sceneIntroOverlay = null;
-		promptCanvasGroup = null;
-		counterCanvasGroup = null;
-		promptBackground = null;
-		counterBackground = null;
-		promptLabel = null;
-		counterLabel = null;
+		promptUi = null;
 		arenaEnemies.Clear();
 	}
 

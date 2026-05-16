@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -9,8 +10,11 @@ public class LevelManager : MonoBehaviour
 {
 	public enum RetryKeyAction
 	{
+		[InspectorName("Disabled")]
 		Disabled,
+		[InspectorName("Soft Reset")]
 		SoftReset,
+		[InspectorName("Reload Current Level")]
 		ReloadCurrentLevel,
 	}
 
@@ -34,11 +38,13 @@ public class LevelManager : MonoBehaviour
 	[SerializeField] private string playerLeaderboardName = "PLAYER";
 
 	[Header("Level Control")]
-	[SerializeField] private RetryKeyAction retryKeyAction = RetryKeyAction.SoftReset;
+	[SerializeField, Tooltip("Choose whether pressing Reload performs a soft reset or reloads the current level.")]
+	private RetryKeyAction retryKeyAction = RetryKeyAction.SoftReset;
 
 	private bool encounterEventsBound;
 	private bool sceneLoadRequested;
 	private bool scoreSubmitted;
+	private PlayerOneHitDeath playerOneHitDeath;
 	private Transform playerTransform;
 	private CharacterController playerCharacterController;
 	private Camera playerCamera;
@@ -46,6 +52,7 @@ public class LevelManager : MonoBehaviour
 	private Vector3 defaultPlayerResetPosition;
 	private Quaternion defaultPlayerResetRotation = Quaternion.identity;
 	private bool defaultPlayerResetCaptured;
+	private readonly List<ArenaBakedEnemyTarget> resettableEnemyTargets = new List<ArenaBakedEnemyTarget>();
 
 	private void Awake()
 	{
@@ -307,6 +314,7 @@ public class LevelManager : MonoBehaviour
 			playerTransform = firstPersonController.transform;
 			playerCharacterController = firstPersonController.GetComponent<CharacterController>();
 			playerCamera = firstPersonController.PlayerCamera;
+			playerOneHitDeath = firstPersonController.GetComponent<PlayerOneHitDeath>();
 
 			if (inputActions == null)
 			{
@@ -334,6 +342,11 @@ public class LevelManager : MonoBehaviour
 				{
 					playerCamera = taggedPlayer.GetComponentInChildren<Camera>(true);
 				}
+
+				if (playerOneHitDeath == null)
+				{
+					playerOneHitDeath = taggedPlayer.GetComponent<PlayerOneHitDeath>();
+				}
 			}
 		}
 
@@ -359,6 +372,8 @@ public class LevelManager : MonoBehaviour
 				inputActions = playerInput.actions;
 			}
 		}
+
+		RefreshResettableEnemyTargets();
 	}
 
 	private void BindReloadAction()
@@ -396,18 +411,37 @@ public class LevelManager : MonoBehaviour
 
 	private void ResetAllEnemies()
 	{
-		if (arenaEncounterFlow == null)
-		{
-			return;
-		}
+		RefreshResettableEnemyTargets();
 
-		var enemies = arenaEncounterFlow.EnemyTargets;
-		for (int i = 0; i < enemies.Count; i++)
+		for (int i = 0; i < resettableEnemyTargets.Count; i++)
 		{
-			if (enemies[i] != null)
+			if (resettableEnemyTargets[i] != null)
 			{
-				enemies[i].ResetToInitialState();
+				resettableEnemyTargets[i].ResetToInitialState();
 			}
+		}
+	}
+
+	private void RefreshResettableEnemyTargets()
+	{
+		resettableEnemyTargets.Clear();
+
+		ArenaBakedEnemyTarget[] discoveredTargets = UnityEngine.Object.FindObjectsByType<ArenaBakedEnemyTarget>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+		for (int i = 0; i < discoveredTargets.Length; i++)
+		{
+			ArenaBakedEnemyTarget target = discoveredTargets[i];
+			if (target == null)
+			{
+				continue;
+			}
+
+			Scene targetScene = target.gameObject.scene;
+			if (!targetScene.IsValid() || !targetScene.isLoaded)
+			{
+				continue;
+			}
+
+			resettableEnemyTargets.Add(target);
 		}
 	}
 
@@ -433,6 +467,7 @@ public class LevelManager : MonoBehaviour
 		if (firstPersonController != null)
 		{
 			firstPersonController.ResetToSpawn(position, rotation);
+			playerOneHitDeath?.ResetDeathState();
 			return;
 		}
 
@@ -458,6 +493,8 @@ public class LevelManager : MonoBehaviour
 		{
 			playerCamera.transform.parent.localRotation = Quaternion.identity;
 		}
+
+		playerOneHitDeath?.ResetDeathState();
 	}
 
 	private void CaptureDefaultPlayerResetPoseIfNeeded()
@@ -522,6 +559,7 @@ public class LevelManager : MonoBehaviour
 		}
 
 		sceneLoadRequested = true;
+		sprayPaint?.ClearAllSpray();
 		PersistLeaderboardEntries();
 		return true;
 	}

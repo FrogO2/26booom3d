@@ -191,86 +191,6 @@ Transform:
   - {fileID: 172094179841435102}
   m_Father: {fileID: 2605441689029082306}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &524380647761262686
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5369724466850173674}
-  - component: {fileID: 7847845239376106657}
-  - component: {fileID: 223049082730966078}
-  - component: {fileID: 6541005762125393968}
-  m_Layer: 9
-  m_Name: TriggerHelper
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5369724466850173674
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 524380647761262686}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.25, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 33755398242317687}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &7847845239376106657
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 524380647761262686}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &223049082730966078
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 524380647761262686}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.0000002, y: 1, z: 1.0000002}
-  m_Center: {x: 0.000003814698, y: 0, z: 0.0000028610236}
---- !u!114 &6541005762125393968
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 524380647761262686}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19c789670a80b704eba4dfebed94a111, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  header: Trigger Helper
-  comment: Now that we use a Floating Capsule Collider we need another collider set
-    as trigger to help the collision with smaller colliders such as item triggers
-    in the floor.
-  inEdit: 0
 --- !u!1 &533614965975745752
 GameObject:
   m_ObjectHideFlags: 0
@@ -16096,7 +16016,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2336385218921090829}
-  - {fileID: 5369724466850173674}
   m_Father: {fileID: 7297014382191750754}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4107977060067870612
@@ -17368,18 +17287,17 @@ MonoBehaviour:
   _shootFrequency: 0.25
   isInfinityAmmo: 1
   _ammo: 8
-  ignoreTags:
-  - Player
+  ignoreTags: []
   hitLayer:
     serializedVersion: 2
-    m_Bits: 32769
+    m_Bits: 32833
   projectile: {fileID: 1000010710861650, guid: 22773fb6a3ebd59429b49fd6e288058e, type: 3}
   muzzle: {fileID: 4964590432481261569}
   projectilesPerShot: 1
   dispersion: 0
   quadDispersion: 0
-  velocity: 310
-  damageByDistance: 1
+  velocity: 200
+  damageByDistance: 0
   _minDamageDistance: 8
   _maxDamageDistance: 50
   _minDamage: 15
@@ -27004,7 +26922,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8630087372215371083}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.031866413, z: -0, w: 0.99949217}
+  m_LocalRotation: {x: 0, y: 0.03186431, z: 0, w: 0.9994922}
   m_LocalPosition: {x: 0.21900177, y: 4.216556, z: -8.851}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -27103,7 +27021,7 @@ MonoBehaviour:
   detectionRange: 20
   fieldOfView: 150
   playerTag: Player
-  continuousFireInterval: 1
+  continuousFireInterval: 3
   fallbackAimReadyDelay: 0.2
   aimAtTargetTransform: 1
   aimHeightOffset: 0

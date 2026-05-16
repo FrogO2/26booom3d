@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 403092}
   - component: {fileID: 3393510}
   - component: {fileID: 2340746}
-  m_Layer: 11
+  m_Layer: 9
   m_Name: bullet (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,6 +58,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -79,9 +84,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1000010710861650
 GameObject:
@@ -96,7 +103,7 @@ GameObject:
   - component: {fileID: 114000010787565436}
   - component: {fileID: 11410338}
   - component: {fileID: 11414782}
-  m_Layer: 11
+  m_Layer: 9
   m_Name: vDefaultBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,10 +134,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000010710861650}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 0.02
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -142,7 +149,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
@@ -278,7 +285,7 @@ GameObject:
   m_Component:
   - component: {fileID: 150144279004724685}
   - component: {fileID: 5488307411070260006}
-  m_Layer: 11
+  m_Layer: 9
   m_Name: trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -302,7 +309,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!96 &5488307411070260006
 TrailRenderer:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -318,6 +325,11 @@ TrailRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -339,10 +351,12 @@ TrailRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.3
+  m_MaskInteraction: 0
+  m_Time: 0.5
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -352,7 +366,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.02631712
+        value: 0.05115843
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -364,34 +378,34 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 0}
-      key1: {r: 1, g: 1, b: 1, a: 1}
-      key2: {r: 1, g: 1, b: 1, a: 1}
-      key3: {r: 1, g: 1, b: 1, a: 0}
-      key4: {r: 1, g: 1, b: 1, a: 0}
-      key5: {r: 1, g: 1, b: 1, a: 0}
+      key0: {r: 0.0055321376, g: 0.27437407, b: 0.97735846, a: 1}
+      key1: {r: 0.003921569, g: 0.27450982, b: 0.97647065, a: 1}
+      key2: {r: 0.003921569, g: 0.27450982, b: 0.97647065, a: 1}
+      key3: {r: 0.003921569, g: 0.27450982, b: 0.97647065, a: 1}
+      key4: {r: 0.003921569, g: 0.27450982, b: 0.97647065, a: 0}
+      key5: {r: 0.003921569, g: 0.27450982, b: 0.97647065, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
       ctime0: 0
       ctime1: 16384
-      ctime2: 32768
-      ctime3: 49151
-      ctime4: 50115
+      ctime2: 44641
+      ctime3: 65535
+      ctime4: 65535
       ctime5: 65535
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 28142
-      atime2: 32768
+      atime1: 65535
+      atime2: 65535
       atime3: 65535
       atime4: 65535
       atime5: 0
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
-      m_NumColorKeys: 6
-      m_NumAlphaKeys: 4
+      m_ColorSpace: 0
+      m_NumColorKeys: 4
+      m_NumAlphaKeys: 2
     numCornerVertices: 2
     numCapVertices: 2
     alignment: 0
@@ -400,7 +414,6 @@ TrailRenderer:
     shadowBias: 0
     generateLightingData: 0
   m_MinVertexDistance: 0.1
-  m_MaskInteraction: 0
   m_Autodestruct: 1
   m_Emitting: 1
   m_ApplyActiveColorSpace: 0

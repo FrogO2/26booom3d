@@ -2623,6 +2623,7 @@ GameObject:
   - component: {fileID: 1930346847}
   - component: {fileID: 1930346846}
   - component: {fileID: 1930346845}
+  - component: {fileID: 1930346843}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -2785,6 +2786,31 @@ MonoBehaviour:
   fieldOfViewLerpSpeed: 8
   wallRunTilt: 12
   tiltLerpSpeed: 10
+--- !u!114 &1930346843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1930346844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 997d9d842d584214b93eb8f8bdebc0f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerOneHitDeath
+  firstPersonController: {fileID: 1930346847}
+  attackController: {fileID: 1930346845}
+  monitorFallDeath: 1
+  fallDeathYThreshold: -20
+  onStartReceiveDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onReceiveDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  died:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!143 &1930346848
 CharacterController:
   m_ObjectHideFlags: 0

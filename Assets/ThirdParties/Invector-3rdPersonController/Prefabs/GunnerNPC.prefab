@@ -12754,11 +12754,10 @@ MonoBehaviour:
   _shootFrequency: 0.25
   isInfinityAmmo: 1
   _ammo: 8
-  ignoreTags:
-  - Player
+  ignoreTags: []
   hitLayer:
     serializedVersion: 2
-    m_Bits: 32769
+    m_Bits: 32833
   projectile: {fileID: 1000010710861650, guid: 22773fb6a3ebd59429b49fd6e288058e, type: 3}
   muzzle: {fileID: 479170631075424440}
   projectilesPerShot: 1
