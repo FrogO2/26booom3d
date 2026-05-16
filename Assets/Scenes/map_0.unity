@@ -236,6 +236,59 @@ Transform:
   m_Children: []
   m_Father: {fileID: 876466864}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 90}
+--- !u!1 &99200366
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 99200368}
+  - component: {fileID: 99200367}
+  m_Layer: 9
+  m_Name: music0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &99200367
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99200366}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &99200368
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99200366}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 188, y: -301, z: 772}
+  m_LocalScale: {x: 30, y: 30, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &130113761
 GameObject:
   m_ObjectHideFlags: 0
@@ -12130,7 +12183,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 178063012924383657, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
   m_PrefabInstance: {fileID: 8324009991654956049}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8324009991654956050}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea30ae1ec4d05d74c9be4c2b59286916, type: 3}
@@ -12141,7 +12194,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8863113254741270379, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
   m_PrefabInstance: {fileID: 8324009991654956049}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8324009991654956050}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0867faba1e8f8044983c6b98205fb084, type: 3}
@@ -12152,7 +12205,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7141589309926464537, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
   m_PrefabInstance: {fileID: 8324009991654956049}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8324009991654956050}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e2fe3f0fecf06b24f9bcd9c8f22df2f8, type: 3}
@@ -12528,8 +12581,44 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1538759644578808846, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8324009991654956051}
   m_SourcePrefab: {fileID: 100100000, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
+--- !u!1 &8324009991654956050 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1538759644578808846, guid: a40f26f6b7a69af47ab653be7ab67f49, type: 3}
+  m_PrefabInstance: {fileID: 8324009991654956049}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8324009991654956051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8324009991654956050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c95ec92a12276545abc99d042fda625, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UltimateAdaptiveMusicManager
+  attackController: {fileID: 6338408118274362001}
+  playerController: {fileID: 4001492678972626557}
+  playerTag: Player
+  vocalsSource: {fileID: 0}
+  othersSource: {fileID: 0}
+  bassSource: {fileID: 0}
+  drumsSource: {fileID: 0}
+  playList: []
+  currentTrackIndex: 0
+  vocalsWeight: 1
+  othersWeight: 1
+  bassWeight: 1
+  drumsWeight: 1
+  masterVolume: 0.85
+  fadeSpeed: 2.5
+  playOnFirstAttack: 1
 --- !u!1001 &9075832592643981364
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12632,3 +12721,4 @@ SceneRoots:
   - {fileID: 558077883}
   - {fileID: 1112634082}
   - {fileID: 1879788393}
+  - {fileID: 99200368}
