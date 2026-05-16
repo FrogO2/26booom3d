@@ -25936,15 +25936,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3642760886919590806, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -410.51
+      value: -410.373
       objectReference: {fileID: 0}
     - target: {fileID: 3642760886919590806, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 112.38
+      value: 112.479
       objectReference: {fileID: 0}
     - target: {fileID: 3642760886919590806, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -45.33
+      value: -44.972
       objectReference: {fileID: 0}
     - target: {fileID: 3642760886919590806, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -32089,6 +32089,22 @@ PrefabInstance:
     - target: {fileID: 2811595543725164711, guid: ce169b4b6e561e84b9a43f2cd16f3f08, type: 3}
       propertyPath: m_Name
       value: TimerPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 4326478378694000111, guid: ce169b4b6e561e84b9a43f2cd16f3f08, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 381834906964498365, guid: 02fdcaeedc0c067419eda7a3371b20fe, type: 2}
+    - target: {fileID: 6152978242158735111, guid: ce169b4b6e561e84b9a43f2cd16f3f08, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 02fdcaeedc0c067419eda7a3371b20fe, type: 2}
+    - target: {fileID: 6152978242158735111, guid: ce169b4b6e561e84b9a43f2cd16f3f08, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 381834906964498365, guid: 02fdcaeedc0c067419eda7a3371b20fe, type: 2}
+    - target: {fileID: 6152978242158735111, guid: ce169b4b6e561e84b9a43f2cd16f3f08, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6373241659849691741, guid: ce169b4b6e561e84b9a43f2cd16f3f08, type: 3}
       propertyPath: m_LocalPosition.x
