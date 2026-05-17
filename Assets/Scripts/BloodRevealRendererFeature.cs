@@ -4,7 +4,11 @@ using UnityEngine.Rendering.Universal;
 
 public class BloodRevealRendererFeature : ScriptableRendererFeature
 {
+#if UNITY_WEBGL && !UNITY_EDITOR
+	private const string DefaultShaderName = "Hidden/MyProject/BloodRevealMask_WebGL";
+#else
 	private const string DefaultShaderName = "Hidden/MyProject/BloodRevealMask";
+#endif
 
 	[SerializeField] private RenderPassEvent renderPassEvent = RenderPassEvent.AfterRenderingTransparents;
 	[SerializeField] private Shader revealShader;

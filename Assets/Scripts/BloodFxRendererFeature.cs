@@ -4,7 +4,11 @@ using UnityEngine.Rendering.Universal;
 
 public class BloodFxRendererFeature : ScriptableRendererFeature
 {
+#if UNITY_WEBGL && !UNITY_EDITOR
+	private const string DefaultShaderName = "Hidden/MyProject/BloodProjectorFx_WebGL";
+#else
 	private const string DefaultShaderName = "Hidden/MyProject/BloodProjectorFx";
+#endif
 
 	[SerializeField] private RenderPassEvent renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
 	[SerializeField] private Shader bloodFxShader;

@@ -11813,8 +11813,12 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3209846624040536956, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
+      propertyPath: captureResolution
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 3209846624040536956, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
       propertyPath: enableAsyncHighRes
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3209846624040536956, guid: b01732133bd58334384ab7dba53d7ba2, type: 3}
       propertyPath: projectionDistance

@@ -8,15 +8,25 @@ public static class FrozenProjectorManager
 	public const int ShaderMaxProjectors = 16;
 
 	private static readonly List<FrozenProjector> Projectors = new List<FrozenProjector>(ShaderMaxProjectors);
-	private static readonly int ProjectorVisibilityAtlasId = Shader.PropertyToID("_ProjectorVisibilityAtlas");
 	private static int maxRetainedProjectors = ShaderMaxProjectors;
 	private static int nextProjectorId = 1;
 	private static int nextDepthSliceIndex;
-	private static Texture2DArray projectorVisibilityAtlas;
 	private static int visibilityAtlasResolution;
 
-	// --- Async HD Atlas ---
+#if UNITY_WEBGL && !UNITY_EDITOR
+	// WebGL 路径: 16 张独立 Texture2D 替代 Texture2DArray (兼容 WebGL2/GLES3)。
+	// 深度以归一化 R + alpha = 1 写入 RGBA32,shader 端解码 viewZ = far - R*(far - near)。
+	private static readonly Texture2D[] projectorVisibilityAtlasSlices = new Texture2D[ShaderMaxProjectors];
+	private static readonly Texture2D[] projectorHDAtlasSlices = new Texture2D[ShaderMaxProjectors];
+	private static Texture2D hdAtlasStubSlice;
+	private static readonly float[] visibilityAtlasSliceNear = new float[ShaderMaxProjectors];
+	private static readonly float[] visibilityAtlasSliceFar = new float[ShaderMaxProjectors];
+	private static readonly int[] VisibilityAtlasSliceIds = BuildSliceIds("_ProjectorVisibilityAtlas");
+	private static readonly int[] HDAtlasSliceIds = BuildSliceIds("_ProjectorHDAtlas");
+#else
+	private static readonly int ProjectorVisibilityAtlasId = Shader.PropertyToID("_ProjectorVisibilityAtlas");
 	private static readonly int ProjectorHDAtlasId = Shader.PropertyToID("_ProjectorHDAtlas");
+	private static Texture2DArray projectorVisibilityAtlas;
 	private static Texture2DArray projectorHDAtlas;
 	private static Texture2DArray hdAtlasStub;
 	private static int hdAtlasResolution;
@@ -24,6 +34,8 @@ public static class FrozenProjectorManager
 	private static Material captureDepthMaterial;
 	private static readonly List<AsyncHDRequest> PendingHDRequests = new List<AsyncHDRequest>();
 	private static readonly List<PendingCapture> PendingCaptures = new List<PendingCapture>();
+#endif
+
 	private static readonly Dictionary<int, AsyncProjectorState> ProjectorAsyncStates = new Dictionary<int, AsyncProjectorState>();
 
 	public enum AsyncProjectorState
@@ -108,6 +120,10 @@ public static class FrozenProjectorManager
 	// Defaults to int.MaxValue (complete each capture in a single call).
 	public static void Tick(int rowsPerFrame = int.MaxValue)
 	{
+#if UNITY_WEBGL && !UNITY_EDITOR
+		// WebGL 没有 AsyncGPUReadback,异步 HD 通道整体禁用。
+		return;
+#else
 		// Phase 1: incremental row-by-row rendering of queued captures.
 		for (int i = PendingCaptures.Count - 1; i >= 0; i--)
 		{
@@ -198,6 +214,7 @@ public static class FrozenProjectorManager
 			Object.Destroy(req.renderTexture);
 			PendingHDRequests.RemoveAt(i);
 		}
+#endif
 	}
 
 	// Render a high-resolution depth snapshot from the projector's frozen camera state
@@ -205,6 +222,10 @@ public static class FrozenProjectorManager
 	// The HD result becomes available in _ProjectorHDAtlas a few frames later.
 	public static void ScheduleAsyncHDCapture(int projectorId, int hdResolution, LayerMask captureMask, Shader captureShader)
 	{
+#if UNITY_WEBGL && !UNITY_EDITOR
+		// WebGL 不支持 AsyncGPUReadback,跳过 HD 升级,只使用 CPU raycast 的 visibility atlas。
+		return;
+#else
 		if (captureShader == null || !TryGetProjector(projectorId, out FrozenProjector projector))
 		{
 			return;
@@ -263,17 +284,33 @@ public static class FrozenProjectorManager
 			captureShader = captureShader,
 			nextRow = 0,
 		});
+#endif
 	}
 
 	public static void ApplySharedVisibilityData(Material material)
 	{
-		if (material == null || projectorVisibilityAtlas == null)
+		if (material == null)
 		{
 			return;
 		}
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+		EnsureHDAtlasStubWebGL();
+		for (int slot = 0; slot < ShaderMaxProjectors; slot++)
+		{
+			Texture2D vis = projectorVisibilityAtlasSlices[slot];
+			material.SetTexture(VisibilityAtlasSliceIds[slot], vis != null ? (Texture)vis : (Texture)Texture2D.blackTexture);
+			Texture2D hd = projectorHDAtlasSlices[slot];
+			material.SetTexture(HDAtlasSliceIds[slot], hd != null ? (Texture)hd : (Texture)hdAtlasStubSlice);
+		}
+#else
+		if (projectorVisibilityAtlas == null)
+		{
+			return;
+		}
 		material.SetTexture(ProjectorVisibilityAtlasId, projectorVisibilityAtlas);
 		material.SetTexture(ProjectorHDAtlasId, GetHDAtlasForBinding());
+#endif
 	}
 
 	public static bool TryGetProjector(int projectorId, out FrozenProjector projector)
@@ -358,7 +395,7 @@ public static class FrozenProjectorManager
 	{
 		if (skipDepthCapture)
 		{
-			CaptureVisibleDepthPlaceholder(captureResolution, projector.farDistance, projector.depthSliceIndex);
+			CaptureVisibleDepthPlaceholder(captureResolution, projector.nearDistance, projector.farDistance, projector.depthSliceIndex);
 			return;
 		}
 
@@ -389,11 +426,43 @@ public static class FrozenProjectorManager
 	{
 		EnsureDepthAtlas(captureResolution);
 
-		Color[] depthPixels = new Color[captureResolution * captureResolution];
 		Transform cameraTransform = sourceCamera.transform;
 		Vector3 cameraPosition = cameraTransform.position;
 		Vector3 cameraForward = cameraTransform.forward;
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+		// WebGL: 编码为 RGBA32. R = (far - depth) / (far - near), A = 1 表示有数据。
+		Color32[] depthPixels = new Color32[captureResolution * captureResolution];
+		float range = Mathf.Max(farDistance - nearDistance, 0.0001f);
+		for (int y = 0; y < captureResolution; y++)
+		{
+			float viewportY = (y + 0.5f) / captureResolution;
+			for (int x = 0; x < captureResolution; x++)
+			{
+				float viewportX = (x + 0.5f) / captureResolution;
+				Ray ray = sourceCamera.ViewportPointToRay(new Vector3(viewportX, viewportY, 0f));
+				int pixelIndex = y * captureResolution + x;
+				if (Physics.Raycast(ray, out RaycastHit hit, farDistance, projectionMask, QueryTriggerInteraction.Ignore))
+				{
+					float depth = Vector3.Dot(hit.point - cameraPosition, cameraForward);
+					float r = Mathf.Clamp01((farDistance - depth) / range);
+					byte rByte = (byte)Mathf.RoundToInt(r * 255f);
+					depthPixels[pixelIndex] = new Color32(rByte, 0, 0, 255);
+				}
+				else
+				{
+					depthPixels[pixelIndex] = new Color32(0, 0, 0, 0);
+				}
+			}
+		}
+
+		Texture2D slice = projectorVisibilityAtlasSlices[depthSliceIndex];
+		slice.SetPixels32(depthPixels);
+		slice.Apply(false, false);
+		visibilityAtlasSliceNear[depthSliceIndex] = nearDistance;
+		visibilityAtlasSliceFar[depthSliceIndex] = farDistance;
+#else
+		Color[] depthPixels = new Color[captureResolution * captureResolution];
 		for (int y = 0; y < captureResolution; y++)
 		{
 			float viewportY = (y + 0.5f) / captureResolution;
@@ -418,12 +487,28 @@ public static class FrozenProjectorManager
 
 		projectorVisibilityAtlas.SetPixels(depthPixels, depthSliceIndex, 0);
 		projectorVisibilityAtlas.Apply(false, false);
+#endif
 	}
 
-	private static void CaptureVisibleDepthPlaceholder(int captureResolution, float farDistance, int depthSliceIndex)
+	private static void CaptureVisibleDepthPlaceholder(int captureResolution, float nearDistance, float farDistance, int depthSliceIndex)
 	{
 		EnsureDepthAtlas(captureResolution);
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+		// 全可见占位: r=1 表示 viewZ=near (最浅深度,任何场景点都通过测试)。
+		Color32[] depthPixels = new Color32[captureResolution * captureResolution];
+		Color32 visiblePixel = new Color32(255, 0, 0, 255);
+		for (int i = 0; i < depthPixels.Length; i++)
+		{
+			depthPixels[i] = visiblePixel;
+		}
+
+		Texture2D slice = projectorVisibilityAtlasSlices[depthSliceIndex];
+		slice.SetPixels32(depthPixels);
+		slice.Apply(false, false);
+		visibilityAtlasSliceNear[depthSliceIndex] = nearDistance;
+		visibilityAtlasSliceFar[depthSliceIndex] = farDistance;
+#else
 		Color[] depthPixels = new Color[captureResolution * captureResolution];
 		Color visiblePixel = new Color(farDistance, 0f, 0f, 1f);
 		for (int i = 0; i < depthPixels.Length; i++)
@@ -433,8 +518,10 @@ public static class FrozenProjectorManager
 
 		projectorVisibilityAtlas.SetPixels(depthPixels, depthSliceIndex, 0);
 		projectorVisibilityAtlas.Apply(false, false);
+#endif
 	}
 
+#if !UNITY_WEBGL || UNITY_EDITOR
 	private static void EnsureHDAtlas(int resolution)
 	{
 		if (projectorHDAtlas != null && hdAtlasResolution == resolution)
@@ -551,9 +638,31 @@ public static class FrozenProjectorManager
 		captureDepthMaterial = new Material(captureShader) { hideFlags = HideFlags.HideAndDontSave };
 		return captureDepthMaterial;
 	}
+#endif
 
 	private static void EnsureDepthAtlas(int captureResolution)
 	{
+#if UNITY_WEBGL && !UNITY_EDITOR
+		if (visibilityAtlasResolution == captureResolution && projectorVisibilityAtlasSlices[0] != null)
+		{
+			return;
+		}
+
+		for (int i = 0; i < ShaderMaxProjectors; i++)
+		{
+			if (projectorVisibilityAtlasSlices[i] != null)
+			{
+				Object.Destroy(projectorVisibilityAtlasSlices[i]);
+			}
+			projectorVisibilityAtlasSlices[i] = new Texture2D(captureResolution, captureResolution, TextureFormat.RGBA32, false, true)
+			{
+				wrapMode = TextureWrapMode.Clamp,
+				filterMode = FilterMode.Bilinear,
+				anisoLevel = 0,
+			};
+		}
+		visibilityAtlasResolution = captureResolution;
+#else
 		if (projectorVisibilityAtlas != null && visibilityAtlasResolution == captureResolution)
 		{
 			return;
@@ -571,7 +680,42 @@ public static class FrozenProjectorManager
 			filterMode = FilterMode.Bilinear,
 			anisoLevel = 0,
 		};
+#endif
 	}
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+	private static int[] BuildSliceIds(string baseName)
+	{
+		int[] ids = new int[ShaderMaxProjectors];
+		for (int i = 0; i < ShaderMaxProjectors; i++)
+		{
+			ids[i] = Shader.PropertyToID($"{baseName}{i}");
+		}
+		return ids;
+	}
+
+	private static void EnsureHDAtlasStubWebGL()
+	{
+		if (hdAtlasStubSlice != null)
+		{
+			return;
+		}
+		hdAtlasStubSlice = new Texture2D(1, 1, TextureFormat.RGBA32, false, true)
+		{
+			wrapMode = TextureWrapMode.Clamp,
+			filterMode = FilterMode.Bilinear,
+		};
+		hdAtlasStubSlice.SetPixel(0, 0, new Color(0f, 0f, 0f, 0f));
+		hdAtlasStubSlice.Apply(false, false);
+	}
+
+	// Per-slice near/far accessor for WebGL shader binding (the encoded R value depends on it).
+	public static void GetVisibilityAtlasSliceNearFar(int slice, out float near, out float far)
+	{
+		near = visibilityAtlasSliceNear[slice];
+		far = visibilityAtlasSliceFar[slice];
+	}
+#endif
 
 	private static void TrimToLimit()
 	{
@@ -583,6 +727,7 @@ public static class FrozenProjectorManager
 		}
 	}
 
+#if !UNITY_WEBGL || UNITY_EDITOR
 	private struct AsyncHDRequest
 	{
 		public int projectorId;
@@ -606,6 +751,7 @@ public static class FrozenProjectorManager
 		public Shader captureShader;
 		public int nextRow;
 	}
+#endif
 
 	public struct FrozenProjector
 	{
