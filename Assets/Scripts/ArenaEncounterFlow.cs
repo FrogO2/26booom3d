@@ -43,12 +43,13 @@ public class ArenaEncounterFlow : MonoBehaviour
 
 	private void Awake()
 	{
-		usesStandalonePresentation = GetComponent<ArenaTutorialSceneController>() == null;
-		EnsureBindings();
+
 	}
 
 	private void Start()
 	{
+		usesStandalonePresentation = GetComponent<ArenaTutorialSceneController>() == null;
+		EnsureBindings();
 		ResetEncounter();
 		if (!usesStandalonePresentation)
 		{
