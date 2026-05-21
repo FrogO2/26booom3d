@@ -3,9 +3,20 @@ a 2026 booom project on painting the world red
 
 以下内容供项目组成员确认进度，不是特别细致，爱来自FrogO2。
 
-距离提交还有
-![:FrogO2](https://count.getloli.com/@FrogO2?name=FrogO2&theme=original-new&padding=1&offset=0&align=top&scale=1&pixelated=1&darkmode=auto&num=1)
-天
+## 机核页面宣传材料
+
+游戏有四关，但是上传版本有严重问题导致无法通关教程关卡，请考虑游玩修复版：https://pan.baidu.com/s/1qAjMg573ba29o8wMIz-26Q?pwd=0000
+
+以血探路：依靠杀敌的血迹才能看清新的敌人和落脚点。敌人不仅是威胁还是重要的资源，谨慎地决定你挥刀的方向和位置。
+![alt text](blood.gif)
+砍杀：排除挡路的敌人，面对竞技场中敌人的围攻。灵活运用能力躲避，或是算准刀尖距离斩杀敌人。
+![alt text](kill.gif)
+跑酷：滑铲，登墙跳，二段跳。利用能力高速而流畅地穿越地图并躲避攻击。
+![alt text](parkour.gif)
+死亡：跌出地图，被刀砍中，被子弹击中。你无比脆弱，但是敌人也是。冷静下来考虑每一次落地位置，溅血方向，杀敌顺序。
+
+![alt text](death.gif)
+
 
 ## 基础能力
 ### 体型与基础移动
